@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<!-- 
+    Targets:
+       clean
+       compile
+       build
+       tests
+       clean-build (default)
+       
+    Build:        Creates the following files
+      Prosys-OPC-UA-Java-SDK-Client-Binary-[version].zip
+      Prosys-OPC-UA-Java-SDK-Client-Source-[version].zip
+      Prosys-OPC-UA-Java-SDK-Client-Server-Binary-[version].zip
+      Prosys-OPC-UA-Java-SDK-Client-Server-Source-[version].zip
+      Prosys-OPC-UA-Java-SDK-Client-Server-Evaluation-[version].zip
+ -->
+<project default="source" basedir=".">
+
+	<property name="androidexample.package.name" value="AndroidSampleProject" />
+	<property name="build.dir" value="build" />
+	<property name="bin.dir" value="bin" />
+
+	<!-- Targets -->
+	<target name="source" depends="">
+		<zip destfile="${build.dir}/${androidexample.package.name}.zip">
+			<zipfileset dir="." excludes="${build.dir}/**;${bin.dir}/**;build.xml;Build.**" />
+		</zip>
+	</target>
+	
+</project>
