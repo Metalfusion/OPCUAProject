@@ -1,27 +1,11 @@
 package com.prosysopc.ua.android;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
 import java.util.Locale;
 
 import android.os.AsyncTask;
+import android.os.Environment;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.opcfoundation.ua.builtintypes.DataValue;
 import org.opcfoundation.ua.builtintypes.DateTime;
 import org.opcfoundation.ua.builtintypes.LocalizedText;
@@ -29,16 +13,10 @@ import org.opcfoundation.ua.core.ApplicationDescription;
 import org.opcfoundation.ua.core.ApplicationType;
 import org.opcfoundation.ua.core.Identifiers;
 import org.opcfoundation.ua.transport.security.SecurityMode;
-import org.opcfoundation.ua.utils.CertificateUtils;
-
 import com.prosysopc.ua.ApplicationIdentity;
 import com.prosysopc.ua.PkiFileBasedCertificateValidator;
-import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
-import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.UserIdentity;
-import com.prosysopc.ua.client.InvalidServerEndpointException;
-import com.prosysopc.ua.client.ServerConnectionException;
 import com.prosysopc.ua.client.UaClient;
 
 /**
@@ -106,7 +84,8 @@ public class ConnectAndReadTimeTask extends AsyncTask<String, Void, Boolean>
 		UaClient myClient = new UaClient(serverUri);
 		
 		// Create and set certificate validator
-		PkiFileBasedCertificateValidator validator = new PkiFileBasedCertificateValidator("/sdcard/PKI/CA");
+		//PkiFileBasedCertificateValidator validator = new PkiFileBasedCertificateValidator("/sdcard/PKI/CA");
+		PkiFileBasedCertificateValidator validator = new PkiFileBasedCertificateValidator(Environment.getExternalStorageDirectory().getPath()+"/PKI/CA");
 		myClient.setCertificateValidator(validator);
 
 		// Create application description
