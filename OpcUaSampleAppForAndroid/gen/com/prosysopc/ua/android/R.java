@@ -24,28 +24,34 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f07000c;
-        public static final int LinearLayout2=0x7f070006;
-        public static final int action_settings=0x7f07000d;
-        public static final int connectAndReadButton=0x7f070005;
-        public static final int fragment1=0x7f070009;
-        public static final int fragment2=0x7f07000a;
-        public static final int horizontalScrollView1=0x7f070008;
-        public static final int listView1=0x7f07000b;
+        public static final int LinearLayout1=0x7f070003;
+        public static final int LinearLayout2=0x7f070009;
+        public static final int RelativeLayout1=0x7f07000e;
+        public static final int action_settings=0x7f070010;
+        public static final int button1=0x7f07000f;
+        public static final int connectAndReadButton=0x7f070008;
+        public static final int fragment01=0x7f07000b;
+        public static final int fragment1=0x7f07000c;
+        public static final int fragment2=0x7f07000d;
+        public static final int horizontalScrollView1=0x7f07000a;
+        public static final int listView1=0x7f070005;
         public static final int pager=0x7f070000;
         public static final int pager_title_strip=0x7f070001;
         public static final int section_label=0x7f070002;
-        public static final int serverTimeField=0x7f070004;
-        public static final int serverTimeLabel=0x7f070003;
-        public static final int textView1=0x7f070007;
+        public static final int serverTimeField=0x7f070007;
+        public static final int serverTimeLabel=0x7f070006;
+        public static final int textView1=0x7f070004;
     }
     public static final class layout {
         public static final int activity_main_pager=0x7f030000;
         public static final int fragment_main_pager_dummy=0x7f030001;
-        public static final int main=0x7f030002;
-        public static final int nodebrowser=0x7f030003;
-        public static final int nodelist_level_fragment=0x7f030004;
-        public static final int serverlist=0x7f030005;
+        public static final int logview=0x7f030002;
+        public static final int main=0x7f030003;
+        public static final int nodebrowser=0x7f030004;
+        public static final int nodelist_level_fragment=0x7f030005;
+        public static final int serverlist=0x7f030006;
+        public static final int sublist=0x7f030007;
+        public static final int textpopupwindow=0x7f030008;
     }
     public static final class menu {
         public static final int main_pager=0x7f060000;
