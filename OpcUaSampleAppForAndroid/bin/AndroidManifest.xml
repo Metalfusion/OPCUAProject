@@ -31,6 +31,10 @@
             android:name="com.prosysopc.ua.android.ServerSettingsActivity"
             android:label="@string/title_activity_server_settings" >
         </activity>
+        <activity
+            android:name="com.prosysopc.ua.android.MainPager"
+            android:label="@string/title_activity_main_pager" >
+        </activity>
     </application>
 
 </manifest>
