@@ -105,7 +105,7 @@ public class ConnectAndReadTimeTask extends AsyncTask<String, Void, Boolean>
 		myClient.setLocale(Locale.ENGLISH);
 		
 		// Set default timeout to 60 seconds
-		myClient.setTimeout(60000);
+		myClient.setTimeout(6000);
 
 		// Set security mode to NONE (others not currently supported on Android)
 		myClient.setSecurityMode(SecurityMode.NONE);
