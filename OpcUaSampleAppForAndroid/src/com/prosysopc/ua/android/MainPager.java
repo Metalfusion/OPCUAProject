@@ -27,7 +27,7 @@ public class MainPager extends FragmentActivity {
 	 * intensive, it may be best to switch to a
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
-	SectionsPagerAdapter mSectionsPagerAdapter;
+	MainPagerAdapter mPagerAdapter;	
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -41,12 +41,11 @@ public class MainPager extends FragmentActivity {
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+		mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setAdapter(mPagerAdapter);
 
 	}
 
@@ -61,14 +60,15 @@ public class MainPager extends FragmentActivity {
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class MainPagerAdapter extends FragmentPagerAdapter {
 
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
+		public MainPagerAdapter(FragmentManager fm) {
+			super(fm);			
 		}
 
 		@Override
 		public Fragment getItem(int position) {
+			
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
@@ -105,9 +105,9 @@ public class MainPager extends FragmentActivity {
 	 * displays dummy text.
 	 */
 	public static class DummySectionFragment extends Fragment {
+		
 		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
+		 * The fragment argument representing the section number for this fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -115,14 +115,13 @@ public class MainPager extends FragmentActivity {
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(
-					R.layout.fragment_main_pager_dummy, container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
+			
+			View rootView = inflater.inflate(R.layout.fragment_main_pager_dummy, container, false);
+			TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
+			
+			dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+			
 			return rootView;
 		}
 	}
