@@ -25,33 +25,34 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f070003;
-        public static final int LinearLayout2=0x7f070009;
-        public static final int RelativeLayout1=0x7f07000e;
-        public static final int action_settings=0x7f07001b;
-        public static final int button1=0x7f07000f;
-        public static final int button2=0x7f07001a;
-        public static final int connectAndReadButton=0x7f070008;
-        public static final int editText1=0x7f070011;
-        public static final int editText2=0x7f070013;
-        public static final int editText3=0x7f070015;
-        public static final int editText4=0x7f070017;
-        public static final int editText5=0x7f070019;
-        public static final int fragment01=0x7f07000b;
-        public static final int fragment1=0x7f07000c;
-        public static final int fragment2=0x7f07000d;
-        public static final int horizontalScrollView1=0x7f07000a;
+        public static final int LinearLayout2=0x7f070007;
+        public static final int RelativeLayout1=0x7f07000c;
+        public static final int action_settings=0x7f07001c;
+        public static final int button1=0x7f07000d;
+        public static final int button2=0x7f070018;
+        public static final int connectAndReadButton=0x7f07001b;
+        public static final int editText1=0x7f07000f;
+        public static final int editText2=0x7f070011;
+        public static final int editText3=0x7f070013;
+        public static final int editText4=0x7f070015;
+        public static final int editText5=0x7f070017;
+        public static final int fragment01=0x7f070009;
+        public static final int fragment1=0x7f07000a;
+        public static final int fragment2=0x7f07000b;
+        public static final int horizontalScrollView1=0x7f070008;
         public static final int listView1=0x7f070005;
+        public static final int mypager=0x7f070006;
         public static final int pager=0x7f070000;
         public static final int pager_title_strip=0x7f070001;
         public static final int section_label=0x7f070002;
-        public static final int serverTimeField=0x7f070007;
-        public static final int serverTimeLabel=0x7f070006;
+        public static final int serverTimeField=0x7f07001a;
+        public static final int serverTimeLabel=0x7f070019;
         public static final int textView1=0x7f070004;
-        public static final int textView2=0x7f070010;
-        public static final int textView3=0x7f070012;
-        public static final int textView4=0x7f070014;
-        public static final int textView5=0x7f070016;
-        public static final int textView6=0x7f070018;
+        public static final int textView2=0x7f07000e;
+        public static final int textView3=0x7f070010;
+        public static final int textView4=0x7f070012;
+        public static final int textView5=0x7f070014;
+        public static final int textView6=0x7f070016;
     }
     public static final class layout {
         public static final int activity_main_pager=0x7f030000;
@@ -63,8 +64,9 @@ public final class R {
         public static final int serverlist=0x7f030006;
         public static final int serversettings=0x7f030007;
         public static final int sublist=0x7f030008;
-        public static final int textpopupwindow=0x7f030009;
-        public static final int valueeditwindow=0x7f03000a;
+        public static final int testview=0x7f030009;
+        public static final int textpopupwindow=0x7f03000a;
+        public static final int valueeditwindow=0x7f03000b;
     }
     public static final class menu {
         public static final int main_pager=0x7f060000;

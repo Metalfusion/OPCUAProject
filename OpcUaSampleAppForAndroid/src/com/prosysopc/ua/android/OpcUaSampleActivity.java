@@ -16,7 +16,7 @@ public class OpcUaSampleActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.testview);
         
         // Get handles to the UI elements
         connectAndReadButton = (Button)findViewById(R.id.connectAndReadButton);
