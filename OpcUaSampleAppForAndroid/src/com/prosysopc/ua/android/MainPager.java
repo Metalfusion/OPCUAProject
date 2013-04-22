@@ -1,5 +1,7 @@
 package com.prosysopc.ua.android;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.os.Bundle;
@@ -41,7 +43,9 @@ public class MainPager extends FragmentActivity {
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
-		mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+		List<Fragment> fragments = getFragments();
+
+		mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(),fragments);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -56,14 +60,34 @@ public class MainPager extends FragmentActivity {
 		return true;
 	}
 
+	private List<Fragment> getFragments(){
+
+		  List<Fragment> fList = new ArrayList<Fragment>();
+
+		  fList.add(DummySectionFragment.newInstance());
+
+		  fList.add(LogviewFragment.newInstance());
+
+		  fList.add(NodebrowserFragment.newInstance());
+		  
+		  fList.add(ServerlistFragment.newInstance());
+
+		  return fList;
+
+		}
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
 	public class MainPagerAdapter extends FragmentPagerAdapter {
 
-		public MainPagerAdapter(FragmentManager fm) {
-			super(fm);			
+		private List<Fragment> fragments;
+		
+		public MainPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+			super(fm);	
+			this.fragments = fragments;
+
 		}
 
 		@Override
@@ -72,17 +96,21 @@ public class MainPager extends FragmentActivity {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
-			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
-			return fragment;
+			//Fragment fragment = new DummySectionFragment();
+			//Bundle args = new Bundle();
+			//args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+			//fragment.setArguments(args);
+			//return fragment;
+			return this.fragments.get(position);
+
 		}
 
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return 3;
+			//return 3;
+			return this.fragments.size();
+
 		}
 
 		@Override
@@ -111,6 +139,13 @@ public class MainPager extends FragmentActivity {
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
+		public static final DummySectionFragment newInstance()
+		{
+			DummySectionFragment f = new DummySectionFragment();
+			return f;
+			
+		}
+		
 		public DummySectionFragment() {
 		}
 
@@ -120,13 +155,13 @@ public class MainPager extends FragmentActivity {
 			View rootView = inflater.inflate(R.layout.fragment_main_pager_dummy, container, false);
 			TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
 			
-			dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+			dummyTextView.setText("Dummy");
 			
 			return rootView;
 		}
 	}
 	
-public static class LogviewFragment extends Fragment {
+	public static class LogviewFragment extends Fragment {
 		
 		/**
 		 * The fragment argument representing the section number for this fragment.
@@ -135,17 +170,74 @@ public static class LogviewFragment extends Fragment {
 
 		public LogviewFragment() {
 		}
+		
+		public static final LogviewFragment newInstance()
+		{
+			LogviewFragment f = new LogviewFragment();
+			return f;
+			
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
 			
 			View rootView = inflater.inflate(R.layout.logview, container, false);
-			//TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-			
-			//dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
 			
 			return rootView;
 		}
 	}
 
+
+
+	public static class NodebrowserFragment extends Fragment {
+	
+		/**
+		 * The fragment argument representing the section number for this fragment.
+		 */
+		public static final String ARG_SECTION_NUMBER = "section_number";
+	
+		public NodebrowserFragment() {
+		}
+	
+		public static final NodebrowserFragment newInstance()
+		{
+			NodebrowserFragment f = new NodebrowserFragment();
+			return f;
+			
+		}
+		
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
+			
+			View rootView = inflater.inflate(R.layout.nodebrowser, container, false);
+			
+			return rootView;
+		}
+	}
+	
+	public static class ServerlistFragment extends Fragment {
+		
+		/**
+		 * The fragment argument representing the section number for this fragment.
+		 */
+		public static final String ARG_SECTION_NUMBER = "section_number";
+	
+		public ServerlistFragment() {
+		}
+		
+		public static final ServerlistFragment newInstance()
+		{
+			ServerlistFragment f = new ServerlistFragment();
+			return f;
+			
+		}
+	
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
+			
+			View rootView = inflater.inflate(R.layout.nodebrowser, container, false);
+			
+			return rootView;
+		}
+	}
 }
