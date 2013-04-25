@@ -46,7 +46,8 @@ public class MainPager extends FragmentActivity {
 		List<Fragment> fragments = getFragments();
 
 		mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(),fragments);
-
+		//mViewPager.setAdapter(new MainPagerAdapter(getChildFragmentManager(), fragments));
+		
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
