@@ -19,11 +19,12 @@
         android:layout_height="match_parent" >
 
         <LinearLayout
+            android:id="@+id/nodelevellayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="10dp" >
-
+<!-- 
             <fragment
                 android:id="@+id/fragment01"
                 android:name="android.support.v4.app.ListFragment"
@@ -47,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33"
                 tools:layout="@layout/nodelist_level_fragment" />
-
+ -->
         </LinearLayout>
     </HorizontalScrollView>
 
