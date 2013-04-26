@@ -65,14 +65,16 @@ public class MainPager extends FragmentActivity {
 
 		  List<Fragment> fList = new ArrayList<Fragment>();
 
-		  fList.add(DummySectionFragment.newInstance());
-
-		  fList.add(LogviewFragment.newInstance());
-
-		  fList.add(NodebrowserFragment.newInstance());
+		  //fList.add(DummySectionFragment.newInstance());
 		  
 		  fList.add(ServerlistFragment.newInstance());
-
+	
+		  fList.add(NodebrowserFragment.newInstance());
+	
+		  fList.add(SublistFragment.newInstance());
+		  
+		  fList.add(LogviewFragment.newInstance());
+		  
 		  return fList;
 
 		}

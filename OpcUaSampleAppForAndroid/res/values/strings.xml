@@ -11,6 +11,8 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>    
     <string name="title_activity_main_pager">OPCUA Android app</string>    
-    <string name="node_browser">Node browser</string>
+    <string name="node_browser">Node browser</string>    
+    <string name="servers">Servers</string>    
+    <string name="add_server">Add server</string>
 
 </resources>
