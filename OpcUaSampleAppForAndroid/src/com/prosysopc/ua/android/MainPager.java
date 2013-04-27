@@ -37,7 +37,14 @@ public class MainPager extends FragmentActivity {
 	 */
 	ViewPager mViewPager;
 
-	public OPCReader OPCreader = new OPCReader();
+	public OPCReader opcreader;
+	
+	
+	public MainPager () {
+		opcreader = new OPCReader();
+		ServerSettingsActivity.opcreader = opcreader;
+	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
