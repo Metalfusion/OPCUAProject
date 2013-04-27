@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 public class ServerSettingsActivity extends Activity {
 
+	public static OPCReader opcreader;
 
 
 	@Override
@@ -31,7 +32,6 @@ public class ServerSettingsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.serversettings);
 	}
-
 	
 
 	@Override
@@ -57,7 +57,7 @@ public class ServerSettingsActivity extends Activity {
 		EditText etTimeout = (EditText)findViewById(R.id.editTextTimeout);
 		
 		// save server settings
-		
+		opcreader.addModifyServer(etServer.toString(), etAddress.toString(), etIdentity.toString(), etPassword.toString(), Integer.parseInt(etTimeout.toString()));
 		
 		// return to viewpager
 		finish();
