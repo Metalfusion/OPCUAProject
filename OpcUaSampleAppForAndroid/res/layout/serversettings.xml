@@ -19,7 +19,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/editTextServerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -36,7 +36,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/editTextAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -50,7 +50,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editTextIdentity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" />
@@ -63,7 +63,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" />
@@ -76,7 +76,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/editTextTimeout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -87,18 +87,20 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonCancelServerSettingsEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.65"
-            android:text="Cancel" />
+            android:text="Cancel"
+            android:onClick="buttonCancelServerSettingsEditOnClick" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/buttonSaveServerSettingsEdit"
             android:layout_width="166dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.38"
-            android:text="Save" />
+            android:text="Save" 
+            android:onClick="buttonSaveServerSettingsEditOnClick"/>
 
     </LinearLayout>
 

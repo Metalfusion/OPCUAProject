@@ -9,7 +9,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Subscriptions"
+        android:text="@string/subscriptions"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView

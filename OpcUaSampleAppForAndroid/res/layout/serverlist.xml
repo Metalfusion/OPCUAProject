@@ -13,7 +13,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/listViewServers"
         android:layout_width="match_parent"
         android:layout_height="272dp"
         android:layout_weight="0.61" >
@@ -24,10 +24,10 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/buttonServerSettingsEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="button1OnClick"
+            android:onClick="buttonServerEditOnClick"
             android:text="@string/add_server" />
     </LinearLayout>
 

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 
 public class NodebrowserFragment extends Fragment {
-	
+	static MainPager mPager;
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */

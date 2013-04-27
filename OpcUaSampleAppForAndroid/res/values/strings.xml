@@ -13,6 +13,8 @@
     <string name="title_activity_main_pager">OPCUA Android app</string>    
     <string name="node_browser">Node browser</string>    
     <string name="servers">Servers</string>    
-    <string name="add_server">Add server</string>
+    <string name="add_server">Add server</string>    
+    <string name="subscriptions">Subscriptions</string>    
+    <string name="log_browser">Log browser</string>
 
 </resources>

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 
 	public class LogviewFragment extends Fragment {
-		
+		static MainPager mPager;
 		/**
 		 * The fragment argument representing the section number for this fragment.
 		 */

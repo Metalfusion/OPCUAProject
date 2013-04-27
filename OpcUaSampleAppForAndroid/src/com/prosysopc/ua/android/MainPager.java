@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -36,6 +37,8 @@ public class MainPager extends FragmentActivity {
 	 */
 	ViewPager mViewPager;
 
+	public OPCReader OPCreader = new OPCReader();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -121,14 +124,22 @@ public class MainPager extends FragmentActivity {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
+				return getString(R.string.servers).toUpperCase(l);
 			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
+				return getString(R.string.node_browser).toUpperCase(l);
 			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
+				return getString(R.string.subscriptions).toUpperCase(l);
+			case 3:
+				return getString(R.string.log_browser).toUpperCase(l);
 			}
 			return null;
 		}
+	}
+	
+	//On click event for button1
+	public void buttonServerEditOnClick(View v) {
+		Intent intent = new Intent(this, ServerSettingsActivity.class);
+		startActivity(intent);
 	}
 
 }

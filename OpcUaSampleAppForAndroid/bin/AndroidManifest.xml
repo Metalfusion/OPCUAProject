@@ -29,7 +29,11 @@
             
         </activity>
                      
-        
+        <activity
+            android:name="com.prosysopc.ua.android.ServerSettingsActivity"
+            android:label="@string/app_name" >
+            
+        </activity>
     </application>
 
 </manifest>
