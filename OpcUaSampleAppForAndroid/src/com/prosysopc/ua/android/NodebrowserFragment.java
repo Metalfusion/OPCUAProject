@@ -18,8 +18,9 @@ public class NodebrowserFragment extends Fragment {
 	public NodebrowserFragment() {
 	}
 
-	public static final NodebrowserFragment newInstance()
+	public static final NodebrowserFragment newInstance(MainPager pager)
 	{
+		mPager = pager;
 		NodebrowserFragment f = new NodebrowserFragment();
 		return f;
 		

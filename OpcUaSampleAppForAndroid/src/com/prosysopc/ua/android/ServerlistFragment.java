@@ -10,8 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
-public class ServerlistFragment extends Fragment {
+public class ServerlistFragment extends ListFragment {
 	static MainPager mPager;
+	
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */
@@ -20,8 +21,9 @@ public class ServerlistFragment extends Fragment {
 	public ServerlistFragment() {
 	}
 	
-	public static final ServerlistFragment newInstance()
+	public static final ServerlistFragment newInstance( MainPager pager)
 	{
+		mPager = pager;
 		ServerlistFragment f = new ServerlistFragment();
 		return f;
 		
@@ -35,6 +37,12 @@ public class ServerlistFragment extends Fragment {
 		return rootView;
 	}
 	
-	//final ListView listview = (ListView) getView().findViewById(R.id.listViewServers);
-	//final StableArrayAdapter adapter = new  StableArrayAdapter( this, android.R.layout.simple_list_item_1, (MainPager)getActivity().OPCreader.getServers());
+	// set servernames to
+	
+	final ListView listview = (ListView) getView().findViewById(R.id.listViewServers);
+	//final ArrayAdapter<String> adapter = new  ArrayAdapter<String>( this, 
+	//		android.R.layout.simple_list_item_1, mPager.OPCreader.getServers());
+	
+		
+	
 }

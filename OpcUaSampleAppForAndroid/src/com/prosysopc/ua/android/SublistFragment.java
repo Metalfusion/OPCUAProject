@@ -17,8 +17,9 @@ import android.view.ViewGroup;
 		public SublistFragment() {
 		}
 		
-		public static final SublistFragment newInstance()
+		public static final SublistFragment newInstance(MainPager pager)
 		{
+			mPager = pager;
 			SublistFragment f = new SublistFragment();
 			return f;
 			

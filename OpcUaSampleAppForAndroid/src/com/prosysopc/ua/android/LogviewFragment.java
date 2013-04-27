@@ -17,8 +17,9 @@ import android.view.ViewGroup;
 		public LogviewFragment() {
 		}
 		
-		public static final LogviewFragment newInstance()
+		public static final LogviewFragment newInstance(MainPager pager)
 		{
+			mPager = pager;
 			LogviewFragment f = new LogviewFragment();
 			return f;
 			
