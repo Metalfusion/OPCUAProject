@@ -5,12 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -18,9 +22,13 @@ import android.widget.SimpleAdapter;
 
 @SuppressLint("ValidFragment")
 public class ServerlistFragment extends ListFragment {
+	
+	
 	static MainPager mPager;
 	private SimpleAdapter adapter;
 	ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
+	
+	
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */
@@ -44,28 +52,55 @@ public class ServerlistFragment extends ListFragment {
 		View rootView = inflater.inflate(R.layout.serverlist, container, false);
 		List<Server> servers =  mPager.opcreader.getServers();
 		HashMap<String,String> item;
-		    for( int i=0; i < servers.size(); i++ ){
-		      item = new HashMap<String,String>();
-		      item.put( "line1", servers.get(i).getName());
-		      item.put( "line2", servers.get(i).getAddress());
-		      list.add( item );
-		    }
-		    adapter = new SimpleAdapter(this.getActivity(), list,
-		    		      android.R.layout.two_line_list_item ,
-		    		      new String[] { "line1","line2" },
-		    		      new int[] {android.R.id.text1, android.R.id.text2});
-		    setListAdapter( adapter );
-
-		
+		// clear the list so the list doesn't grow on every time it is created
+		list.clear();
+	    for( int i=0; i < servers.size(); i++ ){
+	      item = new HashMap<String,String>();
+	      item.put( "line1", servers.get(i).getName());
+	      item.put( "line2", servers.get(i).getAddress());
+	      list.add( item );
+	    }
+	    adapter = new SimpleAdapter(this.getActivity(), list,
+	    		      android.R.layout.two_line_list_item ,
+	    		      new String[] { "line1","line2" },
+	    		      new int[] {android.R.id.text1, android.R.id.text2});
+	    setListAdapter( adapter );
+	    
+	    registerForContextMenu(rootView.findViewById(android.R.id.list));
+	    
 		return rootView;
 	}
 	
-	// set servernames to
 	
-	//final ListView listview = (ListView) getView().findViewById(R.id.listViewServers);
-	//final ArrayAdapter<String> adapter = new  ArrayAdapter<String>( this, 
-	//		android.R.layout.simple_list_item_1, mPager.OPCreader.getServers());
 	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+	    super.onCreateContextMenu(menu, v, menuInfo);
+	    if (v.getId() == this.getListView().getId()) {
+	        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+	        HashMap item = (HashMap) getListView().getItemAtPosition(info.position);
+	        menu.setHeaderTitle("Context Menu Example");
+	        menu.add(0, 0, 0, "Connect");
+	        menu.add(0, 0, 0, "Edit");
+	        menu.add(0, 0, 0, "Delete");
+	        // toiseksi parametriksi pitäis tulla ilmeisesti itemin id, tyyliin HashMap.getId()
+	    }
+	}
 		
+	public boolean onContextItemSelected(MenuItem item) {
+	    if (item.getTitle() == "Connect") {
+	        //Code To Handle connect
+	    } 
+	    else if (item.getTitle() == "Edit") {
+	        //Code To Handle edit
+	    } 
+	    else if (item.getTitle() == "Delete") {
+	        //Code To Handle deletion
+	    } 
+	    else {
+	        return false;
+	    }
+	    return true;
+	}
 	
 }
