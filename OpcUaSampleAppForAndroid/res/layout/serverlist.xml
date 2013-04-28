@@ -13,7 +13,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
-        android:id="@+id/listViewServers"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="272dp"
         android:layout_weight="0.61" >

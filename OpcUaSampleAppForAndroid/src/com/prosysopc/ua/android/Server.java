@@ -18,9 +18,13 @@ public class Server
 		timeout = timeoutvalue;
 	}
 	
-	public String toString()
+	public String getName()
 	{
 		return name;
+	}
+	public String getAddress()
+	{
+		return address;
 	}
 	
 }
