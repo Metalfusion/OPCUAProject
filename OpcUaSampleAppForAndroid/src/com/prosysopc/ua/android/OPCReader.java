@@ -67,4 +67,15 @@ public class OPCReader
 	{
 		return servers;
 	}
+	
+	public boolean removeServer( int i )
+	{
+		if( i > servers.size())
+		{
+			return false;
+		}
+		
+		servers.remove(i);
+		return true;
+	}
 }

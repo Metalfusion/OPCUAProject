@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -80,7 +81,7 @@ public class ServerlistFragment extends ListFragment {
 	        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 	        HashMap item = (HashMap) getListView().getItemAtPosition(info.position);
 	        menu.setHeaderTitle("Context Menu Example");
-	        menu.add(0, 0, 0, "Connect");
+	        menu.add(0, info.position, 0, "Connect");
 	        menu.add(0, 0, 0, "Edit");
 	        menu.add(0, 0, 0, "Delete");
 	        // toiseksi parametriksi pitäis tulla ilmeisesti itemin id, tyyliin HashMap.getId()
@@ -88,6 +89,9 @@ public class ServerlistFragment extends ListFragment {
 	}
 		
 	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		
+		
 	    if (item.getTitle() == "Connect") {
 	        //Code To Handle connect
 	    } 
@@ -96,8 +100,11 @@ public class ServerlistFragment extends ListFragment {
 	    } 
 	    else if (item.getTitle() == "Delete") {
 	        //Code To Handle deletion
+	    	mPager.opcreader.removeServer((int)info.id);
+	    	adapter.notifyDataSetChanged();
 	    } 
 	    else {
+	    	
 	        return false;
 	    }
 	    return true;
