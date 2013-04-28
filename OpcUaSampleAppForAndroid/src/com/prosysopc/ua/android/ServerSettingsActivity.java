@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ServerSettingsActivity extends Activity {
 
@@ -56,11 +57,16 @@ public class ServerSettingsActivity extends Activity {
 		EditText etPassword = (EditText)findViewById(R.id.editTextPassword);
 		EditText etTimeout = (EditText)findViewById(R.id.editTextTimeout);
 		
+	
 		// save server settings
-		opcreader.addModifyServer(etServer.toString(), etAddress.toString(), etIdentity.toString(), etPassword.toString(), Integer.parseInt(etTimeout.toString()));
+		opcreader.addModifyServer(etServer.getText().toString(), etAddress.getText().toString(), 
+								etIdentity.getText().toString(), etPassword.getText().toString(), 
+								Integer.parseInt(etTimeout.getText().toString()));
 		
 		// return to viewpager
 		finish();
+		
+		
 	}
 
 }
