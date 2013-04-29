@@ -46,6 +46,7 @@ public class MainPager extends FragmentActivity {
 		opcreader = new OPCReader();
 		opcreader.addModifyServer("localhost", 
 				"opc.tcp://10.0.2.2:52520/OPCUA/SampleConsoleServer", "", "", 5);
+		opcreader.addLog( Logmessage.LogmessageType.INFO, "Program start");
 		ServerSettingsActivity.opcreader = opcreader;
 	}
 	

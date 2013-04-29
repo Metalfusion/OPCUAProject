@@ -6,9 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
+
+
 public class OPCReader
 {
 	List<Server> servers;
+	List<Logmessage> messagelog;
 	Server activeServer;
 	// settings
 	// connectionsettings
@@ -17,6 +21,7 @@ public class OPCReader
 	public OPCReader() {
 		
 		servers = new ArrayList<Server>();
+		messagelog = new ArrayList<Logmessage>();
 		activeServer = null;
 		
 	}
@@ -77,5 +82,17 @@ public class OPCReader
 		
 		servers.remove(i);
 		return true;
+	}
+	
+	// adds new message to log
+	public void addLog( LogmessageType type, String message )
+	{
+		// timestamp is added on Logmessage constructor
+		messagelog.add( new Logmessage( type, message) );
+	}
+	
+	public List<Logmessage> getMessagelog()
+	{
+		return messagelog;
 	}
 }

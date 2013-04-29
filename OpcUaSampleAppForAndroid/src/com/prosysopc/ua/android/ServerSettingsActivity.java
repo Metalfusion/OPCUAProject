@@ -63,6 +63,9 @@ public class ServerSettingsActivity extends Activity {
 								etIdentity.getText().toString(), etPassword.getText().toString(), 
 								Integer.parseInt(etTimeout.getText().toString()));
 		
+		// log the addition
+		opcreader.addLog( Logmessage.LogmessageType.INFO, "Server: " + etServer.getText().toString() + " was added" );
+		
 		// return to viewpager
 		finish();
 		
