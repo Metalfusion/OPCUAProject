@@ -73,6 +73,25 @@ public class ServerlistFragment extends ListFragment {
 	}
 	
 	
+	public void onStart()
+	{
+		super.onStart();
+		List<Server> servers =  mPager.opcreader.getServers();
+		HashMap<String,String> item;
+		// clear the list so the list doesn't grow on every time it is created
+		list.clear();
+	    for( int i=0; i < servers.size(); i++ ){
+	      item = new HashMap<String,String>();
+	      item.put( "line1", servers.get(i).getName());
+	      item.put( "line2", servers.get(i).getAddress());
+	      list.add( item );
+	    }
+	    adapter = new SimpleAdapter(this.getActivity(), list,
+	    		      android.R.layout.two_line_list_item ,
+	    		      new String[] { "line1","line2" },
+	    		      new int[] {android.R.id.text1, android.R.id.text2});
+	    setListAdapter( adapter );
+	}
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -107,6 +126,7 @@ public class ServerlistFragment extends ListFragment {
 	    	
 	        return false;
 	    }
+	    onStart();
 	    return true;
 	}
 	
