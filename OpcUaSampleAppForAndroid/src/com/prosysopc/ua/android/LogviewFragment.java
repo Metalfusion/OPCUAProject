@@ -126,7 +126,7 @@ import android.widget.SimpleAdapter;
 		    	Bundle b = new Bundle();
 		    	b.putString("type", message.getType().toString());
 		    	b.putString("message", message.getMessage());
-		    	b.putInt("timestamp", message.getTimestamp());
+		    	b.putString("timestamp", message.getTimestampString());
 		    	intent.putExtras(b);
 				startActivity(intent);
 		    }

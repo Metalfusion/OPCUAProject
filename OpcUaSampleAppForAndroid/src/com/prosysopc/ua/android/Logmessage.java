@@ -1,5 +1,8 @@
 package com.prosysopc.ua.android;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Logmessage
 {
 	private Integer timestamp;
@@ -52,6 +55,12 @@ public class Logmessage
 			}
 			return s;
 		}
+	}
+	
+	public String getTimestampString()
+	{
+		Date date = new Date( timestamp );
+		return date.toString();
 	}
 	
 }

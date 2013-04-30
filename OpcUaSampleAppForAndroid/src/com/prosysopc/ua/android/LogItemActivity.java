@@ -32,7 +32,7 @@ public class LogItemActivity extends Activity {
 		Bundle b = getIntent().getExtras();
 		
 		typeview.setText(b.getString("type"));
-		timestampview.setText("Timestamp");//b.getInt("timestamp").toString());
+		timestampview.setText(b.getString("timestamp"));
 		messageview.setText(b.getString("message"));
 	}
 	
