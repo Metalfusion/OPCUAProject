@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Logmessage
 {
-	private Integer timestamp;
+	private Long timestamp;
 	private LogmessageType type;
 	private String message;
 	
@@ -13,7 +13,7 @@ public class Logmessage
 	{
 		type = typevalue;
 		message = messagevalue;
-		timestamp = (int) (System.currentTimeMillis());
+		timestamp = (System.currentTimeMillis());
 	}
 	
 	
@@ -21,7 +21,7 @@ public class Logmessage
 		return type;
 	}
 	
-	public Integer getTimestamp()
+	public Long getTimestamp()
 	{
 		return timestamp;
 	}
