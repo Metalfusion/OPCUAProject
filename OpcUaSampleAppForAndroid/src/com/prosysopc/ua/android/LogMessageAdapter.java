@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 public class LogMessageAdapter extends ArrayAdapter<Logmessage> {
 	
-	static int[] resArr = {R.drawable.ic_pin, R.drawable.ic_ok,R.drawable.ic_pin};
+	static int[] resArr = {R.drawable.error, R.drawable.exclamation,R.drawable.information};
 	
 	 Context context; 
 	 int layoutResourceId;    

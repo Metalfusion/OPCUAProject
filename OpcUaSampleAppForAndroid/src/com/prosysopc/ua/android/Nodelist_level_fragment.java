@@ -43,8 +43,8 @@ public class Nodelist_level_fragment extends ListFragment {
 				
 		node_data = new UINode[]
         {
-			new UINode(R.drawable.ic_folder,"Folder node",123),
-			new UINode(R.drawable.ic_list,"Normal node",12123),
+			new UINode(R.drawable.folder,"Folder node",123),
+			new UINode(R.drawable.text_list_bullets,"Normal node",12123),
 			new UINode(R.drawable.ic_folder,"Folder node 2",23),
 			new UINode(R.drawable.ic_folder,"Folder node 3",143),
 			new UINode(R.drawable.ic_list,"Normal node 2",13),			
