@@ -1,11 +1,6 @@
 package com.prosysopc.ua.android;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.Menu;
