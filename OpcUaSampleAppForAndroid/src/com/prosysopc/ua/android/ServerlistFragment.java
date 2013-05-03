@@ -1,8 +1,11 @@
 package com.prosysopc.ua.android;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -109,6 +112,12 @@ public class ServerlistFragment extends ListFragment {
 		
 	    if (item.getTitle() == "Connect") {
 	        //Code To Handle connect
+	    	try {
+				mPager.opcreader.updateConnection(mPager.opcreader.getServer((int)info.id));
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				mPager.opcreader.addLog(LogmessageType.WARNING, e.toString() );
+			}
 	    } 
 	    else if (item.getTitle() == "Edit") {
 	        //Code To Handle edit

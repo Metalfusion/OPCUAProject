@@ -1,8 +1,11 @@
 package com.prosysopc.ua.android;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +15,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainPager extends FragmentActivity {
 
@@ -38,8 +43,13 @@ public class MainPager extends FragmentActivity {
 	
 	public MainPager () {
 		opcreader = new OPCReader();
-		opcreader.addModifyServer("localhost", 
-				"opc.tcp://10.0.2.2:52520/OPCUA/SampleConsoleServer", "", "", 5);
+		try {
+			opcreader.addModifyServer("localhost", 
+					"opc.tcp://localhost/OPCUA/SampleConsoleServer", "", "", 5);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			opcreader.addLog(LogmessageType.WARNING, e.toString() );
+		}
 		opcreader.addLog( Logmessage.LogmessageType.INFO, "Program start");
 		ServerSettingsActivity.opcreader = opcreader;
 	}
@@ -71,6 +81,28 @@ public class MainPager extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.main_pager, menu);
 		return true;
 	}
+	
+	 @Override
+	    public boolean onOptionsItemSelected(MenuItem item) {
+	 
+	        super.onOptionsItemSelected(item);
+	 
+	        switch(item.getItemId()){
+	            case R.id.action_settings:
+	                Toast.makeText(getBaseContext(), "You selected settings", Toast.LENGTH_SHORT).show();
+	                break;
+	 
+	            case R.id.disconnect:
+	                Toast.makeText(getBaseContext(), "You selected disconnect", Toast.LENGTH_SHORT).show();
+	                break;
+	 
+	            case R.id.exit:
+	                Toast.makeText(getBaseContext(), "You selected exit", Toast.LENGTH_SHORT).show();
+	                break;	 
+	        }
+	        return true;
+	 
+	    }
 
 	private List<Fragment> getFragments(){
 

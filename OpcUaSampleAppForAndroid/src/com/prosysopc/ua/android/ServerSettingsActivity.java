@@ -1,5 +1,9 @@
 package com.prosysopc.ua.android;
 
+import java.net.URISyntaxException;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -42,9 +46,17 @@ public class ServerSettingsActivity extends Activity {
 		
 	
 		// save server settings
-		opcreader.addModifyServer(etServer.getText().toString(), etAddress.getText().toString(), 
-								etIdentity.getText().toString(), etPassword.getText().toString(), 
-								Integer.parseInt(etTimeout.getText().toString()));
+		try {
+			opcreader.addModifyServer(etServer.getText().toString(), etAddress.getText().toString(), 
+									etIdentity.getText().toString(), etPassword.getText().toString(), 
+									Integer.parseInt(etTimeout.getText().toString()));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			opcreader.addLog(LogmessageType.WARNING, e.toString() );
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			opcreader.addLog(LogmessageType.WARNING, e.toString() );
+		}
 		
 		// log the addition
 		opcreader.addLog( Logmessage.LogmessageType.INFO, "Server: " + etServer.getText().toString() + " was added" );

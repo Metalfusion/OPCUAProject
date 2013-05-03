@@ -88,11 +88,13 @@ public final class R {
         public static final int buttonSaveServerSettingsEdit=0x7f07001d;
         public static final int buttonServerSettingsEdit=0x7f070011;
         public static final int connectAndReadButton=0x7f070021;
+        public static final int disconnect=0x7f070023;
         public static final int editTextAddress=0x7f070015;
         public static final int editTextIdentity=0x7f070017;
         public static final int editTextPassword=0x7f070019;
         public static final int editTextServerName=0x7f070013;
         public static final int editTextTimeout=0x7f07001b;
+        public static final int exit=0x7f070024;
         public static final int horizontalScrollView1=0x7f07000c;
         public static final int imgIcon=0x7f070003;
         public static final int listView1=0x7f07001e;
@@ -141,6 +143,8 @@ public final class R {
         public static final int app_name=0x7f050000;
         public static final int close=0x7f05000f;
         public static final int connect_and_read=0x7f050001;
+        public static final int disconnect=0x7f050011;
+        public static final int exit=0x7f050010;
         public static final int init_time_string=0x7f050003;
         public static final int log_browser=0x7f05000e;
         public static final int node_browser=0x7f05000a;

@@ -16,6 +16,8 @@
     <string name="add_server">Add server</string>    
     <string name="subscriptions">Subscriptions</string>    
     <string name="log_browser">Log browser</string>    
-    <string name="close">Close</string>
+    <string name="close">Close</string>    
+    <string name="exit">exit</string>    
+    <string name="disconnect">disconnect</string>
 
 </resources>

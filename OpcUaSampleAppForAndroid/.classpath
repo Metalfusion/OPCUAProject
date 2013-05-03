@@ -4,9 +4,9 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="C:/Users/v/Dropbox/Koulu/Ohjelmistokomponentit/SDK/lib/bcprov-jdk16-146.jar"/>
-	<classpathentry kind="lib" path="C:/Users/v/Dropbox/Koulu/Ohjelmistokomponentit/SDK/lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="C:/Users/v/Dropbox/Koulu/Ohjelmistokomponentit/SDK/lib/Opc.Ua.Stack-1.01.330.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/v/Dropbox/Koulu/Ohjelmistokomponentit/SDK/lib/prosysSDK.jar"/>
+	<classpathentry kind="lib" path="libs/bcprov-jdk16-146.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="libs/Opc.Ua.Stack-1.01.330.0.jar"/>
+	<classpathentry kind="lib" path="libs/prosysSDK.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

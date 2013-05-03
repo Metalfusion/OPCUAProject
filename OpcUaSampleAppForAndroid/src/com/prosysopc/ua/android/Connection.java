@@ -28,4 +28,10 @@ public class Connection
 		client.connect();
 		return true;
 	}
+	
+	public boolean disconnect()
+	{
+		client.disconnect();
+		return true;
+	}
 }
