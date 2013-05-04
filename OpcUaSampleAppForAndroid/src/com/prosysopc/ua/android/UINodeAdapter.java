@@ -13,13 +13,13 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
 	
 	 Context context; 
 	 int layoutResourceId;    
-	 UINode data[] = null;
+	 UINode rootNode = null;
 	
-	public UINodeAdapter(Context context, int layoutResourceId, UINode[] data) {
-        super(context, layoutResourceId, data);
+	public UINodeAdapter(Context context, int layoutResourceId, UINode rootNode) {
+        super(context, layoutResourceId, rootNode.childNodes);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data = data;
+        this.rootNode = rootNode;
     }
 
     @Override
@@ -43,9 +43,9 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
             holder = (UINodeHolder)row.getTag();
         }
         
-        UINode UINode = data[position];
+        UINode UINode = rootNode.childNodes.get(position);
         holder.txtTitle.setText(UINode.name);
-        holder.imgIcon.setImageResource(UINode.iconRes);
+        holder.imgIcon.setImageResource(UINode.type.value);
         
         return row;
     }

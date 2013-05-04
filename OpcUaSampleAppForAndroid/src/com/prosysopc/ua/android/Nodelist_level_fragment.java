@@ -1,6 +1,10 @@
 package com.prosysopc.ua.android;
 
 
+import java.util.ArrayList;
+
+import com.prosysopc.ua.android.UINode.UINodeType;
+
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -10,11 +14,11 @@ import android.view.ViewGroup;
 public class Nodelist_level_fragment extends ListFragment {
 	
 	// This array hold the data to be displayed
-	public UINode node_data[];
+	public UINode rootNode;
 	
 	public Nodelist_level_fragment() {
 		// TODO Auto-generated constructor stub
-		node_data = new UINode[0];
+		rootNode = null;
 	}
 
 		
@@ -24,7 +28,7 @@ public class Nodelist_level_fragment extends ListFragment {
 		
 		createTestData();
 		
-        UINodeAdapter adapter = new UINodeAdapter(getActivity(), R.layout.nodelistitem, node_data);
+        UINodeAdapter adapter = new UINodeAdapter(getActivity(), R.layout.nodelistitem, rootNode);
         		
 		//ArrayAdapter<String> adapter= new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listItems);		
 	    setListAdapter(adapter);
@@ -33,22 +37,24 @@ public class Nodelist_level_fragment extends ListFragment {
 		
 	}
 	
+	@Override
+	public void onListItemClick(android.widget.ListView l, View v, int position, long id) {
+		
+		v.getTag();
+		
+	}
+	
 	
 	// Dummy data generation for testing
 	private void createTestData() {
-				
-		node_data = new UINode[]
-        {
-			new UINode(R.drawable.folder,"Folder node",123),
-			new UINode(R.drawable.text_list_bullets,"Normal node",12123),
-			new UINode(R.drawable.ic_folder,"Folder node 2",23),
-			new UINode(R.drawable.ic_folder,"Folder node 3",143),
-			new UINode(R.drawable.ic_list,"Normal node 2",13),			
-			new UINode(R.drawable.ic_folder,"Folder node 4",23),
-			new UINode(R.drawable.ic_folder,"Folder node 5",143),
-			new UINode(R.drawable.ic_list,"Normal node 3",13),
 			
-        };
+		ArrayList<UINode> childarr = new ArrayList<UINode>();
+		childarr.add(new UINode(UINodeType.folderNode,"Folder node",123));
+		childarr.add(new UINode(UINodeType.leafNode,"Normal node",12123));
+		childarr.add(new UINode(UINodeType.leafNode,"Normal node 2",121312323));
+		childarr.add(new UINode(UINodeType.leafNode,"Normal node 3",23));
+		
+		rootNode = new UINode(UINodeType.folderNode,"Node x",343, childarr);
 		        
 	}
 	
