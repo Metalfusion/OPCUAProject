@@ -94,6 +94,8 @@ public class MainPager extends FragmentActivity {
 	 
 	            case R.id.disconnect:
 	                Toast.makeText(getBaseContext(), "You selected disconnect", Toast.LENGTH_SHORT).show();
+	                opcreader.connection.disconnect();
+	                opcreader.addLog(LogmessageType.INFO, "Disconnected from server");
 	                break;
 	 
 	            case R.id.exit:

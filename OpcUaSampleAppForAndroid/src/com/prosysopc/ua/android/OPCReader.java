@@ -60,19 +60,20 @@ public class OPCReader
 	// Updates the connection within the prosys framework
 	public void updateConnection( Server newserver) throws URISyntaxException {
 		
-		// TODO: server connection update/change
 		if( connection == null )
 		{
 			connection = new Connection( newserver );
+			activeServer = newserver;
 		}
 		else
 		{
 			connection.disconnect();
 			addLog(LogmessageType.INFO, "Disconnected from " + activeServer.getName() );
 			connection = new Connection( newserver );
+			addLog(LogmessageType.INFO, "Connected to " + newserver.getName() );
+			activeServer = newserver;
 		}
-		addLog(LogmessageType.INFO, "Connected to " + newserver.getName() );
-		activeServer = newserver;
+		
 		
 	}
 
@@ -109,4 +110,6 @@ public class OPCReader
 	{
 		return messagelog;
 	}
+	
+	
 }

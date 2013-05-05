@@ -4,6 +4,8 @@ package com.prosysopc.ua.android;
 
 import java.net.URISyntaxException;
 
+import org.opcfoundation.ua.transport.security.SecurityMode;
+
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.client.ConnectException;
@@ -25,7 +27,10 @@ public class Connection
 	
 	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException
 	{
+		client.setTimeout(server.getTimeout());
+		client.setSecurityMode(SecurityMode.NONE);
 		client.connect();
+		
 		return true;
 	}
 	

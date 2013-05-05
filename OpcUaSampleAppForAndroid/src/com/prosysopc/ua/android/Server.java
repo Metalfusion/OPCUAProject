@@ -27,4 +27,9 @@ public class Server
 		return address;
 	}
 	
+	public Integer getTimeout()
+	{
+		return timeout;
+	}
+	
 }
