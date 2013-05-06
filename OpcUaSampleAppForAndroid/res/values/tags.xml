@@ -1,0 +1,4 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+      <item name="TAG_UINODE_HOLDER_KEY_ID" type="id">1</item>
+      <item name="TAG_UINODE_NODE_KEY_ID" type="id">2</item>
+</resources>

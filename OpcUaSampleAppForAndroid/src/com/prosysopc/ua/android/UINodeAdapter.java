@@ -11,7 +11,10 @@ import android.widget.TextView;
 
 public class UINodeAdapter extends ArrayAdapter<UINode> {
 	
-	 Context context; 
+	public static final int HOLDER_KEY_ID = R.id.TAG_UINODE_HOLDER_KEY_ID;
+	public static final int NODE_KEY_ID = R.id.TAG_UINODE_NODE_KEY_ID;
+	
+	Context context; 
 	 int layoutResourceId;    
 	 UINode rootNode = null;
 	
@@ -36,11 +39,13 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
             holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
             holder.txtTitle = (TextView)row.findViewById(R.id.txtTitle);
             
-            row.setTag(holder);
+            row.setTag(HOLDER_KEY_ID, holder);
+            row.setTag(NODE_KEY_ID, rootNode.childNodes.get(position));
         }
+        
         else
         {
-            holder = (UINodeHolder)row.getTag();
+            holder = (UINodeHolder)row.getTag(HOLDER_KEY_ID);
         }
         
         UINode UINode = rootNode.childNodes.get(position);

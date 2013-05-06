@@ -94,15 +94,19 @@ public class ServerlistFragment extends ListFragment {
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-	    super.onCreateContextMenu(menu, v, menuInfo);
-	    if (v.getId() == this.getListView().getId()) {
-	        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	        HashMap item = (HashMap) getListView().getItemAtPosition(info.position);
-	        menu.setHeaderTitle("Context Menu Example");
+	    
+		super.onCreateContextMenu(menu, v, menuInfo);
+	    
+		if (v.getId() == this.getListView().getId()) {
+	    
+			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+	        //HashMap item = (HashMap) getListView().getItemAtPosition(info.position);
+	        menu.setHeaderTitle("Select action");
 	        menu.add(0, info.position, 0, "Connect");
 	        menu.add(0, 0, 0, "Edit");
 	        menu.add(0, 0, 0, "Delete");
 	        // toiseksi parametriksi pitäis tulla ilmeisesti itemin id, tyyliin HashMap.getId()
+	        
 	    }
 	}
 		
