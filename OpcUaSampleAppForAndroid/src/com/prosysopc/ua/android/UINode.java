@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
-import org.xml.sax.AttributeList;
 
 public class UINode {
 	

@@ -4,17 +4,16 @@ package com.prosysopc.ua.android;
 import java.util.ArrayList;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
-
-import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
-import com.prosysopc.ua.android.UINodeAdapter.UINodeHolder;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 public class Nodelist_level_fragment extends ListFragment {
 	
@@ -23,7 +22,8 @@ public class Nodelist_level_fragment extends ListFragment {
 	private int listLevel;		// Level of this list at the hierarchy of the nodebrowser
 	private NodebrowserFragment nodebrowser;
 	private boolean showAttributes = false;
-	
+	private int selectedItem = -1;
+		
 	public Nodelist_level_fragment() {
 		// TODO Auto-generated constructor stub
 		rootNode = null;
@@ -41,20 +41,30 @@ public class Nodelist_level_fragment extends ListFragment {
 		
 		View nodelistview = inflater.inflate(R.layout.nodelist_level_fragment, container, false);		
 		
-		if (rootNode == null) {
+		if (rootNode == null || (rootNode.attributes == null && rootNode.childNodes.isEmpty())) {
 			createTestData();
 		}		
 		
-		ListAdapter adapter;
+		ListAdapter adapter;			    
+		String headerStr = "";
 		
 		if ( showAttributes ) {
+			headerStr ="Attrib. of " + rootNode.name;
 			adapter = new UINodeAttributeAdapter(getActivity(), rootNode.attributes);
 		} else {
+			headerStr ="Nodes of " + rootNode.name;
 			adapter = new UINodeAdapter(getActivity(), R.layout.nodelistitem, rootNode);
 		}
 						
 	    setListAdapter(adapter);
-				
+	    
+	    if (headerStr.length() > MainPager.LIST_LINE_LENGTH) {
+	    	headerStr = headerStr.substring(0, MainPager.LIST_LINE_LENGTH-3) + "...";
+	    }
+	    
+	    TextView headerText= (TextView)nodelistview.findViewById(R.id.HeaderText);
+	    headerText.setText(headerStr);
+	    
 		return nodelistview;
 		
 	}
@@ -64,8 +74,21 @@ public class Nodelist_level_fragment extends ListFragment {
 		
 	//	if (v.getId() == this.getListView().getId()) {
 			
+			// Scroll the selected to the top
+			l.setSelectionFromTop(position, 0);
+				
 			if (! showAttributes) {
+				
+				// Highlight the selected one
+				l.getChildAt(position).setBackgroundColor(Color.rgb(51, 181, 229));
 								
+				// Clear highlights from others
+				if (selectedItem != -1 && selectedItem != position){
+				    l.getChildAt(selectedItem).setBackgroundColor(Color.TRANSPARENT);
+				}			
+				
+				selectedItem = position;     
+				
 				UINode node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);
 				
 				// TODO: Add node browse and type (leaf/folder) investigation with the OPCUA SDK before the list creation call
@@ -85,14 +108,25 @@ public class Nodelist_level_fragment extends ListFragment {
 	
 	// Dummy data generation for testing
 	private void createTestData() {
-			
-		ArrayList<UINode> childarr = new ArrayList<UINode>();
-		childarr.add(new UINode(UINodeType.folderNode,"Folder node",new NodeId(1,2)));
-		childarr.add(new UINode(UINodeType.leafNode,"Normal node",new NodeId(2,3)));
-		childarr.add(new UINode(UINodeType.leafNode,"Normal node 2",new NodeId(3,4)));
-		childarr.add(new UINode(UINodeType.leafNode,"Normal node 3",new NodeId(5,6)));
 		
-		rootNode = new UINode(UINodeType.folderNode,"Node x",new NodeId(7,8), childarr);
+		String name;
+		
+		if (rootNode == null) {
+			name = "x";
+		} else {
+			name = rootNode.name;
+		}
+		
+		ArrayList<UINode> childarr = new ArrayList<UINode>();
+		childarr.add(new UINode(UINodeType.folderNode,"Folder node 1",new NodeId(1,2)));
+		childarr.add(new UINode(UINodeType.folderNode,"Folder node 2",new NodeId(2,3)));
+		childarr.add(new UINode(UINodeType.folderNode,"Folder node 3",new NodeId(4,5)));
+		
+		for (int i = 1; i < 5; i++) {
+			childarr.add(new UINode(UINodeType.leafNode,"Data node " + i,new NodeId(i+3,i*2+5)));			
+		}		
+		
+		rootNode = new UINode(UINodeType.folderNode,name,new NodeId(7,8), childarr);
 		
 		for (int i = 1; i < 5; i++) {
 			rootNode.addAttribute("Attibute " + i, "Value " + i);
@@ -100,5 +134,6 @@ public class Nodelist_level_fragment extends ListFragment {
 		
 		        
 	}
+	
 	
 }

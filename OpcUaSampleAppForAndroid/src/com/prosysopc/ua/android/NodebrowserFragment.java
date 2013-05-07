@@ -36,18 +36,20 @@ public class NodebrowserFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
 		
-		FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+		/*FragmentTransaction ft = getChildFragmentManager().beginTransaction();
 		
 		for (Fragment frag : listFragments) {
 			ft.remove(frag);
 		}		
 		
-		listFragments.clear();
-		
+		listFragments.clear();*/		
 		
 		View rootView = inflater.inflate(R.layout.nodebrowser, container, false);
 		
-		createTestFragments(1);				
+		if (listFragments.size() == 0) {
+			createTestFragments(1);
+		}
+						
 		return rootView;
 	}
 	
@@ -100,8 +102,8 @@ public class NodebrowserFragment extends Fragment {
 		
 		Nodelist_level_fragment childfrag = new Nodelist_level_fragment();
 		
-		//childfrag.setup(this, rootNode, position, attributeView);		
-		childfrag.setup(this, null, position, attributeView); // FIXME: test code, correct code above
+		childfrag.setup(this, rootNode, position, attributeView);		
+		//childfrag.setup(this, null, position, attributeView); // FIXME: test code, correct code above
 		
 		ft2.add(R.id.nodelevellayout ,childfrag, "nodelevel" + position);		
 		ft2.commit();

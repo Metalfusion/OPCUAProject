@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout1"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent" >
-
+    android:layout_height="match_parent" 
+	android:layout_marginRight="10dp"
+	android:layout_width="250dp"	
+	>	
+    
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/HeaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Nodes of x"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_marginBottom="5dp"  
+        android:textAppearance="?android:attr/textAppearanceMedium"        
+        />
+    	
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1" >
+        android:layout_below="@+id/HeaderText" >
     </ListView>
 
 </RelativeLayout>

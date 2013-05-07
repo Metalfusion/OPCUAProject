@@ -52,8 +52,8 @@ public class LogMessageAdapter extends ArrayAdapter<Logmessage> {
         
         String msg = logmsg.getMessage();
         
-        if (msg.length() > 50) {
-        	msg = msg.substring(0, 47) + "...";
+        if (msg.length() > MainPager.LIST_LINE_LENGTH) {
+        	msg = msg.substring(0, MainPager.LIST_LINE_LENGTH - 3) + "...";
         }        
         
         holder.txt1.setText(logmsg.getTimestampString());

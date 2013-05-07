@@ -51,8 +51,8 @@ public class UINodeAttributeAdapter extends ArrayAdapter<AttributeValuePair> {
                 
         AttributeValuePair attr = attributes.get(position);
         
-        holder.txt1.setText(attr.attrName);
-        holder.txt2.setText(attr.attrValue);
+        holder.txt1.setText(truncateString(attr.attrName));
+        holder.txt2.setText(truncateString(attr.attrValue));
         
         return row;
     }
@@ -63,5 +63,15 @@ public class UINodeAttributeAdapter extends ArrayAdapter<AttributeValuePair> {
         TextView txt2;
     }
 	
+    private String truncateString(String str) {
+    	
+    	if (str.length() > MainPager.LIST_LINE_LENGTH) {
+    		return str.substring(0,MainPager.LIST_LINE_LENGTH-3) + "...";
+    	}
+    	
+    	return str;
+    	
+    }
+    
 
 }

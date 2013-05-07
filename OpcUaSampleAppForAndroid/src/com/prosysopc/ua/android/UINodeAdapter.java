@@ -49,7 +49,7 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
         }
         
         UINode UINode = rootNode.childNodes.get(position);
-        holder.txtTitle.setText(UINode.name);
+        holder.txtTitle.setText(truncateString(UINode.name));
         holder.imgIcon.setImageResource(UINode.type.value);
         
         return row;
@@ -59,6 +59,16 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
     {
         ImageView imgIcon;
         TextView txtTitle;
+    }
+    
+    private String truncateString(String str) {
+    	
+    	if (str.length() > MainPager.LIST_LINE_LENGTH) {
+    		return str.substring(0,MainPager.LIST_LINE_LENGTH-3) + "...";
+    	}
+    	
+    	return str;
+    	
     }
 }
 	
