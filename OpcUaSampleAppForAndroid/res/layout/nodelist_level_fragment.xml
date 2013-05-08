@@ -3,7 +3,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_height="match_parent" 
 	android:layout_marginRight="10dp"
-	android:layout_width="250dp"	
+	android:layout_width="220dp"	
 	>	
     
     <TextView
@@ -14,6 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="5dp"  
         android:textAppearance="?android:attr/textAppearanceMedium"        
+		android:clickable="true"        
         />
     	
 

@@ -11,11 +11,12 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class Nodelist_level_fragment extends ListFragment {
+public class Nodelist_level_fragment extends ListFragment implements OnClickListener {
 	
 	// This node holds the data to be displayed
 	private UINode rootNode;
@@ -64,6 +65,7 @@ public class Nodelist_level_fragment extends ListFragment {
 	    
 	    TextView headerText= (TextView)nodelistview.findViewById(R.id.HeaderText);
 	    headerText.setText(headerStr);
+	    headerText.setOnClickListener(this);
 	    
 		return nodelistview;
 		
@@ -73,27 +75,41 @@ public class Nodelist_level_fragment extends ListFragment {
 	public void onListItemClick(android.widget.ListView l, View v, int position, long id) {
 		
 	//	if (v.getId() == this.getListView().getId()) {
-			
-			// Scroll the selected to the top
-			l.setSelectionFromTop(position, 0);
-				
+							
 			if (! showAttributes) {
 				
-				// Highlight the selected one
-				l.getChildAt(position).setBackgroundColor(Color.rgb(51, 181, 229));
-								
-				// Clear highlights from others
-				if (selectedItem != -1 && selectedItem != position){
-				    l.getChildAt(selectedItem).setBackgroundColor(Color.TRANSPARENT);
-				}			
+				try {
+					
+					// Clear highlights from others					
+					for (int i = 0 ; i < l.getChildCount(); i++) {
+						if (i == position) {							
+							l.getChildAt(i).setBackgroundColor(Color.rgb(51, 181, 229));						
+						} else	{						
+							l.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+						}
+					}					
+										
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				} finally {
+					selectedItem = position;
+				}
 				
-				selectedItem = position;     
+				UINode node;
+				try {
+					node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);
+					// TODO: Add node browse and type (leaf/folder) investigation with the OPCUA SDK before the list creation call
+					// The call to nodebrowser should then be done as a callback
+					nodebrowser.createList(this.listLevel+1, node, node.type == UINodeType.leafNode);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
-				UINode node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);
+				// Scroll the selected to the top
 				
-				// TODO: Add node browse and type (leaf/folder) investigation with the OPCUA SDK before the list creation call
-				// The call to nodebrowser should then be done as a callback
-				nodebrowser.createList(this.listLevel+1, node, node.type == UINodeType.leafNode);
+				l.setSelectionFromTop(position, 0);
 				
 			} else {
 				// TODO: Add attribute full text read window popup/activity
@@ -105,6 +121,10 @@ public class Nodelist_level_fragment extends ListFragment {
 		
 	//}
 	
+	
+	public void onClick(View v) {
+		nodebrowser.createList(this.listLevel+1, this.rootNode, true);
+	}
 	
 	// Dummy data generation for testing
 	private void createTestData() {
@@ -122,7 +142,7 @@ public class Nodelist_level_fragment extends ListFragment {
 		childarr.add(new UINode(UINodeType.folderNode,"Folder node 2",new NodeId(2,3)));
 		childarr.add(new UINode(UINodeType.folderNode,"Folder node 3",new NodeId(4,5)));
 		
-		for (int i = 1; i < 5; i++) {
+		for (int i = 1; i < 8; i++) {
 			childarr.add(new UINode(UINodeType.leafNode,"Data node " + i,new NodeId(i+3,i*2+5)));			
 		}		
 		

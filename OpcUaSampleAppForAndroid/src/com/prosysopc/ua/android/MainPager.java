@@ -52,6 +52,8 @@ public class MainPager extends FragmentActivity {
 			opcreader.addLog(LogmessageType.WARNING, e.toString() );
 		}
 		opcreader.addLog( Logmessage.LogmessageType.INFO, "Program start");
+		opcreader.addLog( Logmessage.LogmessageType.WARNING, "Warning message example");
+		opcreader.addLog( Logmessage.LogmessageType.ERROR, "Error message example");
 		ServerSettingsActivity.opcreader = opcreader;
 	}
 	

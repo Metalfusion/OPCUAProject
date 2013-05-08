@@ -15,8 +15,8 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
 	public static final int NODE_KEY_ID = R.id.TAG_UINODE_NODE_KEY_ID;
 	
 	Context context; 
-	 int layoutResourceId;    
-	 UINode rootNode = null;
+	int layoutResourceId;    
+	UINode rootNode = null;
 	
 	public UINodeAdapter(Context context, int layoutResourceId, UINode rootNode) {
         super(context, layoutResourceId, rootNode.childNodes);
