@@ -22,7 +22,7 @@ import com.prosysopc.ua.client.UaClient;
 public class Connection
 {
 	Server server;
-	protected static UaClient client;
+	public UaClient client;
 	NodeId nodeId = Identifiers.RootFolder;
 	
 	public Connection( Server servervalue ) throws URISyntaxException

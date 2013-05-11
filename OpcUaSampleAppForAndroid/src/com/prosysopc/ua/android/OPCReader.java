@@ -3,7 +3,18 @@ package com.prosysopc.ua.android;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.opcfoundation.ua.builtintypes.NodeId;
+
+import com.prosysopc.ua.ServiceException;
+import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
+import com.prosysopc.ua.android.UINode.AttributeValuePair;
+import com.prosysopc.ua.android.UINode.UINodeType;
+import com.prosysopc.ua.client.AddressSpaceException;
+import com.prosysopc.ua.nodes.UaInstance;
+import com.prosysopc.ua.nodes.UaNode;
+import com.prosysopc.ua.nodes.UaReference;
 
 
 public class OPCReader
@@ -111,5 +122,75 @@ public class OPCReader
 		return messagelog;
 	}
 	
+	// return UINode made from node of the nodeID
+	public UINode getNode(NodeId nodeID)
+	{
+		UINode node = null;
+		UINodeType type;
+		String name;
+		List<UINode> childNodes; 
+		List<AttributeValuePair> attributes;
+		
+		try {
+			UaNode uanode = connection.client.getAddressSpace().getNode(nodeID);
+			
+			name = uanode.getBrowseName().toString();
+			
+			// check whether node is folder or leaf
+			UaReference[] references = uanode.getReferences();
+			
+			if (references.length == 1 ) 
+			{
+				// leaf
+				type = UINodeType.leafNode;
+				node = new UINode(type, name, nodeID);
+			}
+			else
+			{
+				// folder
+				type = UINodeType.folderNode;
+				node = new UINode(type, name, nodeID);
+			}
+			
+			
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (AddressSpaceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (StatusException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		}
+		
+		
+		return node;
+	}
+	
+	public List<UINode> getNodeChildren(NodeId nodeID)
+	{
+		List<UINode> list = new ArrayList<UINode>();
+		UaNode uanode = null;
+		try {
+			uanode = connection.client.getAddressSpace().getNode(nodeID);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (AddressSpaceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (StatusException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		}
+		UaReference[] references = uanode.getReferences();
+		for( UaReference reference : references)
+		{
+			UaNode node = reference.getTargetNode();
+			list.add(getNode(node.getNodeId()));
+		}
+		return list;
+	}
 	
 }
