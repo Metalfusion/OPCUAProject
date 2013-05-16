@@ -57,7 +57,28 @@ public class UINode {
 		
 		attributes.add(new AttributeValuePair(name, value));
 	}
+	
+	public void addAttributes(List<AttributeValuePair> list) {
 		
+		if (attributes == null) {
+			attributes = list;
+		}
+		else
+		{
+			for( AttributeValuePair pair : list)
+			{
+				attributes.add(pair);
+			}
+		}
+		
+		
+	}
+	
+	public NodeId getNodeId()
+	{
+		return nodeID;
+	}
+	
 	public enum UINodeType {
 		folderNode(R.drawable.folder), leafNode(R.drawable.text_list_bullets);
 		
@@ -79,5 +100,6 @@ public class UINode {
 		}
 		
 	}
+	
 	
 }

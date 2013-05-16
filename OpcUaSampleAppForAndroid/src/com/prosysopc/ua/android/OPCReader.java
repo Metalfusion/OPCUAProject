@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
+import org.opcfoundation.ua.common.ServiceResultException;
 
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.StatusException;
@@ -122,6 +123,26 @@ public class OPCReader
 		return messagelog;
 	}
 	
-
+	public UINode getNode( NodeId nodeid ) 
+	{
+		UINode node = null;
+		try {
+			node = connection.getNode(nodeid);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (AddressSpaceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (StatusException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (ServiceResultException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		}
+		
+		return node;
+	}
 	
 }

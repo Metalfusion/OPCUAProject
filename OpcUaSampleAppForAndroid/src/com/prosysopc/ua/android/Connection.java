@@ -9,8 +9,14 @@ import java.util.List;
 import org.opcfoundation.ua.builtintypes.DataValue;
 import org.opcfoundation.ua.builtintypes.NodeId;
 import org.opcfoundation.ua.builtintypes.UnsignedInteger;
+import org.opcfoundation.ua.common.ServiceResultException;
+import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.Identifiers;
+import org.opcfoundation.ua.core.NodeAttributes;
+import org.opcfoundation.ua.core.NodeClass;
+import org.opcfoundation.ua.core.ReferenceDescription;
 import org.opcfoundation.ua.transport.security.SecurityMode;
+import org.opcfoundation.ua.utils.AttributesUtil;
 
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
@@ -62,7 +68,7 @@ public class Connection
 	}
 	
 	// return UINode made from node of the nodeID
-	public UINode getNode(NodeId nodeID) throws ServiceException, AddressSpaceException, StatusException
+	public UINode getNode(NodeId nodeID) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
 	{
 		UINode node = null;
 		UINodeType type;
@@ -72,53 +78,55 @@ public class Connection
 		
 		name = uanode.getBrowseName().toString();
 		
-		// check whether node is folder or leaf
-		UaReference[] references = uanode.getReferences();
 		
-		if (references.length == 1 ) 
+		if( uanode.getNodeClass() == NodeClass.Object )
 		{
-			// leaf
-			type = UINodeType.leafNode;
-			node = new UINode(type, name, nodeID);
+			// node is folder
+			type = UINodeType.folderNode;
+			node = new UINode(type, name, nodeID, getNodeChildren(nodeID));
 		}
 		else
 		{
-			// folder
-			type = UINodeType.folderNode;
+			// node is leaf
+			type = UINodeType.leafNode;
 			node = new UINode(type, name, nodeID);
 		}
+
 		
+		// add attributes to node
+		getNodeAttributes(node);
 		return node;
 	}
 	
-	public List<UINode> getNodeChildren(NodeId nodeID) throws ServiceException, AddressSpaceException, StatusException
+	public List<UINode> getNodeChildren(NodeId nodeID) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
 	{
 		List<UINode> list = new ArrayList<UINode>();
-		UaNode uanode = null;
-		uanode = client.getAddressSpace().getNode(nodeID);
+		List<ReferenceDescription> references = client.getAddressSpace().browse(nodeId); 
 		
-		UaReference[] references = uanode.getReferences();
-		for( UaReference reference : references)
+		for( ReferenceDescription reference : references)
 		{
-			UaNode node = reference.getTargetNode();
-			list.add(getNode(node.getNodeId()));
+			// gets the nodeid from the reference and adds node by that id to the list
+			list.add(getNode(client.getNamespaceTable().toNodeId(reference.getNodeId())));
+			
 		}
+		
 		return list;
 	}
 	
-	public List<AttributeValuePair> getNodeAttributes( NodeId nodeID)
+	
+	public void getNodeAttributes( UINode uinode ) throws ServiceException, AddressSpaceException, StatusException
 	{
-		List<AttributeValuePair> list = new ArrayList<AttributeValuePair>();
-		UaNode uanode = null;
-		uanode = client.getAddressSpace().getNode(nodeID);
+		UaNode uanode = client.getAddressSpace().getNode(uinode.getNodeId());
 		
-		UaReference[] references = uanode.getReferences();
-		for( UaReference reference : references)
-		{
-			UaNode node = reference.getTargetNode();
-			list.add();
-		}
-		return list;
+		NodeAttributes attributes = uanode.getAttributes();
+
+		for (long i = Attributes.NodeId.getValue(); i < Attributes.UserExecutable
+				.getValue(); i++)
+			 AttributesUtil.toString(UnsignedInteger
+					.valueOf(i));
+		
+		uinode.addAttribute( attributes.getDisplayName().toString(), 
+							attributes.getSpecifiedAttributes().toString() );
 	}
 	
 }
