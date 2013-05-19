@@ -3,6 +3,8 @@ package com.prosysopc.ua.android;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opcfoundation.ua.core.Identifiers;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -47,7 +49,20 @@ public class NodebrowserFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.nodebrowser, container, false);
 		
 		if (listFragments.size() == 0) {
-			createTestFragments(1);
+			
+			//createTestFragments(1);
+			// replace dummy-code with actual
+			// on start get the root folder
+			if( mPager.opcreader.connection == null)
+			{
+				createTestFragments(1);
+			}
+			else
+			{
+				createList( 1, mPager.opcreader.getNode( Identifiers.RootFolder ), false );
+				
+			}
+			
 		}
 						
 		return rootView;
