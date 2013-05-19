@@ -3,8 +3,6 @@ package com.prosysopc.ua.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opcfoundation.ua.core.Identifiers;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -37,34 +35,8 @@ public class NodebrowserFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
-		
-		/*FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-		
-		for (Fragment frag : listFragments) {
-			ft.remove(frag);
-		}		
-		
-		listFragments.clear();*/		
-		
-		View rootView = inflater.inflate(R.layout.nodebrowser, container, false);
-		
-		if (listFragments.size() == 0) {
-			
-			//createTestFragments(1);
-			// replace dummy-code with actual
-			// on start get the root folder
-			if( mPager.opcreader.connection == null)
-			{
-				createTestFragments(1);
-			}
-			else
-			{
-				createList( 1, mPager.opcreader.getNode( Identifiers.RootFolder ), false );
-				
-			}
-			
-		}
 						
+		View rootView = inflater.inflate(R.layout.nodebrowser, container, false);										
 		return rootView;
 	}
 	
@@ -91,6 +63,12 @@ public class NodebrowserFragment extends Fragment {
 	// Adds a new list to the nodebrowser and removes unnecessary old ones.
 	public void createList(int position, UINode rootNode, boolean attributeView) {
 		
+		// TODO: Add option to OPCReader to only read child nodes or attributes
+		if (attributeView && !rootNode.attributesSet) {
+			rootNode = mPager.opcreader.getNode(rootNode.nodeID);
+		} else if (!attributeView && !rootNode.referencesSet) {
+			rootNode = mPager.opcreader.getNode(rootNode.nodeID);
+		}
 		
 		// Transaction for removing the old fragments
 		FragmentTransaction ft = getChildFragmentManager().beginTransaction();
@@ -124,6 +102,16 @@ public class NodebrowserFragment extends Fragment {
 		ft2.commit();
 		listFragments.add(childfrag);
 		
+	}
+	
+	// Resets the whole nodebrowser
+	public void updateRootList(UINode rootNode) {				
+		
+		if (rootNode == null) {
+			createTestFragments(1);
+		} else {
+			createList(0, rootNode, false );
+		}		
 	}
 	
 }

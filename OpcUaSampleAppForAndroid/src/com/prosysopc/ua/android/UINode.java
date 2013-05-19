@@ -13,6 +13,9 @@ public class UINode {
 	public String name;
 	public NodeId nodeID;	
 	
+	public Boolean attributesSet = false;
+	public Boolean referencesSet = false;
+	
 	public UINode(){
 	    super();
 	    childNodes = new ArrayList<UINode>();
@@ -61,17 +64,13 @@ public class UINode {
 	public void addAttributes(List<AttributeValuePair> list) {
 		
 		if (attributes == null) {
-			attributes = list;
-		}
-		else
-		{
-			for( AttributeValuePair pair : list)
-			{
-				attributes.add(pair);
-			}
-		}
 		
-		
+			attributes = list;		
+		} else {
+			
+			attributes.addAll(list);			
+		}
+				
 	}
 	
 	public NodeId getNodeId()

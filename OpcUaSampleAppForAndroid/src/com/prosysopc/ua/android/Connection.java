@@ -68,33 +68,44 @@ public class Connection
 	}
 	
 	// return UINode made from node of the nodeID
-	public UINode getNode(NodeId nodeID) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
+	public UINode getNode(NodeId nodeID, Boolean getChildren) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
 	{
 		UINode node = null;
 		UINodeType type;
 		String name;
 		
-		UaNode uanode = client.getAddressSpace().getNode(nodeID);
-		
-		name = uanode.getBrowseName().toString();
-		
+		UaNode uanode = client.getAddressSpace().getNode(nodeID);		
+		name = uanode.getBrowseName().toString();		
 		
 		if( uanode.getNodeClass() == NodeClass.Object )
 		{
 			// node is folder
 			type = UINodeType.folderNode;
-			node = new UINode(type, name, nodeID, getNodeChildren(nodeID));
+						
+			List<UINode> children = null;
+			
+			if (getChildren) {
+				children = getNodeChildren(nodeID);
+			}
+			
+			node = new UINode(type, name, nodeID, children);
+			
+			if (children != null) {
+				node.referencesSet = true;
+			}
+			
 		}
 		else
 		{
 			// node is leaf
 			type = UINodeType.leafNode;
 			node = new UINode(type, name, nodeID);
+			node.referencesSet = true;
 		}
-
 		
 		// add attributes to node
 		getNodeAttributes(node);
+		node.attributesSet = true;
 		return node;
 	}
 	
@@ -106,7 +117,7 @@ public class Connection
 		for( ReferenceDescription reference : references)
 		{
 			// gets the nodeid from the reference and adds node by that id to the list
-			list.add(getNode(client.getNamespaceTable().toNodeId(reference.getNodeId())));
+			list.add(getNode(client.getNamespaceTable().toNodeId(reference.getNodeId()), false ));
 			
 		}
 		

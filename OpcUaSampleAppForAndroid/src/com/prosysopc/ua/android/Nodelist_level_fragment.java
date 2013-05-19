@@ -22,8 +22,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	private UINode rootNode;
 	private int listLevel;		// Level of this list at the hierarchy of the nodebrowser
 	private NodebrowserFragment nodebrowser;
-	private boolean showAttributes = false;
-	private int selectedItem = -1;
+	private boolean showAttributes = false;	
 		
 	public Nodelist_level_fragment() {
 		// TODO Auto-generated constructor stub
@@ -74,54 +73,46 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	@Override
 	public void onListItemClick(android.widget.ListView l, View v, int position, long id) {
 		
-	//	if (v.getId() == this.getListView().getId()) {
-							
-			if (! showAttributes) {
+								
+		if (! showAttributes) {
+			
+			try {
 				
-				try {
-					
-					// Clear highlights from others					
-					for (int i = 0 ; i < l.getChildCount(); i++) {
-						if (i == position) {							
-							l.getChildAt(i).setBackgroundColor(Color.rgb(51, 181, 229));						
-						} else	{						
-							l.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-						}
-					}					
-										
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-				} finally {
-					selectedItem = position;
-				}
-				
-				UINode node;
-				try {
-					node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);
-					// TODO: Add node browse and type (leaf/folder) investigation with the OPCUA SDK before the list creation call
-					// The call to nodebrowser should then be done as a callback
-					nodebrowser.createList(this.listLevel+1, node, node.type == UINodeType.leafNode);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				// Scroll the selected to the top
-				
-				l.setSelectionFromTop(position, 0);
-				
-			} else {
-				// TODO: Add attribute full text read window popup/activity
-				// Optionally could open a context menu that has read and write options
+				// Clear highlights from others					
+				for (int i = 0 ; i < l.getChildCount(); i++) {
+					if (i == position) {							
+						l.getChildAt(i).setBackgroundColor(Color.rgb(51, 181, 229));						
+					} else	{						
+						l.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+					}
+				}					
+									
+			} catch (Exception e) {					
+				//e.printStackTrace();
 			}
 			
+			UINode node;
+			try {
+				
+				node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);								
+				nodebrowser.createList(this.listLevel+1, node, node.type == UINodeType.leafNode);
+				
+			} catch (Exception e) {}
 			
+			// Scroll the selected to the top				
+			l.setSelectionFromTop(position, 0);
+			
+		} else {
+			// TODO: Add attribute full text read window popup/activity
+			// Optionally could open a context menu that has read and write options
 		}
 		
-	//}
+		
+	}
+		
 	
 	
+	// Event handler for the header click, opens attributes list
 	public void onClick(View v) {
 		nodebrowser.createList(this.listLevel+1, this.rootNode, true);
 	}
@@ -151,6 +142,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		for (int i = 1; i < 5; i++) {
 			rootNode.addAttribute("Attibute " + i, "Value " + i);
 		}
+		
+		rootNode.attributesSet = rootNode.referencesSet = true;
 		
 		        
 	}

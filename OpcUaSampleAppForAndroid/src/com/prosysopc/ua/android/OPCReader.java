@@ -10,13 +10,7 @@ import org.opcfoundation.ua.common.ServiceResultException;
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
-import com.prosysopc.ua.android.UINode.AttributeValuePair;
-import com.prosysopc.ua.android.UINode.UINodeType;
 import com.prosysopc.ua.client.AddressSpaceException;
-import com.prosysopc.ua.nodes.UaInstance;
-import com.prosysopc.ua.nodes.UaNode;
-import com.prosysopc.ua.nodes.UaReference;
-
 
 public class OPCReader
 {
@@ -127,7 +121,7 @@ public class OPCReader
 	{
 		UINode node = null;
 		try {
-			node = connection.getNode(nodeid);
+			node = connection.getNode(nodeid, true);
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			addLog(LogmessageType.WARNING, e.toString() );
