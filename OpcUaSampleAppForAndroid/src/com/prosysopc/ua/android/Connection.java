@@ -9,12 +9,16 @@ import java.util.List;
 import org.opcfoundation.ua.builtintypes.DataValue;
 import org.opcfoundation.ua.builtintypes.NodeId;
 import org.opcfoundation.ua.builtintypes.UnsignedInteger;
+import org.opcfoundation.ua.common.NamespaceTable;
 import org.opcfoundation.ua.common.ServiceResultException;
 import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.Identifiers;
 import org.opcfoundation.ua.core.NodeAttributes;
 import org.opcfoundation.ua.core.NodeClass;
+import org.opcfoundation.ua.core.ReadResponse;
+import org.opcfoundation.ua.core.ReadValueId;
 import org.opcfoundation.ua.core.ReferenceDescription;
+import org.opcfoundation.ua.core.TimestampsToReturn;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 import org.opcfoundation.ua.utils.AttributesUtil;
 
@@ -26,6 +30,7 @@ import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
+import com.prosysopc.ua.client.AddressSpace;
 import com.prosysopc.ua.client.AddressSpaceException;
 import com.prosysopc.ua.client.ConnectException;
 import com.prosysopc.ua.client.InvalidServerEndpointException;
@@ -42,6 +47,8 @@ public class Connection
 	Server server;
 	public UaClient client;
 	NodeId nodeId = Identifiers.RootFolder;
+	AddressSpace addressspace;
+	NamespaceTable namespacetable;
 	
 	public Connection( Server servervalue ) throws URISyntaxException
 	{
@@ -49,12 +56,14 @@ public class Connection
 		client = new UaClient( server.address );
 	}
 	
-	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException
+	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException, StatusException
 	{
 		//TODO: rest of server settings, if needed
 		client.setTimeout(server.getTimeout()*1000);
 		client.setSecurityMode(SecurityMode.NONE);
 		client.connect();
+		addressspace = client.getAddressSpace();
+		namespacetable = client.getNamespaceTable();
 		
 		return true;
 	}
@@ -62,6 +71,7 @@ public class Connection
 	public boolean disconnect()
 	{
 		client.disconnect();
+		
 		return true;
 	}
 	
@@ -116,12 +126,12 @@ public class Connection
 	public List<UINode> getNodeChildren(NodeId nodeID) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
 	{
 		List<UINode> list = new ArrayList<UINode>();
-		List<ReferenceDescription> references = client.getAddressSpace().browse(nodeId); 
+		List<ReferenceDescription> references = addressspace.browse(nodeID); 
 		
 		for( ReferenceDescription reference : references)
 		{
 			// gets the nodeid from the reference and adds node by that id to the list
-			list.add(getNode(client.getNamespaceTable().toNodeId(reference.getNodeId()), false ));
+			list.add(getNode(namespacetable.toNodeId(reference.getNodeId()), false ));
 			
 		}
 		
@@ -131,20 +141,17 @@ public class Connection
 	
 	public void getNodeAttributes( UINode uinode ) throws ServiceException, AddressSpaceException, StatusException
 	{
-		UaNode uanode = client.getAddressSpace().getNode(uinode.getNodeId());
 		
-		NodeAttributes attributes = uanode.getAttributes();
-//TODO: Fetching of attributes from server
-		//for (long i = Attributes.NodeId.getValue(); i < Attributes.UserExecutable
-		//		.getValue(); i++)
-		//	 AttributesUtil.toString(UnsignedInteger
-		//			.valueOf(i));
 		
-		//uinode.addAttribute( attributes.getDisplayName().toString(), 
-		//					attributes.getSpecifiedAttributes().toString() );
+		ReadValueId nodesToRead = new ReadValueId( uinode.getNodeId(), Attributes.Value, null, null);
+		ReadResponse rr = client.read(UaClient.MAX_CACHE_AGE,TimestampsToReturn.Both, nodesToRead);
+		DataValue[] value = rr.getResults();
 		
-		// adds dummy-attribute
-		uinode.addAttribute("DummyName", "DummyValue");
+		
+		
+		uinode.addAttribute(value[0].toString(), value[0].getValue().toString());
+		
+		
 	}
 	
 }

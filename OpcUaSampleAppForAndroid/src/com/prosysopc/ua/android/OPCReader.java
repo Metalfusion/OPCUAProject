@@ -99,6 +99,9 @@ public class OPCReader
 			} catch (ServiceException e) {
 				// TODO Auto-generated catch block
 				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (StatusException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
 			}
 		}
 		else
@@ -120,6 +123,9 @@ public class OPCReader
 				// TODO Auto-generated catch block
 				addLog(LogmessageType.WARNING, e.toString() );
 			} catch (ServiceException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (StatusException e) {
 				// TODO Auto-generated catch block
 				addLog(LogmessageType.WARNING, e.toString() );
 			}
