@@ -18,6 +18,8 @@ import org.opcfoundation.ua.core.ReferenceDescription;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 import org.opcfoundation.ua.utils.AttributesUtil;
 
+import android.os.StrictMode;
+
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.StatusException;
@@ -35,6 +37,8 @@ import com.prosysopc.ua.nodes.UaReference;
 
 public class Connection
 {
+	
+	
 	Server server;
 	public UaClient client;
 	NodeId nodeId = Identifiers.RootFolder;
@@ -48,7 +52,7 @@ public class Connection
 	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException
 	{
 		//TODO: rest of server settings, if needed
-		client.setTimeout(server.getTimeout());
+		client.setTimeout(server.getTimeout()*1000);
 		client.setSecurityMode(SecurityMode.NONE);
 		client.connect();
 		
@@ -130,14 +134,17 @@ public class Connection
 		UaNode uanode = client.getAddressSpace().getNode(uinode.getNodeId());
 		
 		NodeAttributes attributes = uanode.getAttributes();
-
-		for (long i = Attributes.NodeId.getValue(); i < Attributes.UserExecutable
-				.getValue(); i++)
-			 AttributesUtil.toString(UnsignedInteger
-					.valueOf(i));
+//TODO: Fetching of attributes from server
+		//for (long i = Attributes.NodeId.getValue(); i < Attributes.UserExecutable
+		//		.getValue(); i++)
+		//	 AttributesUtil.toString(UnsignedInteger
+		//			.valueOf(i));
 		
-		uinode.addAttribute( attributes.getDisplayName().toString(), 
-							attributes.getSpecifiedAttributes().toString() );
+		//uinode.addAttribute( attributes.getDisplayName().toString(), 
+		//					attributes.getSpecifiedAttributes().toString() );
+		
+		// adds dummy-attribute
+		uinode.addAttribute("DummyName", "DummyValue");
 	}
 	
 }

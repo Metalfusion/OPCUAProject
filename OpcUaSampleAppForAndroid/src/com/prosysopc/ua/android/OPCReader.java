@@ -8,9 +8,12 @@ import org.opcfoundation.ua.builtintypes.NodeId;
 import org.opcfoundation.ua.common.ServiceResultException;
 
 import com.prosysopc.ua.ServiceException;
+import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.client.AddressSpaceException;
+import com.prosysopc.ua.client.ConnectException;
+import com.prosysopc.ua.client.InvalidServerEndpointException;
 
 public class OPCReader
 {
@@ -66,10 +69,37 @@ public class OPCReader
 	// Updates the connection within the prosys framework
 	public void updateConnection( Server newserver) throws URISyntaxException {
 		
-		if( connection == null )
+		if( newserver == null )
+		{
+			if( connection != null )
+			{
+				connection.disconnect();
+				connection = null;
+				addLog(LogmessageType.INFO, "Disconnected from server " + activeServer.getName());
+				activeServer = null;
+			}
+		}
+		
+		else if( connection == null )
 		{
 			connection = new Connection( newserver );
 			activeServer = newserver;
+			addLog(LogmessageType.INFO, "Connected to server " + newserver.getName() );
+			try {
+				connection.connect();
+			} catch (InvalidServerEndpointException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (ConnectException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (SessionActivationException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (ServiceException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			}
 		}
 		else
 		{
@@ -78,7 +108,24 @@ public class OPCReader
 			connection = new Connection( newserver );
 			addLog(LogmessageType.INFO, "Connected to " + newserver.getName() );
 			activeServer = newserver;
+			try {
+				connection.connect();
+			} catch (InvalidServerEndpointException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (ConnectException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (SessionActivationException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (ServiceException e) {
+				// TODO Auto-generated catch block
+				addLog(LogmessageType.WARNING, e.toString() );
+			}
 		}
+		
+		
 		
 		
 	}

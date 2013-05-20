@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.opcfoundation.ua.core.Identifiers;
+
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 import android.annotation.SuppressLint;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.SimpleAdapter;
 
@@ -122,6 +125,16 @@ public class ServerlistFragment extends ListFragment {
 				// TODO Auto-generated catch block
 				mPager.opcreader.addLog(LogmessageType.WARNING, e.toString() );
 			}
+	    	
+	    	// refresh nodebrowser, doesn't work
+	    	NodebrowserFragment f = (NodebrowserFragment) mPager.mPagerAdapter.getItem(1);
+	    	if( f != null)
+	    	{
+	    		Toast.makeText(getActivity(), "Wasn't null", Toast.LENGTH_SHORT).show();
+	    		f.updateRoot();
+	    	}
+	    	
+	    	
 	    } 
 	    else if (item.getTitle() == "Edit") {
 	        //Code To Handle edit
@@ -135,6 +148,7 @@ public class ServerlistFragment extends ListFragment {
 	    	
 	        return false;
 	    }
+	    
 	    onStart();
 	    return true;
 	}

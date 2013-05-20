@@ -10,6 +10,7 @@ import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -47,6 +48,7 @@ public class MainPager extends FragmentActivity {
 		try {
 			opcreader.addModifyServer("localhost", "opc.tcp://localhost/OPCUA/SampleConsoleServer", "", "", 5);
 			opcreader.addModifyServer("Public test server", "opc.tcp://opcua.info:62949/Advosol/uaSimUC", "ua", "test", 5);
+			opcreader.addModifyServer("Ascolab", "opc.tcp://demo.ascolab.com:4841", "", "", 5);
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			opcreader.addLog(LogmessageType.WARNING, e.toString() );
@@ -60,6 +62,12 @@ public class MainPager extends FragmentActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		
+		// purkkaratkaisu android.os.NetworkOnMainThreadExceptioniin
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
+		
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_pager);
 
@@ -97,8 +105,12 @@ public class MainPager extends FragmentActivity {
 	 
 	            case R.id.disconnect:
 	                Toast.makeText(getBaseContext(), "You selected disconnect", Toast.LENGTH_SHORT).show();
-	                opcreader.connection.disconnect();
-	                opcreader.addLog(LogmessageType.INFO, "Disconnected from server");
+				try {
+					opcreader.updateConnection(null);
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					opcreader.addLog(LogmessageType.WARNING, e.toString() );
+				}
 	                break;
 	 
 	            case R.id.exit:
@@ -112,8 +124,6 @@ public class MainPager extends FragmentActivity {
 	private List<Fragment> getFragments(){
 
 		  List<Fragment> fList = new ArrayList<Fragment>();
-
-		  //fList.add(DummySectionFragment.newInstance());
 		  
 		  fList.add(ServerlistFragment.newInstance(this));
 	

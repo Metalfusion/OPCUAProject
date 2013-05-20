@@ -3,6 +3,14 @@ package com.prosysopc.ua.android;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opcfoundation.ua.common.ServiceResultException;
+import org.opcfoundation.ua.core.Identifiers;
+
+import com.prosysopc.ua.ServiceException;
+import com.prosysopc.ua.StatusException;
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
+import com.prosysopc.ua.client.AddressSpaceException;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -112,6 +120,26 @@ public class NodebrowserFragment extends Fragment {
 		} else {
 			createList(0, rootNode, false );
 		}		
+	}
+	
+	public void updateRoot()
+	{
+		try {
+			createList(0, mPager.opcreader.connection.getNode(Identifiers.RootFolder, true) , false );
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
+		} catch (AddressSpaceException e) {
+			// TODO Auto-generated catch block
+			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
+		} catch (StatusException e) {
+			// TODO Auto-generated catch block
+			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
+		} catch (ServiceResultException e) {
+			// TODO Auto-generated catch block
+			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
+		}
+		
 	}
 	
 }
