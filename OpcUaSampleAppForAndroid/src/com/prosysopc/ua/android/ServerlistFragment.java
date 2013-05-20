@@ -10,6 +10,7 @@ import org.opcfoundation.ua.core.Identifiers;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
@@ -137,7 +138,16 @@ public class ServerlistFragment extends ListFragment {
 	    	
 	    } 
 	    else if (item.getTitle() == "Edit") {
-	        //Code To Handle edit
+	    	Intent intent = new Intent(getActivity(), ServerSettingsActivity.class);
+			Bundle b = new Bundle();
+			Server server = mPager.opcreader.getServer((int)info.id);
+	    	b.putString("name", server.getName());
+	    	b.putString("address", server.getAddress());
+	    	b.putString("identity",server.getIdentity());
+	    	b.putString("password",server.getPassword());
+	    	b.putInt("timeout",server.getTimeout());
+	    	intent.putExtras(b);
+			startActivity(intent);
 	    } 
 	    else if (item.getTitle() == "Delete") {
 	        //Code To Handle deletion

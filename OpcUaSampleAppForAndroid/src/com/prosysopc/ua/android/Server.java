@@ -27,6 +27,16 @@ public class Server
 		return address;
 	}
 	
+	public String getIdentity()
+	{
+		return identity;
+	}
+	
+	public String getPassword()
+	{
+		return password;
+	}
+	
 	public Integer getTimeout()
 	{
 		return timeout;

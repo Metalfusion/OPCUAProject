@@ -194,6 +194,13 @@ public class MainPager extends FragmentActivity {
 	//On click event for button1
 	public void buttonServerEditOnClick(View v) {
 		Intent intent = new Intent(this, ServerSettingsActivity.class);
+		Bundle b = new Bundle();
+    	b.putString("name", "ExampleServer");
+    	b.putString("address", "opc.tcp://");
+    	b.putString("identity","");
+    	b.putString("password","");
+    	b.putInt("timeout",5);
+    	intent.putExtras(b);
 		startActivity(intent);
 	}
 
