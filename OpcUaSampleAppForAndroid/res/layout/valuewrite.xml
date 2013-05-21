@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"        
+        android:ems="10"
+        android:textSize="25sp"
+        android:textIsSelectable="true">
+      
+    </TextView>
+   
+    <EditText
+        android:id="@+id/textvalue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+    
+    <Button
+       android:id="@+id/buttonOKValueWriteView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:onClick="buttonOKWriteViewOnClick"
+       android:text="@string/write" />
+    
+   <Button
+       android:id="@+id/buttonCloseValueWriteView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:onClick="buttonCloseValueWriteOnClick"
+       android:text="@string/cancel" />
+
+
+</LinearLayout>

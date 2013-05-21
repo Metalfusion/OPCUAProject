@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"        
+        android:textSize="25sp"
+        android:ems="10"
+        android:textIsSelectable="true">
+      
+    </TextView>
+
+    <TextView
+    android:id="@+id/textvalue"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.35"
+    android:ems="10"
+    android:textIsSelectable="true" >
+      
+    </TextView>
+    
+   <Button
+       android:id="@+id/buttonCloseValueReadView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:onClick="buttonCloseValueReadOnClick"
+       android:text="@string/close" />
+
+
+</LinearLayout>
