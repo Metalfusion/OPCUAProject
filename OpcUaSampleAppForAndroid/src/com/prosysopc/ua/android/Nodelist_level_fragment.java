@@ -10,8 +10,10 @@ import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Region.Op;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
@@ -34,6 +36,13 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	private NodebrowserFragment nodebrowser;
 	private boolean showAttributes = false;	
 	private AttributeValuePair selectedItem;
+	
+	
+	public static OPCReader opcreader;
+	
+	// id for writeattributecall
+	static final int WRITE_ATTRIBUTE_CALL = 1;
+	static final int RESULT = 2;
 	
 	public Nodelist_level_fragment() {
 		// TODO Auto-generated constructor stub
@@ -166,7 +175,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	    	b.putString("text",selectedItem.attrValue);	    	
 	    	
 	    	intent.putExtras(b);
-			startActivity(intent);
+	    	// 1 is the id for the result
+			startActivityForResult(intent,WRITE_ATTRIBUTE_CALL);
 			selectedItem = null;
 	    	    	
 	    } else if (item.getTitle() == "Write") {
@@ -194,6 +204,20 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	    return true;
 	}
 	
+	// reads the return value from ValueWriteActivity
+	public void onActivityResult( int requestCode, int resultCode, Intent data)
+	{
+		if( requestCode == WRITE_ATTRIBUTE_CALL)
+		{
+			if( resultCode == Activity.RESULT_OK)
+			{
+				Bundle b = data.getExtras();
+				// and writes the value to server
+				opcreader.writeAttributes(rootNode.nodeID, b.getString("newValue") );
+				
+			}
+		}
+	}
 	
 		
 	

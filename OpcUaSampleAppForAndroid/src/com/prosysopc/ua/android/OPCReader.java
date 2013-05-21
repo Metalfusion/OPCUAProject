@@ -192,4 +192,17 @@ public class OPCReader
 		return node;
 	}
 	
+	public void writeAttributes( NodeId nodeid, String value)
+	{
+		try {
+			connection.writeAttribute(nodeid, value);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (StatusException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		}
+	}
+	
 }

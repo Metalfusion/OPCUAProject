@@ -9,6 +9,7 @@ import java.util.List;
 import org.opcfoundation.ua.builtintypes.DataValue;
 import org.opcfoundation.ua.builtintypes.NodeId;
 import org.opcfoundation.ua.builtintypes.UnsignedInteger;
+import org.opcfoundation.ua.builtintypes.Variant;
 import org.opcfoundation.ua.common.NamespaceTable;
 import org.opcfoundation.ua.common.ServiceResultException;
 import org.opcfoundation.ua.core.Attributes;
@@ -24,9 +25,11 @@ import org.opcfoundation.ua.utils.AttributesUtil;
 
 import android.os.StrictMode;
 
+import com.prosysopc.ua.DataTypeConverter;
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.StatusException;
+import com.prosysopc.ua.UaApplication.a;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
@@ -35,8 +38,10 @@ import com.prosysopc.ua.client.AddressSpaceException;
 import com.prosysopc.ua.client.ConnectException;
 import com.prosysopc.ua.client.InvalidServerEndpointException;
 import com.prosysopc.ua.client.UaClient;
+import com.prosysopc.ua.nodes.UaDataType;
 import com.prosysopc.ua.nodes.UaNode;
 import com.prosysopc.ua.nodes.UaReference;
+import com.prosysopc.ua.nodes.UaVariable;
 
 
 
@@ -141,8 +146,6 @@ public class Connection
 	
 	public void getNodeAttributes( UINode uinode ) throws ServiceException, AddressSpaceException, StatusException
 	{
-		
-		
 		ReadValueId nodesToRead = new ReadValueId( uinode.getNodeId(), Attributes.Value, null, null);
 		ReadResponse rr = client.read(UaClient.MAX_CACHE_AGE,TimestampsToReturn.Both, nodesToRead);
 		DataValue[] value = rr.getResults();
@@ -152,6 +155,13 @@ public class Connection
 		uinode.addAttribute(value[0].toString(), value[0].getValue().toString());
 		
 		
+	}
+	
+	// writes the value of the node
+	public void writeAttribute( NodeId nodeid, String value ) throws ServiceException, StatusException
+	{
+		
+		client.writeValue(nodeid, new Variant((Object)value) );
 	}
 	
 }

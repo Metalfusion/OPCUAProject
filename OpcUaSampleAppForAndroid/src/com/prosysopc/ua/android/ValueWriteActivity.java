@@ -1,6 +1,7 @@
 package com.prosysopc.ua.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -11,7 +12,8 @@ import android.widget.TextView;
 
 public class ValueWriteActivity extends Activity {
 
-
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -41,7 +43,9 @@ public class ValueWriteActivity extends Activity {
 			String newValue = ((EditText)findViewById(R.id.textvalue)).getText().toString();
 			
 			// TODO: Write the new value to the server and update the nodebrowser
-			
+			Intent resultData = new Intent();
+			resultData.putExtra("newValue", newValue);
+			setResult(Activity.RESULT_OK, resultData);
 			finish();
 		}
 	
