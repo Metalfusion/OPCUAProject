@@ -44,7 +44,7 @@ public class ServerlistFragment extends ListFragment {
 	
 	public ServerlistFragment() {		
 	}
-	
+	          
 	@SuppressLint("ValidFragment")
 	public ServerlistFragment(MainPager pager) {
 		mPager = pager;

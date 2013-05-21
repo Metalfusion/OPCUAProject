@@ -48,7 +48,7 @@ public class ValueWriteActivity extends Activity {
 			setResult(Activity.RESULT_OK, resultData);
 			finish();
 		}
-	
+	   
 	//On click event for Cancel button
 	public void buttonCloseValueWriteOnClick(View v) {
 		// return to viewpager when cancel is pressed

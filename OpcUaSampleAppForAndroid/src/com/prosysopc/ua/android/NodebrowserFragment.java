@@ -32,7 +32,7 @@ public class NodebrowserFragment extends Fragment {
 
 	public NodebrowserFragment() {
 	}
-
+             
 	public static final NodebrowserFragment newInstance(MainPager pager)
 	{
 		mPager = pager;

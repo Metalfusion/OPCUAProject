@@ -27,7 +27,7 @@ public class SubscriptionAdapter extends ArrayAdapter<Logmessage> {
     }
 
 	//TODO: Change this to fit subscriptions
-	
+	          
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;

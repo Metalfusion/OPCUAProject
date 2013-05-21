@@ -156,7 +156,7 @@ public class Connection
 		
 		
 	}
-	
+	        
 	// writes the value of the node
 	public void writeAttribute( NodeId nodeid, String value ) throws ServiceException, StatusException
 	{

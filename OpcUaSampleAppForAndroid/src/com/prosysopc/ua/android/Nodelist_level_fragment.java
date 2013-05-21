@@ -218,7 +218,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			}
 		}
 	}
-	
+	    
 		
 	
 	// Event handler for the header click, opens attributes list

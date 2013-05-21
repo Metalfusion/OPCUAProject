@@ -32,7 +32,7 @@ public class OPCReader
 		activeServer = null;
 		
 	}
-	
+	        
 	// Adds a new server to server list, or updates an existing one.
 	public void addModifyServer( String name, String address, String identity, String password, Integer timeout ) throws URISyntaxException
 	{
