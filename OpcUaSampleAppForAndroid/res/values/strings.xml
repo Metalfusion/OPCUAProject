@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">OPC UA App</string>
+    <string name="app_name">OPC UA Client</string>
     <string name="connect_and_read">Connect and read server time</string>
     <string name="time_on_server">Time on server</string>
     <string name="init_time_string">No time to display, do a read first!</string>
@@ -16,7 +16,9 @@
     <string name="add_server">Add server</string>    
     <string name="subscriptions">Subscriptions</string>    
     <string name="log_browser">Log browser</string>    
-    <string name="close">Close</string>    
+    <string name="close">Close</string>
+    <string name="cancel">Cancel</string>
+    <string name="write">Write</string>       
     <string name="exit">exit</string>    
     <string name="disconnect">disconnect</string>
 

@@ -44,8 +44,9 @@ public class NodebrowserFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
 						
-		View rootView = inflater.inflate(R.layout.nodebrowser, container, false);										
+		View rootView = inflater.inflate(R.layout.nodebrowser, container, false);
 		return rootView;
+			
 	}
 	
 	// Creates lists with dummy data
@@ -121,25 +122,5 @@ public class NodebrowserFragment extends Fragment {
 			createList(0, rootNode, false );
 		}		
 	}
-	
-	public void updateRoot()
-	{
-		try {
-			createList(0, mPager.opcreader.connection.getNode(Identifiers.RootFolder, true) , false );
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
-		} catch (AddressSpaceException e) {
-			// TODO Auto-generated catch block
-			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
-		} catch (StatusException e) {
-			// TODO Auto-generated catch block
-			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
-		} catch (ServiceResultException e) {
-			// TODO Auto-generated catch block
-			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
-		}
 		
-	}
-	
 }

@@ -1,20 +1,30 @@
 package com.prosysopc.ua.android;
 
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
+import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class Nodelist_level_fragment extends ListFragment implements OnClickListener {
 	
@@ -23,7 +33,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	private int listLevel;		// Level of this list at the hierarchy of the nodebrowser
 	private NodebrowserFragment nodebrowser;
 	private boolean showAttributes = false;	
-		
+	private AttributeValuePair selectedItem;
+	
 	public Nodelist_level_fragment() {
 		// TODO Auto-generated constructor stub
 		rootNode = null;
@@ -73,6 +84,13 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	@Override
 	public void onListItemClick(android.widget.ListView l, View v, int position, long id) {
 		
+		// Get the real (absolute) position instead the relative to the view one that is given as a parameter
+		for (int i = 0; i < l.getChildCount(); i++) {
+			if ( l.getChildAt(i) == v ) {
+				position = i;
+				break;
+			}
+		}		
 								
 		if (! showAttributes) {
 			
@@ -105,12 +123,79 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		} else {
 			// TODO: Add attribute full text read window popup/activity
 			// Optionally could open a context menu that has read and write options
+			selectedItem = (AttributeValuePair) l.getAdapter().getItem(position);
+			registerForContextMenu(l); 
+		    l.showContextMenu();
+		    unregisterForContextMenu(l);
+			//l.showContextMenu();
 		}
 		
 		
 	}
-		
 	
+	
+	// Event handler for the attribute context menu
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+	    
+		super.onCreateContextMenu(menu, v, menuInfo);
+	    
+		//AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        menu.setHeaderTitle("Select action");
+        menu.add(0, 0, 0, "Read");
+        menu.add(0, 0, 0, "Write");
+        menu.add(0, 0, 0, "Subscribe");
+	
+	}
+	
+	// Event handler for context menu click
+	public boolean onContextItemSelected(MenuItem item) {
+		
+		//AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		
+		if (selectedItem == null) {
+			return false;
+		}
+		
+	    if (item.getTitle() == "Read") {
+	    	
+	    	Intent intent = new Intent(getActivity(), ValueReadActivity.class);
+			
+	    	Bundle b = new Bundle();			
+	    	b.putString("title",selectedItem.attrName);	    	
+	    	b.putString("text",selectedItem.attrValue);	    	
+	    	
+	    	intent.putExtras(b);
+			startActivity(intent);
+			selectedItem = null;
+	    	    	
+	    } else if (item.getTitle() == "Write") {
+	    
+	    	Intent intent = new Intent(getActivity(), ValueWriteActivity.class);
+			
+	    	Bundle b = new Bundle();			
+	    	b.putString("title",selectedItem.attrName);
+	    	b.putString("value",selectedItem.attrValue);
+	    	
+	    	intent.putExtras(b);
+			startActivity(intent);
+			selectedItem = null;
+	    
+	    } else if (item.getTitle() == "Subscribe") {
+	        // TODO: Add subscription
+	    	
+	    	selectedItem = null;
+	    	
+	    } else {
+	    	
+	        return false;
+	    }
+	    	    	    
+	    return true;
+	}
+	
+	
+		
 	
 	// Event handler for the header click, opens attributes list
 	public void onClick(View v) {
@@ -140,7 +225,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		rootNode = new UINode(UINodeType.folderNode,name,new NodeId(7,8), childarr);
 		
 		for (int i = 1; i < 5; i++) {
-			rootNode.addAttribute("Attibute " + i, "Value " + i);
+			rootNode.addAttribute("Attribute " + i, "Value " + i);
 		}
 		
 		rootNode.attributesSet = rootNode.referencesSet = true;
