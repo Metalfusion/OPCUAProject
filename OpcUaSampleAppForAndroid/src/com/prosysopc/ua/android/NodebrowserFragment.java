@@ -58,7 +58,7 @@ public class NodebrowserFragment extends Fragment {
         
 		for (int i = 0; i < number; i++) {
 		
-			Nodelist_level_fragment childfrag = new Nodelist_level_fragment();
+			Nodelist_level_fragment childfrag = new Nodelist_level_fragment(mPager.opcreader);
 			childfrag.setup(this, null, startPos + i, false);			
 			ft.add(R.id.nodelevellayout ,childfrag, "nodelevel" + startPos + i);
 			listFragments.add(childfrag);
@@ -102,7 +102,7 @@ public class NodebrowserFragment extends Fragment {
 		FragmentTransaction ft2 = getChildFragmentManager().beginTransaction();
 		ft2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		
-		Nodelist_level_fragment childfrag = new Nodelist_level_fragment();
+		Nodelist_level_fragment childfrag = new Nodelist_level_fragment(mPager.opcreader);
 		
 		childfrag.setup(this, rootNode, position, attributeView);		
 		//childfrag.setup(this, null, position, attributeView); // FIXME: test code, correct code above

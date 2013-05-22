@@ -23,6 +23,8 @@ public class OPCReader
 	// settings
 	// connectionsettings
 	Connection connection;
+	
+	List<SubscriptionData> subscriptions = new ArrayList<SubscriptionData>();
 
 	
 	public OPCReader() {
@@ -82,7 +84,7 @@ public class OPCReader
 		
 		else if( connection == null )
 		{
-			connection = new Connection( newserver );
+			connection = new Connection( newserver, this );
 			activeServer = newserver;
 			addLog(LogmessageType.INFO, "Connected to server " + newserver.getName() );
 			try {
@@ -108,7 +110,7 @@ public class OPCReader
 		{
 			connection.disconnect();
 			addLog(LogmessageType.INFO, "Disconnected from " + activeServer.getName() );
-			connection = new Connection( newserver );
+			connection = new Connection( newserver, this );
 			addLog(LogmessageType.INFO, "Connected to " + newserver.getName() );
 			activeServer = newserver;
 			try {
@@ -202,6 +204,43 @@ public class OPCReader
 		} catch (StatusException e) {
 			// TODO Auto-generated catch block
 			addLog(LogmessageType.WARNING, e.toString() );
+		}
+	}
+	
+	public void addSubscriptionData( SubscriptionData sd )
+	{
+		subscriptions.add(sd);
+	}
+	
+	public List<SubscriptionData> getSubscriptionData()
+	{
+		return subscriptions;
+	}
+	
+	public void subscribe( NodeId nodeid)
+	{
+		try {
+			connection.subscribe(nodeid);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (StatusException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
+		}
+	}
+	
+	public void updateSubscriptionValue(NodeId nodeid, String value )
+	{
+		// get the subscription to be updated from the list
+		for( SubscriptionData sd : subscriptions)
+		{
+			if( sd.getNodeId() == nodeid)
+			{
+				// and update it
+				sd.updateValue(value);
+				break;
+			}
 		}
 	}
 	

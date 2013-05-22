@@ -10,6 +10,7 @@ import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+@SuppressLint("ValidFragment")
 public class Nodelist_level_fragment extends ListFragment implements OnClickListener {
 	
 	// This node holds the data to be displayed
@@ -44,9 +46,10 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	static final int WRITE_ATTRIBUTE_CALL = 1;
 	static final int RESULT = 2;
 	
-	public Nodelist_level_fragment() {
+	public Nodelist_level_fragment(OPCReader opcreader) {
 		// TODO Auto-generated constructor stub
 		rootNode = null;
+		this.opcreader = opcreader;
 	}
 		
 	public void setup(NodebrowserFragment nodebrowser, UINode rootNode, int level, boolean showAttributes) {
@@ -193,7 +196,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	    
 	    } else if (item.getTitle() == "Subscribe") {
 	        // TODO: Add subscription
-	    	
+	    	opcreader.subscribe(rootNode.getNodeId());
 	    	selectedItem = null;
 	    	
 	    } else {

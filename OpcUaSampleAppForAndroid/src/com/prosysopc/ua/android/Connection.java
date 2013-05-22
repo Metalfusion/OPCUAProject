@@ -7,15 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.DataValue;
+import org.opcfoundation.ua.builtintypes.DiagnosticInfo;
+import org.opcfoundation.ua.builtintypes.ExtensionObject;
 import org.opcfoundation.ua.builtintypes.NodeId;
+import org.opcfoundation.ua.builtintypes.StatusCode;
 import org.opcfoundation.ua.builtintypes.UnsignedInteger;
 import org.opcfoundation.ua.builtintypes.Variant;
 import org.opcfoundation.ua.common.NamespaceTable;
 import org.opcfoundation.ua.common.ServiceResultException;
 import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.Identifiers;
+import org.opcfoundation.ua.core.MonitoringMode;
 import org.opcfoundation.ua.core.NodeAttributes;
 import org.opcfoundation.ua.core.NodeClass;
+import org.opcfoundation.ua.core.NotificationData;
 import org.opcfoundation.ua.core.ReadResponse;
 import org.opcfoundation.ua.core.ReadValueId;
 import org.opcfoundation.ua.core.ReferenceDescription;
@@ -37,6 +42,12 @@ import com.prosysopc.ua.client.AddressSpace;
 import com.prosysopc.ua.client.AddressSpaceException;
 import com.prosysopc.ua.client.ConnectException;
 import com.prosysopc.ua.client.InvalidServerEndpointException;
+import com.prosysopc.ua.client.MonitoredDataItem;
+import com.prosysopc.ua.client.MonitoredDataItemListener;
+import com.prosysopc.ua.client.MonitoredEventItem;
+import com.prosysopc.ua.client.MonitoredItem;
+import com.prosysopc.ua.client.Subscription;
+import com.prosysopc.ua.client.SubscriptionNotificationListener;
 import com.prosysopc.ua.client.UaClient;
 import com.prosysopc.ua.nodes.UaDataType;
 import com.prosysopc.ua.nodes.UaNode;
@@ -48,16 +59,19 @@ import com.prosysopc.ua.nodes.UaVariable;
 public class Connection
 {
 	
-	
+	static OPCReader opcreader;
 	Server server;
-	public UaClient client;
+	UaClient client;
 	NodeId nodeId = Identifiers.RootFolder;
 	AddressSpace addressspace;
 	NamespaceTable namespacetable;
 	
-	public Connection( Server servervalue ) throws URISyntaxException
+	Subscription subscription;
+	
+	public Connection( Server server, OPCReader opcreader ) throws URISyntaxException
 	{
-		server = servervalue;
+		this.server = server;
+		this.opcreader = opcreader;
 		client = new UaClient( server.address );
 	}
 	
@@ -163,5 +177,55 @@ public class Connection
 		
 		client.writeValue(nodeid, new Variant((Object)value) );
 	}
+	
+	public void subscribe( NodeId nodeid ) throws ServiceException, StatusException
+	{
+		// create new subscription if needed
+		if (subscription == null) {
+			subscription = new Subscription();
+		}
+		
+		// check if item is already monitored
+		if(!subscription.hasItem(nodeId, Attributes.Value)) {
+			// if not, create item to be monitored
+			MonitoredDataItem item = new MonitoredDataItem(nodeId,Attributes.Value,MonitoringMode.Reporting);
+			item.addChangeListener(dataChangeListener);
+			subscription.addItem(item);
+			
+			// create new dataholder for subscription
+			SubscriptionData subdata = new SubscriptionData(server, nodeid);
+			opcreader.addSubscriptionData(subdata);
+			
+		}
+		
+		//Add subscription to the client, if it wasn't there already
+		if (!client.hasSubscription(subscription.getSubscriptionId())) {
+			
+			client.addSubscription(subscription);
+			
+		}
+		
+		// activate subscription
+		subscription.setPublishingEnabled(new Boolean("true"));
+		
+		
+		
+	}
+	
+	// listener for datachanges
+	protected static MonitoredDataItemListener dataChangeListener = new MonitoredDataItemListener() {
+		@Override
+		public void onDataChange(MonitoredDataItem sender, DataValue prevValue,
+				DataValue value) {
+			MonitoredItem i = sender;
+			
+			// on change update the value of the subscriptiondata-list
+			NodeId nodeid = i.getNodeId();
+			opcreader.updateSubscriptionValue(nodeid, value.getValue().toString());
+			
+		//	println(dataValueToString(i.getNodeId(), i.getAttributeId(), value));
+		}
+	};
+
 	
 }
