@@ -191,24 +191,21 @@ public class Connection
 			MonitoredDataItem item = new MonitoredDataItem(nodeId,Attributes.Value,MonitoringMode.Reporting);
 			item.addChangeListener(dataChangeListener);
 			subscription.addItem(item);
-			
-			// create new dataholder for subscription
-			SubscriptionData subdata = new SubscriptionData(server, nodeid);
-			opcreader.addSubscriptionData(subdata);
-			
 		}
 		
 		//Add subscription to the client, if it wasn't there already
 		if (!client.hasSubscription(subscription.getSubscriptionId())) {
 			
+			// activate subscription
+			subscription.setPublishingEnabled(new Boolean("true"));
+			
 			client.addSubscription(subscription);
 			
-		}
-		
-		// activate subscription
-		subscription.setPublishingEnabled(new Boolean("true"));
-		
-		
+			// create new dataholder for subscription
+			SubscriptionData subdata = new SubscriptionData(server, nodeid);
+			opcreader.addSubscriptionData(subdata);
+			
+		}		
 		
 	}
 	
