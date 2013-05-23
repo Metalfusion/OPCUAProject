@@ -204,6 +204,9 @@ public class OPCReader
 		} catch (StatusException e) {
 			// TODO Auto-generated catch block
 			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (AddressSpaceException e) {
+			// TODO Auto-generated catch block
+			addLog(LogmessageType.WARNING, e.toString() );
 		}
 	}
 	

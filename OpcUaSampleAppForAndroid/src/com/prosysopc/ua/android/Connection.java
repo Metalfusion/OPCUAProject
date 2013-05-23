@@ -172,10 +172,25 @@ public class Connection
 	}
 	        
 	// writes the value of the node
-	public void writeAttribute( NodeId nodeid, String value ) throws ServiceException, StatusException
+	public void writeAttribute( NodeId nodeid, String value ) throws ServiceException, StatusException, AddressSpaceException
 	{
+		// change the datatype to fit the node
+		UaDataType dataType = null;
+		UaVariable v = (UaVariable) addressspace.getNode(nodeid);
+		// Initialize DataType node, if it is not initialized yet
+		if (v.getDataType() == null)
+			v.setDataType(client.getAddressSpace().getType(
+					v.getDataTypeId()));
+		dataType = (UaDataType) v.getDataType();
+			
+		Object convertedValue;
+		if (dataType != null)
+			convertedValue = ((DataTypeConverter) addressspace.getDataTypeConverter()).parseVariant(value, dataType);
+		else
+			convertedValue = value;
 		
-		client.writeValue(nodeid, new Variant((Object)value) );
+		// write the node
+		client.writeValue(nodeid, convertedValue );
 	}
 	
 	public void subscribe( NodeId nodeid ) throws ServiceException, StatusException
@@ -203,6 +218,7 @@ public class Connection
 			
 			// create new dataholder for subscription
 			SubscriptionData subdata = new SubscriptionData(server, nodeid);
+			// add subscriptiondata for the ui
 			opcreader.addSubscriptionData(subdata);
 			
 		}		
