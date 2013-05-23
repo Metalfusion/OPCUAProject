@@ -4,6 +4,7 @@ package com.prosysopc.ua.android;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.DataValue;
@@ -55,7 +56,6 @@ import com.prosysopc.ua.nodes.UaReference;
 import com.prosysopc.ua.nodes.UaVariable;
 
 
-
 public class Connection
 {
 	
@@ -103,12 +103,16 @@ public class Connection
 	// return UINode made from node of the nodeID
 	public UINode getNode(NodeId nodeID, Boolean getChildren) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
 	{
+		
+		Date nodeGetStart = new Date();
+		
 		UINode node = null;
 		UINodeType type;
 		String name;
 		
 		UaNode uanode = client.getAddressSpace().getNode(nodeID);		
-		name = uanode.getBrowseName().toString();		
+		name = uanode.getDisplayName().getText();
+		
 		
 		if( uanode.getNodeClass() == NodeClass.Object )
 		{
@@ -117,8 +121,8 @@ public class Connection
 						
 			List<UINode> children = null;
 			
-			if (getChildren) {
-				children = getNodeChildren(nodeID);
+			if (getChildren) {				
+				children = getNodeChildren(uanode);				
 			}
 			
 			node = new UINode(type, name, nodeID, children);
@@ -136,42 +140,79 @@ public class Connection
 			node.referencesSet = true;
 		}
 		
+		
 		// add attributes to node
-		getNodeAttributes(node);
+		getNodeAttributes(uanode,node);
 		node.attributesSet = true;
+				
+		if (getChildren == true) {
+			opcreader.addLog(LogmessageType.INFO,"Getting the whole '" + node.name +  "' node took: " + (new Date().getTime()-nodeGetStart.getTime()) + " milliseconds");
+		}
+		
 		return node;
+		
 	}
 	
-	public List<UINode> getNodeChildren(NodeId nodeID) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
+	// Get minimal info about the node's children without polling the server too much
+	public List<UINode> getNodeChildren(UaNode node) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
 	{
+		// List for the child UINodes
 		List<UINode> list = new ArrayList<UINode>();
-		List<ReferenceDescription> references = addressspace.browse(nodeID); 
-		
+		List<ReferenceDescription> references = addressspace.browse(node.getNodeId());
+
+		// Loop through the references
 		for( ReferenceDescription reference : references)
 		{
-			// gets the nodeid from the reference and adds node by that id to the list
-			list.add(getNode(namespacetable.toNodeId(reference.getNodeId()), false ));
+			
+			// Node class defines whether it is a folder or leaf
+			UINodeType type = reference.getNodeClass() == NodeClass.Object ? UINodeType.folderNode : UINodeType.leafNode;
+			
+			// Get NodeId and display name
+			NodeId id = namespacetable.toNodeId(reference.getNodeId());			
+			String name = reference.getDisplayName().getText();
+			
+			// Construct the UINode
+			UINode newNode = new UINode( type ,name, id);			
+			list.add(newNode);
 			
 		}
 		
 		return list;
 	}
 	
-	
-	public void getNodeAttributes( UINode uinode ) throws ServiceException, AddressSpaceException, StatusException
+	// Reads all attributes of the given UaNode and saves them to the UINode
+	public void getNodeAttributes( UaNode node, UINode uinode ) 
 	{
-		ReadValueId nodesToRead = new ReadValueId( uinode.getNodeId(), Attributes.Value, null, null);
-		ReadResponse rr = client.read(UaClient.MAX_CACHE_AGE,TimestampsToReturn.Both, nodesToRead);
-		DataValue[] value = rr.getResults();
 		
+		// Get all attribute types supported by this node
+		UnsignedInteger attr[] = node.getSupportedAttributes();
 		
-		
-		uinode.addAttribute(value[0].toString(), value[0].getValue().toString());
-		
+		// Loop through the attributes
+		for (int i = 0; i < attr.length; i++) {
+			
+			String attrName = "Unknown attribute";
+			
+			// Find the name of the node attribute
+			for (long i2 = Attributes.NodeId.getValue(); i2 < Attributes.UserExecutable.getValue(); i2++) {
+				
+				if (attr[i].getValue() == i2) {
+					attrName = AttributesUtil.toString(UnsignedInteger.valueOf(i2));
+					break;
+				}
+			}
+			
+			// Read the value of the attribute
+			DataValue val = node.readAttribute(attr[i]);			
+			String value = val.getValue().toString();
+			
+			uinode.addAttribute(attrName,value);
+			
+		}
 		
 	}
+	
 	        
-	// writes the value of the node
+	// Writes the value-attribute of the given node
 	public void writeAttribute( NodeId nodeid, String value ) throws ServiceException, StatusException, AddressSpaceException
 	{
 		// change the datatype to fit the node

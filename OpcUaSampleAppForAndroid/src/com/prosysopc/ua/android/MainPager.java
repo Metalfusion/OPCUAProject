@@ -41,7 +41,7 @@ public class MainPager extends FragmentActivity {
 	ViewPager mViewPager;
 
 	public OPCReader opcreader;
-	public static final int LIST_LINE_LENGTH = 25; 		
+	public static final int LIST_LINE_LENGTH = 100; 		
 	
 	public MainPager () {
 		opcreader = new OPCReader();
