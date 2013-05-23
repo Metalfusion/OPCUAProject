@@ -164,8 +164,6 @@ public class Connection
 		ReadResponse rr = client.read(UaClient.MAX_CACHE_AGE,TimestampsToReturn.Both, nodesToRead);
 		DataValue[] value = rr.getResults();
 		
-		
-		
 		uinode.addAttribute(value[0].toString(), value[0].getValue().toString());
 		
 		
@@ -198,6 +196,7 @@ public class Connection
 		// create new subscription if needed
 		if (subscription == null) {
 			subscription = new Subscription();
+			subscription.addNotificationListener(subscriptionListener);
 		}
 		
 		// check if item is already monitored
@@ -238,6 +237,74 @@ public class Connection
 			
 		//	println(dataValueToString(i.getNodeId(), i.getAttributeId(), value));
 		}
+	};
+	
+	protected static SubscriptionNotificationListener subscriptionListener = new SubscriptionNotificationListener() {
+
+		public void onDataChange(Subscription subscription, MonitoredItem item,
+				DataValue newValue) {
+			// Called for each data change notification			
+			// on change update the value of the subscriptiondata-list
+			NodeId nodeid = item.getNodeId();
+			opcreader.updateSubscriptionValue(nodeid, newValue.getValue().toString());
+		}
+
+		@Override
+		public void onError(Subscription subscription, Object notification,
+				Exception exception) {
+			// Called if the parsing of the notification data fails,
+			// notification is either a MonitoredItemNotification or
+			// an EventList
+			opcreader.addLog(LogmessageType.WARNING, exception.toString());
+		}
+
+		public void onEvent(MonitoredItem item, Variant[] eventFields) {
+			// Called for each event notification
+		}
+
+		@Override
+		public void onNotificationData(Subscription subscription,
+				NotificationData notification) {
+			// Called after a complete notification data package is
+			// handled
+		}
+
+		@Override
+		public void onStatusChange(Subscription subscription,
+				StatusCode oldStatus, StatusCode newStatus,
+				DiagnosticInfo diagnosticInfo) {
+			// Called when the subscription status has changed in
+			// the server
+		}
+
+		@Override
+		public void onBufferOverflow(Subscription arg0, UnsignedInteger arg1,
+				ExtensionObject[] arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onDataChange(Subscription arg0, MonitoredDataItem arg1,
+				DataValue arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onEvent(Subscription arg0, MonitoredEventItem arg1,
+				Variant[] arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public long onMissingData(UnsignedInteger arg0, long arg1, long arg2,
+				StatusCode arg3) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
 	};
 
 	
