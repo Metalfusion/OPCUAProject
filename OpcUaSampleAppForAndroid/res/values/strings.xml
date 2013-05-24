@@ -2,15 +2,12 @@
 <resources>
 
     <string name="app_name">OPC UA Client</string>
-    <string name="connect_and_read">Connect and read server time</string>
-    <string name="time_on_server">Time on server</string>
-    <string name="init_time_string">No time to display, do a read first!</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>    
-    <string name="title_activity_main_pager">OPCUA Android app</string>    
+    <string name="title_activity_main_pager">OPC UA Client</string>    
     <string name="node_browser">Node browser</string>    
     <string name="servers">Servers</string>    
     <string name="add_server">Add server</string>    
@@ -19,7 +16,7 @@
     <string name="close">Close</string>
     <string name="cancel">Cancel</string>
     <string name="write">Write</string>       
-    <string name="exit">exit</string>    
-    <string name="disconnect">disconnect</string>
+    <string name="exit">Exit</string>    
+    <string name="disconnect">Disconnect</string>
 
 </resources>

@@ -1,7 +1,6 @@
 package com.prosysopc.ua.android;
 
 
-
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,10 +60,10 @@ public class Connection
 	
 	Subscription subscription;
 	
-	public Connection( Server server, OPCReader opcreader ) throws URISyntaxException
+	public Connection( Server server, OPCReader opcReader ) throws URISyntaxException
 	{
 		this.server = server;
-		this.opcreader = opcreader;
+		opcreader = opcReader;
 		client = new UaClient( server.address );
 	}
 	
