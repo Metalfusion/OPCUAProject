@@ -8,20 +8,17 @@ import org.opcfoundation.ua.builtintypes.NodeId;
 import org.opcfoundation.ua.common.ServiceResultException;
 
 import com.prosysopc.ua.ServiceException;
-import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.client.AddressSpaceException;
-import com.prosysopc.ua.client.ConnectException;
-import com.prosysopc.ua.client.InvalidServerEndpointException;
 
 public class OPCReader
 {
 	List<Server> servers;
 	List<Logmessage> messagelog;
 	Server activeServer;
-	// settings
-	// connectionsettings
+	
+	// Connection settings
 	Connection connection;
 	
 	List<SubscriptionData> subscriptions = new ArrayList<SubscriptionData>();
@@ -49,7 +46,7 @@ public class OPCReader
 		
 		for (Server s : servers) {
 			
-			if (s.name == newserver.name) {
+			if (s.name.equals(newserver.name)) {
 				
 				if (s == activeServer) {
 					updateConnection(newserver);
@@ -89,21 +86,8 @@ public class OPCReader
 			addLog(LogmessageType.INFO, "Connected to server " + newserver.getName() );
 			try {
 				connection.connect();
-			} catch (InvalidServerEndpointException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (ConnectException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (SessionActivationException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (ServiceException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (StatusException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (Exception e) {
+				addLog(LogmessageType.WARNING, e.toString() );			
 			}
 		}
 		else
@@ -113,28 +97,13 @@ public class OPCReader
 			connection = new Connection( newserver, this );
 			addLog(LogmessageType.INFO, "Connected to " + newserver.getName() );
 			activeServer = newserver;
+			
 			try {
 				connection.connect();
-			} catch (InvalidServerEndpointException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (ConnectException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (SessionActivationException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (ServiceException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
-			} catch (StatusException e) {
-				// TODO Auto-generated catch block
-				addLog(LogmessageType.WARNING, e.toString() );
+			} catch (Exception e) {
+				addLog(LogmessageType.WARNING, e.toString() );			
 			}
 		}
-		
-		
-		
 		
 	}
 

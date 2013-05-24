@@ -1,7 +1,6 @@
 package com.prosysopc.ua.android;
 
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
@@ -33,18 +32,19 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 public class Nodelist_level_fragment extends ListFragment implements OnClickListener {
 	
 	// This node holds the data to be displayed
-	private UINode rootNode;
+	private UINode rootNode = null;
 	private int listLevel;		// Level of this list at the hierarchy of the nodebrowser
 	private NodebrowserFragment nodebrowser;
 	private boolean showAttributes = false;	
 	private AttributeValuePair selectedItem;
-	
-	
+		
 	public static OPCReader opcreader;
 	
 	// id for writeattributecall
 	static final int WRITE_ATTRIBUTE_CALL = 1;
 	static final int RESULT = 2;
+	
+	public Nodelist_level_fragment() {}
 	
 	public Nodelist_level_fragment(OPCReader opcreader) {
 		// TODO Auto-generated constructor stub
@@ -93,6 +93,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		
 	}
 	
+	// Handler for the listview item click events
 	@Override
 	public void onListItemClick(android.widget.ListView l, View v, int position, long id) {
 		
@@ -103,7 +104,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 				break;
 			}
 		}		
-								
+		
+		// Test if we are displaying nodes or attributes
 		if (! showAttributes) {
 			
 			try {
@@ -115,7 +117,9 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 					} else	{						
 						l.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
 					}
-				}					
+				}
+				
+				getView().findViewById(R.id.HeaderText).setBackgroundColor(Color.TRANSPARENT);
 									
 			} catch (Exception e) {					
 				//e.printStackTrace();
@@ -130,16 +134,16 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			} catch (Exception e) {}
 			
 			// Scroll the selected to the top				
-			l.setSelectionFromTop(position, 0);
+			//l.setSelectionFromTop(position, 0);
 			
 		} else {
-			// TODO: Add attribute full text read window popup/activity
-			// Optionally could open a context menu that has read and write options
+			
 			selectedItem = (AttributeValuePair) l.getAdapter().getItem(position);
+			
 			registerForContextMenu(l); 
 		    l.showContextMenu();
 		    unregisterForContextMenu(l);
-			//l.showContextMenu();
+			
 		}
 		
 		
@@ -152,11 +156,25 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	    
 		super.onCreateContextMenu(menu, v, menuInfo);
 	    
+		Boolean hasValue = false;
+		
+		for (AttributeValuePair attr : rootNode.attributes) {
+			
+			if (attr.attrName == "Value") {
+				hasValue = true;
+				break;
+			}
+			
+		}
+		
 		//AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         menu.setHeaderTitle("Select action");
-        menu.add(0, 0, 0, "Read");
-        menu.add(0, 0, 0, "Write");
-        menu.add(0, 0, 0, "Subscribe");
+        menu.add(0, 0, 0, "Open attribute");
+        
+        if (hasValue) {        
+	        menu.add(0, 0, 0, "Edit node value");
+	        menu.add(0, 0, 0, "Subscribe to node");        
+        }
 	
 	}
 	
@@ -169,7 +187,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			return false;
 		}
 		
-	    if (item.getTitle() == "Read") {
+	    if (item.getTitle() == "Open attribute") {
 	    	
 	    	Intent intent = new Intent(getActivity(), ValueReadActivity.class);
 			
@@ -178,23 +196,34 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	    	b.putString("text",selectedItem.attrValue);	    	
 	    	
 	    	intent.putExtras(b);
-	    	// 1 is the id for the result
-			startActivityForResult(intent,WRITE_ATTRIBUTE_CALL);
+	    	startActivity(intent);
 			selectedItem = null;
 	    	    	
-	    } else if (item.getTitle() == "Write") {
+	    } else if (item.getTitle() == "Edit node value") {
 	    
 	    	Intent intent = new Intent(getActivity(), ValueWriteActivity.class);
 			
+	    	AttributeValuePair valueAttr = null;
+	    	
+	    	for (AttributeValuePair attr : rootNode.attributes) {
+	    		
+	    		if (attr.attrName == "Value") {
+	    			valueAttr = attr;
+	    			break;
+	    		}
+	    	}
+	    	
 	    	Bundle b = new Bundle();			
-	    	b.putString("title",selectedItem.attrName);
-	    	b.putString("value",selectedItem.attrValue);
+	    	b.putString("title",valueAttr.attrName);
+	    	b.putString("value",valueAttr.attrValue);
 	    	
 	    	intent.putExtras(b);
-			startActivity(intent);
+	    	
+	    	// 1 is the id for the result
+	    	startActivityForResult(intent,WRITE_ATTRIBUTE_CALL);			
 			selectedItem = null;
 	    
-	    } else if (item.getTitle() == "Subscribe") {
+	    } else if (item.getTitle() == "Subscribe to node") {
 	        // TODO: Add subscription
 	    	opcreader.subscribe(rootNode.getNodeId());
 	    	selectedItem = null;
@@ -226,6 +255,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	
 	// Event handler for the header click, opens attributes list
 	public void onClick(View v) {
+		
+		v.setBackgroundColor(Color.rgb(51, 181, 229));				
 		nodebrowser.createList(this.listLevel+1, this.rootNode, true);
 	}
 	

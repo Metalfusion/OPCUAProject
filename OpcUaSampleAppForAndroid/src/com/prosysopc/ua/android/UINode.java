@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
 
-public class UINode {
+public class UINode implements Comparable<UINode> {
 	
 	public UINodeType type;
 	public List<UINode> childNodes;
@@ -89,6 +89,7 @@ public class UINode {
 
 	}
 	
+	// Holds an attribute name and the related value
 	public class AttributeValuePair {
 		public String attrName;
 		public String attrValue;
@@ -96,6 +97,21 @@ public class UINode {
 		public AttributeValuePair(String name, String value) {
 			attrName = name;
 			attrValue = value;
+		}
+		
+	}
+
+	// Sorting primarily by type and then by name
+	@Override
+	public int compareTo(UINode another) {
+		
+		if (this.type != another.type) {
+			
+			return this.type.value >= another.type.value ? 1 : -1;				
+			
+		} else {
+			
+			return this.name.compareTo(another.name);
 		}
 		
 	}

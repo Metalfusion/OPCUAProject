@@ -46,9 +46,9 @@ public class MainPager extends FragmentActivity {
 	public MainPager () {
 		opcreader = new OPCReader();
 		try {
-			opcreader.addModifyServer("Simulator", "opc.tcp://10.0.2.2:4841", "", "", 5);
-			opcreader.addModifyServer("Public test server", "opc.tcp://opcua.info:62949/Advosol/uaSimUC", "ua", "test", 5);
-			opcreader.addModifyServer("Ascolab", "opc.tcp://demo.ascolab.com:4841", "", "", 5);
+			opcreader.addModifyServer("Simulator", "opc.tcp://10.0.2.2:4841", "", "", 20);
+			opcreader.addModifyServer("Public test server", "opc.tcp://opcua.info:62949/Advosol/uaSimUC", "ua", "test", 20);
+			opcreader.addModifyServer("Ascolab", "opc.tcp://demo.ascolab.com:4841", "", "", 20);
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			opcreader.addLog(LogmessageType.WARNING, e.toString() );

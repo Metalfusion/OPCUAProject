@@ -4,6 +4,7 @@ package com.prosysopc.ua.android;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +22,7 @@ import org.opcfoundation.ua.core.Identifiers;
 import org.opcfoundation.ua.core.MonitoringMode;
 import org.opcfoundation.ua.core.NodeClass;
 import org.opcfoundation.ua.core.NotificationData;
-import org.opcfoundation.ua.core.ReadResponse;
-import org.opcfoundation.ua.core.ReadValueId;
 import org.opcfoundation.ua.core.ReferenceDescription;
-import org.opcfoundation.ua.core.TimestampsToReturn;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 import org.opcfoundation.ua.utils.AttributesUtil;
 
@@ -34,7 +32,7 @@ import com.prosysopc.ua.DataTypeConverter;
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.StatusException;
-import com.prosysopc.ua.UaApplication.a;
+import com.prosysopc.ua.UserIdentity;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
@@ -51,7 +49,6 @@ import com.prosysopc.ua.client.SubscriptionNotificationListener;
 import com.prosysopc.ua.client.UaClient;
 import com.prosysopc.ua.nodes.UaDataType;
 import com.prosysopc.ua.nodes.UaNode;
-import com.prosysopc.ua.nodes.UaReference;
 import com.prosysopc.ua.nodes.UaVariable;
 
 
@@ -76,12 +73,24 @@ public class Connection
 	
 	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException, StatusException
 	{
-		//TODO: rest of server settings, if needed
+
 		client.setTimeout(server.getTimeout()*1000);
 		client.setSecurityMode(SecurityMode.NONE);
+		
+		UserIdentity ident;
+		
+		if (server.getIdentity().isEmpty() && server.getPassword().isEmpty()) {
+			ident = new UserIdentity();
+		} else {
+			ident = new UserIdentity(server.getIdentity(), server.getPassword());
+		}
+		
+		client.setUserIdentity(ident);
 		client.connect();
 		addressspace = client.getAddressSpace();
 		namespacetable = client.getNamespaceTable();
+		addressspace.getCache().setMaxQueueLength(20);
+		addressspace.getCache().setNodeMaxAgeInMillis(server.getTimeout()*1000*10);
 		
 		return true;
 	}
@@ -109,9 +118,9 @@ public class Connection
 		UINodeType type;
 		String name;
 		
-		UaNode uanode = client.getAddressSpace().getNode(nodeID);		
+		UaNode uanode = addressspace.getNode(nodeID);	
+		addressspace.getCache().addNode(uanode);
 		name = uanode.getDisplayName().getText();
-		
 		
 		if( uanode.getNodeClass() == NodeClass.Object )
 		{
@@ -156,7 +165,7 @@ public class Connection
 	public List<UINode> getNodeChildren(UaNode node) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
 	{
 		// List for the child UINodes
-		List<UINode> list = new ArrayList<UINode>();
+		ArrayList<UINode> list = new ArrayList<UINode>();
 		List<ReferenceDescription> references = addressspace.browse(node.getNodeId());
 
 		// Loop through the references
@@ -175,6 +184,9 @@ public class Connection
 			list.add(newNode);
 			
 		}
+		
+		// Sort the children nodes
+		Collections.sort(list);
 		
 		return list;
 	}
@@ -253,12 +265,13 @@ public class Connection
 		if (!client.hasSubscription(subscription.getSubscriptionId())) {
 			
 			// activate subscription
-			subscription.setPublishingEnabled(new Boolean("true"));
+			subscription.setPublishingEnabled(true);
 			
 			client.addSubscription(subscription);
 			
 			// create new dataholder for subscription
 			SubscriptionData subdata = new SubscriptionData(server, nodeid);
+			
 			// add subscriptiondata for the ui
 			opcreader.addSubscriptionData(subdata);
 			

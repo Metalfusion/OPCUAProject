@@ -1,7 +1,6 @@
 package com.prosysopc.ua.android;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
-import org.opcfoundation.ua.core.Node;
 
 public class SubscriptionData
 {

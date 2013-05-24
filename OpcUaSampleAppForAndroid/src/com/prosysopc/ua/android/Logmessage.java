@@ -1,6 +1,5 @@
 package com.prosysopc.ua.android;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Logmessage

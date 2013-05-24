@@ -3,20 +3,14 @@ package com.prosysopc.ua.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opcfoundation.ua.common.ServiceResultException;
-import org.opcfoundation.ua.core.Identifiers;
-
-import com.prosysopc.ua.ServiceException;
-import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
-import com.prosysopc.ua.client.AddressSpaceException;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 
 
 public class NodebrowserFragment extends Fragment {
@@ -110,6 +104,9 @@ public class NodebrowserFragment extends Fragment {
 		ft2.add(R.id.nodelevellayout ,childfrag, "nodelevel" + position);		
 		ft2.commit();
 		listFragments.add(childfrag);
+		
+		HorizontalScrollView scroller = (HorizontalScrollView)(getView().findViewById(R.id.fragmentlist_scrollview));
+		scroller.scrollBy(150, 0);
 		
 	}
 	
