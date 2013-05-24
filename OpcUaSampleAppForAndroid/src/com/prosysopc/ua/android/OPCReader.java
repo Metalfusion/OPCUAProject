@@ -141,6 +141,10 @@ public class OPCReader
 		return messagelog;
 	}
 	
+	public void clearLog() {
+		messagelog.clear();
+	}
+	
 	public UINode getNode( NodeId nodeid ) 
 	{
 		UINode node = null;

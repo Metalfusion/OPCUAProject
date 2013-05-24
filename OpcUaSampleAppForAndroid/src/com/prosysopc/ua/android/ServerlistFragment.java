@@ -4,15 +4,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.opcfoundation.ua.common.ServiceResultException;
 import org.opcfoundation.ua.core.Identifiers;
-
-import com.prosysopc.ua.ServiceException;
-import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
-import com.prosysopc.ua.client.AddressSpaceException;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.SimpleAdapter;
 
@@ -82,12 +74,16 @@ public class ServerlistFragment extends ListFragment {
 		
 		// clear the list so the list doesn't grow on every time it is created
 		list.clear();
-	    for( int i=0; i < servers.size(); i++ ){
+		
+	    for( int i=0; i < servers.size(); i++ ) {
+	    	
 	      item = new HashMap<String,String>();
 	      item.put( "line1", servers.get(i).getName());
 	      item.put( "line2", servers.get(i).getAddress());
 	      list.add( item );
+	      
 	    }
+	    
 	    adapter = new SimpleAdapter(this.getActivity(), list,
 	    		      android.R.layout.two_line_list_item ,
 	    		      new String[] { "line1","line2" },
@@ -114,51 +110,36 @@ public class ServerlistFragment extends ListFragment {
 	}
 		
 	public boolean onContextItemSelected(MenuItem item) {
+		
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		
-		
+				
 	    if (item.getTitle() == "Connect") {
-	        //Code To Handle connect
+	        
+	    	//Code To Handle connect
 	    	try {
 				mPager.opcreader.updateConnection(mPager.opcreader.getServer((int)info.id));
 			} catch (URISyntaxException e) {
 				
 				mPager.opcreader.addLog(LogmessageType.WARNING, e.toString() );
 			}
-	    	
-	    	// TODO: make the read asynchronous and let opcreader handle that 
-	    	// refresh nodebrowser, doesn't work
+	    		    	
 	    	NodebrowserFragment f = (NodebrowserFragment) mPager.mPagerAdapter.getItem(1);
-	    	if( f != null)
-	    	{
-	    		Toast.makeText(getActivity(), "Wasn't null", Toast.LENGTH_SHORT).show();
-	    		
-	    		try {
-	    			f.updateRootList(mPager.opcreader.connection.getNode(Identifiers.RootFolder, true));
-	    			
-	    		} catch (ServiceException e) {
-	    			
-	    			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
-	    			
-	    		} catch (AddressSpaceException e) {
-	    			
-	    			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
-	    			
-	    		} catch (StatusException e) {
-	    			
-	    			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
-	    			
-	    		} catch (ServiceResultException e) {
-	    			
-	    			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
+	    	
+	    	if( f != null)	{
+	    			    		
+	    		try {	    			
+	    			f.updateRootList(mPager.opcreader.connection.getNode(Identifiers.RootFolder, true));	    			
+	    		} catch (Exception e) {	    			
+	    			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());	    			
 	    		}	    		
 	    	}
 	    	
 	    	
-	    } 
-	    else if (item.getTitle() == "Edit") {
+	    } else if (item.getTitle() == "Edit") {
+	    
 	    	Intent intent = new Intent(getActivity(), ServerSettingsActivity.class);
 			Bundle b = new Bundle();
+			
 			Server server = mPager.opcreader.getServer((int)info.id);
 	    	b.putString("name", server.getName());
 	    	b.putString("address", server.getAddress());
@@ -167,9 +148,10 @@ public class ServerlistFragment extends ListFragment {
 	    	b.putInt("timeout",server.getTimeout());
 	    	intent.putExtras(b);
 			startActivity(intent);
-	    } 
-	    else if (item.getTitle() == "Delete") {
-	        //Code To Handle deletion
+			
+	    } else if (item.getTitle() == "Delete") {
+	        
+	    	//Code To Handle deletion
 	    	mPager.opcreader.removeServer((int)info.id);
 	    	adapter.notifyDataSetChanged();
 	    } 

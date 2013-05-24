@@ -26,15 +26,12 @@ import org.opcfoundation.ua.core.ReferenceDescription;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 import org.opcfoundation.ua.utils.AttributesUtil;
 
-import android.os.StrictMode;
-
 import com.prosysopc.ua.DataTypeConverter;
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.UserIdentity;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
-import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
 import com.prosysopc.ua.client.AddressSpace;
 import com.prosysopc.ua.client.AddressSpaceException;
@@ -154,7 +151,7 @@ public class Connection
 		node.attributesSet = true;
 				
 		if (getChildren == true) {
-			opcreader.addLog(LogmessageType.INFO,"Getting the whole '" + node.name +  "' node took: " + (new Date().getTime()-nodeGetStart.getTime()) + " milliseconds");
+			opcreader.addLog(LogmessageType.INFO,"Getting the whole '" + node.name +  "' node took " + (new Date().getTime()-nodeGetStart.getTime()) + " milliseconds");
 		}
 		
 		return node;

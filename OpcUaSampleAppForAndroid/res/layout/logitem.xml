@@ -8,34 +8,37 @@
         android:id="@+id/messagetypeview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.35"
         android:ems="10" >
-
-      
     </TextView>
 
-        <TextView
+    <TextView
         android:id="@+id/timestampview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.35"
-        android:ems="10" >
-
-      
+        android:ems="10"
+        android:textIsSelectable="true" >
     </TextView>
-    
-    <TextView
-        android:id="@+id/messageview"
+
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="272dp"
-        android:layout_weight="0.35" />
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
 
-   <Button
-       android:id="@+id/buttonCloseLogItemView"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:onClick="buttonCloseLogItemOnClick"
-       android:text="@string/close" />
+         <TextView
+             android:id="@+id/messageview"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textIsSelectable="true" />
 
+       
+    </ScrollView>
+
+    <Button
+        android:id="@+id/buttonCloseLogItemView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonCloseLogItemOnClick"
+        android:text="@string/close" />
 
 </LinearLayout>

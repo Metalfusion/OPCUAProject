@@ -81,8 +81,7 @@ public class MainPager extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
-		
-		
+				
 
 	}
 
@@ -99,22 +98,24 @@ public class MainPager extends FragmentActivity {
 	        super.onOptionsItemSelected(item);
 	 
 	        switch(item.getItemId()){
-	            case R.id.action_settings:
-	                Toast.makeText(getBaseContext(), "You selected settings", Toast.LENGTH_SHORT).show();
-	                break;
-	 
-	            case R.id.disconnect:
-	                Toast.makeText(getBaseContext(), "You selected disconnect", Toast.LENGTH_SHORT).show();
-				try {
-					opcreader.updateConnection(null);
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					opcreader.addLog(LogmessageType.WARNING, e.toString() );
-				}
+	           
+	            case R.id.disconnect:	                
+	                
+	                try {
+						opcreader.updateConnection(null);
+					} catch (URISyntaxException e) {						 
+						opcreader.addLog(LogmessageType.WARNING, e.toString() );
+					}
+	                
+	                Toast.makeText(getBaseContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+	                
 	                break;
 	 
 	            case R.id.exit:
-	                Toast.makeText(getBaseContext(), "You selected exit", Toast.LENGTH_SHORT).show();
+	            	
+	                Toast.makeText(getBaseContext(), "Exiting", Toast.LENGTH_SHORT).show();	                
+	                finish();
+	                
 	                break;	 
 	        }
 	        return true;

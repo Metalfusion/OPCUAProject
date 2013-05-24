@@ -65,23 +65,26 @@ public class LogviewFragment extends ListFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 	    
-		super.onCreateContextMenu(menu, v, menuInfo);
-	    
 		if (v.getId() == this.getListView().getId()) {
 	        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	        //HashMap item = (HashMap) getListView().getItemAtPosition(info.position); // t‰m‰ casti heitt‰‰ poikkeuksen
+	        
 	        menu.setHeaderTitle("Select action");
-	        menu.add(0, 0, 0, "Open");
-	        // toiseksi parametriksi pit‰is tulla ilmeisesti itemin id, tyyliin HashMap.getId()
+	        menu.add(0, 0, 0, "Open this item");
+	        menu.add(0, 0, 0, "Clear log");
+	        
 	    }
+		
+		super.onCreateContextMenu(menu, v, menuInfo);
 		
 	}
 		
+	
+	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		
-		
-	    if (item.getTitle() == "Open") {
+				
+	    if (item.getTitle().equals("Open this item")) {
 	        //Code To Handle open
 	    	List<Logmessage> messagelog =  mPager.opcreader.getMessagelog();
 	    	
@@ -95,13 +98,18 @@ public class LogviewFragment extends ListFragment {
 	    	b.putString("timestamp", message.getTimestampString());
 	    	intent.putExtras(b);
 			startActivity(intent);
-	    }
-	    else {
+	    
+	    } else if (item.getTitle().equals("Clear log")) {
+	    
+	    	mPager.opcreader.clearLog();
 	    	
+	    	// update view
+		    onStart();
+	    	
+	    } else {	    	
 	        return false;
 	    }
-	    // update view
-	    onStart();
+	    	    
 	    return true;
 	}
 }
