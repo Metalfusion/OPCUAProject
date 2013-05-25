@@ -23,6 +23,7 @@ public class OPCReader
 	
 	List<SubscriptionData> subscriptions = new ArrayList<SubscriptionData>();
 
+	private NodeId nodeidtobewritten;
 	
 	public OPCReader() {
 		
@@ -167,10 +168,14 @@ public class OPCReader
 		return node;
 	}
 	
-	public void writeAttributes( NodeId nodeid, String value)
+	public void writeAttributes(String value)
 	{
 		try {
-			connection.writeAttribute(nodeid, value);
+			if( nodeidtobewritten != null )
+			{
+				connection.writeAttribute(nodeidtobewritten, value);
+			}
+			
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			addLog(LogmessageType.WARNING, e.toString() );
@@ -218,6 +223,11 @@ public class OPCReader
 				break;
 			}
 		}
+	}
+	
+	public void setNodeIdtoBeWritten( NodeId nodeid )
+	{
+		nodeidtobewritten = nodeid;
 	}
 	
 }

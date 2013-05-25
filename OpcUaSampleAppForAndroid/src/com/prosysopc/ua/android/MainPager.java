@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.opcfoundation.ua.builtintypes.NodeId;
+
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +46,8 @@ public class MainPager extends FragmentActivity {
 
 	public OPCReader opcreader;
 	public static final int LIST_LINE_LENGTH = 100; 		
+	
+	
 	
 	public MainPager () {
 		opcreader = new OPCReader();
@@ -229,5 +235,21 @@ public class MainPager extends FragmentActivity {
 	    return maxWidth;
 	}
 	
+	
+	
+	public void onActivityResult( int requestCode, int resultCode, Intent data)
+	{
+		// only activity that uses this listener is ValueWrite, so only it's 
+		// stuff is needed
+		int WRITE_ATTRIBUTE_CALL = 1;
+		
+		if( resultCode == Activity.RESULT_OK)
+		{
+			Bundle b = data.getExtras();
+			// and writes the value to server
+			opcreader.writeAttributes( b.getString("newValue") );
+			
+		}
+	}
 	
 }

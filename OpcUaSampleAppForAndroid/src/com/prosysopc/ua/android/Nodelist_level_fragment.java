@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("ValidFragment")
 public class Nodelist_level_fragment extends ListFragment implements OnClickListener {
@@ -198,6 +199,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	    
 	    	Intent intent = new Intent(getActivity(), ValueWriteActivity.class);
 			
+	    	
 	    	AttributeValuePair valueAttr = null;
 	    	
 	    	for (AttributeValuePair attr : rootNode.attributes) {
@@ -213,6 +215,9 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	    	b.putString("value",valueAttr.attrValue);
 	    	
 	    	intent.putExtras(b);
+	    	
+	    	// set nodeid in opcreader for the write
+	    	opcreader.setNodeIdtoBeWritten(rootNode.getNodeId());
 	    	
 	    	// 1 is the id for the result
 	    	startActivityForResult(intent,WRITE_ATTRIBUTE_CALL);			
@@ -234,16 +239,18 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	// reads the return value from ValueWriteActivity
 	public void onActivityResult( int requestCode, int resultCode, Intent data)
 	{
+		Toast toast = Toast.makeText(getActivity(), "OnActivityResult called", Toast.LENGTH_SHORT);
 		if( requestCode == WRITE_ATTRIBUTE_CALL)
 		{
 			if( resultCode == Activity.RESULT_OK)
 			{
 				Bundle b = data.getExtras();
 				// and writes the value to server
-				opcreader.writeAttributes(rootNode.nodeID, b.getString("newValue") );
+				opcreader.writeAttributes(b.getString("newValue") );
 				
 			}
 		}
+		
 	}
 	    
 		
