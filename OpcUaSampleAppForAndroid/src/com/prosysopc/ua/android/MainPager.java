@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.opcfoundation.ua.builtintypes.DataValue;
 import org.opcfoundation.ua.builtintypes.NodeId;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
+import com.prosysopc.ua.client.MonitoredDataItem;
+import com.prosysopc.ua.client.MonitoredDataItemListener;
+import com.prosysopc.ua.client.MonitoredItem;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,7 +48,7 @@ public class MainPager extends FragmentActivity {
 	 */
 	ViewPager mViewPager;
 
-	public OPCReader opcreader;
+	public static OPCReader opcreader;
 	public static final int LIST_LINE_LENGTH = 100; 		
 	
 	

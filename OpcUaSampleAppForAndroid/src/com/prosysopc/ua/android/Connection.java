@@ -57,6 +57,7 @@ public class Connection
 	NodeId nodeId = Identifiers.RootFolder;
 	AddressSpace addressspace;
 	NamespaceTable namespacetable;
+	MainPager mpager;
 	
 	Subscription subscription;
 	
@@ -261,7 +262,7 @@ public class Connection
 		if (!client.hasSubscription(subscription.getSubscriptionId())) {
 			
 			// activate subscription
-			subscription.setPublishingEnabled(true);
+			subscription.setPublishingEnabled(new Boolean("true"));
 			
 			client.addSubscription(subscription);
 			
@@ -275,20 +276,7 @@ public class Connection
 		
 	}
 	
-	// listener for datachanges
-	protected static MonitoredDataItemListener dataChangeListener = new MonitoredDataItemListener() {
-		@Override
-		public void onDataChange(MonitoredDataItem sender, DataValue prevValue,
-				DataValue value) {
-			MonitoredItem i = sender;
-			
-			// on change update the value of the subscriptiondata-list
-			NodeId nodeid = i.getNodeId();
-			opcreader.updateSubscriptionValue(nodeid, value.getValue().toString());
-			
-		//	println(dataValueToString(i.getNodeId(), i.getAttributeId(), value));
-		}
-	};
+
 	
 	
 	protected static SubscriptionNotificationListener subscriptionListener = new SubscriptionNotificationListener() {
@@ -358,5 +346,15 @@ public class Connection
 		}
 
 	};	
+	
+	protected static MonitoredDataItemListener dataChangeListener = new MonitoredDataItemListener() {
+		@Override
+		public void onDataChange(MonitoredDataItem sender, DataValue prevValue,
+				DataValue value) {
+			MonitoredItem i = sender;
+			NodeId nodeid = i.getNodeId();
+			opcreader.updateSubscriptionValue(nodeid, value.getValue().toString());
+		}
+	};
 	
 }

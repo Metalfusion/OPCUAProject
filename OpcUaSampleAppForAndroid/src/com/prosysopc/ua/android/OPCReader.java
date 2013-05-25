@@ -95,7 +95,7 @@ public class OPCReader
 		{
 			connection.disconnect();
 			addLog(LogmessageType.INFO, "Disconnected from " + activeServer.getName() );
-			connection = new Connection( newserver, this );
+			connection = new Connection( newserver, this);
 			addLog(LogmessageType.INFO, "Connected to " + newserver.getName() );
 			activeServer = newserver;
 			
