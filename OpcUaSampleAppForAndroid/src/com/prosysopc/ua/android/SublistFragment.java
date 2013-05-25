@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.SimpleAdapter;
 
 
@@ -62,7 +61,7 @@ import android.widget.SimpleAdapter;
 		
 		private void updateList() {
 			
-			List<SubscriptionData> subscriptions =  mPager.opcreader.getSubscriptionData();
+			List<SubscriptionData> subscriptions =  MainPager.opcreader.getSubscriptionData();
 			HashMap<String,String> item;
 			
 			// clear the list so the list doesn't grow on every time it is created
@@ -100,16 +99,13 @@ import android.widget.SimpleAdapter;
 		}
 			
 		public boolean onContextItemSelected(MenuItem item) {
-			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 			
-			
-		    if (item.getTitle() == "Open") {
+			if (item.getTitle() == "Open") {
 		        //Code To Handle open
 		    	//List<Subscription> subscriptions =  mPager.opcreader.getSubscriptions();
 		    	
 		    	//Subscription subscription = subscriptions.get((int)info.id);
-		    	
-		    	
+		    		    	
 		    	
 		    }
 		    else {

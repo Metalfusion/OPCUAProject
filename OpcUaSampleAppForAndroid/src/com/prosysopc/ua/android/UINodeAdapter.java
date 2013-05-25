@@ -30,8 +30,8 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
         View row = convertView;
         UINodeHolder holder = null;
         
-        if(row == null)
-        {
+        if(row == null) {
+        	
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             
@@ -41,10 +41,8 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
             
             row.setTag(HOLDER_KEY_ID, holder);
             row.setTag(NODE_KEY_ID, rootNode.childNodes.get(position));
-        }
         
-        else
-        {
+        } else {
             holder = (UINodeHolder)row.getTag(HOLDER_KEY_ID);
         }
         
@@ -59,6 +57,17 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
     {
         ImageView imgIcon;
         TextView txtTitle;
+    }
+    
+    @Override
+    public UINode getItem(int position) {
+    	
+    	try {
+    		return rootNode.childNodes.get(position);
+    	} catch (Exception e) {
+    		return null;
+    	}   	 	   	
+    	
     }
     
     private String truncateString(String str) {

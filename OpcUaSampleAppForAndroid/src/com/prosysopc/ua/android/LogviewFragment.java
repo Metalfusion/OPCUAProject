@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 
@@ -56,7 +55,7 @@ public class LogviewFragment extends ListFragment {
 	}
 	
 	private void updateAdapter() {
-		List<Logmessage> messagelog =  mPager.opcreader.getMessagelog();
+		List<Logmessage> messagelog =  MainPager.opcreader.getMessagelog();
 		adapter = new LogMessageAdapter(getActivity(), R.layout.icon_two_line_list_item, messagelog);
 		setListAdapter( adapter );
 	}
@@ -66,8 +65,7 @@ public class LogviewFragment extends ListFragment {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 	    
 		if (v.getId() == this.getListView().getId()) {
-	        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	        
+			
 	        menu.setHeaderTitle("Select action");
 	        menu.add(0, 0, 0, "Open this item");
 	        menu.add(0, 0, 0, "Clear log");
@@ -86,7 +84,7 @@ public class LogviewFragment extends ListFragment {
 				
 	    if (item.getTitle().equals("Open this item")) {
 	        //Code To Handle open
-	    	List<Logmessage> messagelog =  mPager.opcreader.getMessagelog();
+	    	List<Logmessage> messagelog =  MainPager.opcreader.getMessagelog();
 	    	
 	    	Logmessage message = messagelog.get((int)info.id);
 	    	
@@ -101,7 +99,7 @@ public class LogviewFragment extends ListFragment {
 	    
 	    } else if (item.getTitle().equals("Clear log")) {
 	    
-	    	mPager.opcreader.clearLog();
+	    	MainPager.opcreader.clearLog();
 	    	
 	    	// update view
 		    onStart();

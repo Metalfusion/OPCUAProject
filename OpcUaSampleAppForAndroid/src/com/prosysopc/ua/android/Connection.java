@@ -262,7 +262,7 @@ public class Connection
 		if (!client.hasSubscription(subscription.getSubscriptionId())) {
 			
 			// activate subscription
-			subscription.setPublishingEnabled(new Boolean("true"));
+			subscription.setPublishingEnabled(true);
 			
 			client.addSubscription(subscription);
 			
@@ -281,8 +281,7 @@ public class Connection
 	
 	protected static SubscriptionNotificationListener subscriptionListener = new SubscriptionNotificationListener() {
 
-		public void onDataChange(Subscription subscription, MonitoredItem item,
-				DataValue newValue) {
+		public void onDataChange(Subscription subscription, MonitoredItem item,	DataValue newValue) {
 			// Called for each data change notification			
 			// on change update the value of the subscriptiondata-list
 			NodeId nodeid = item.getNodeId();
@@ -318,30 +317,23 @@ public class Connection
 		}
 
 		@Override
-		public void onBufferOverflow(Subscription arg0, UnsignedInteger arg1,
-				ExtensionObject[] arg2) {
-			// TODO Auto-generated method stub
+		public void onBufferOverflow(Subscription arg0, UnsignedInteger arg1, ExtensionObject[] arg2) {	
 			
 		}
 
 		@Override
-		public void onDataChange(Subscription arg0, MonitoredDataItem arg1,
-				DataValue arg2) {
-			// TODO Auto-generated method stub
+		public void onDataChange(Subscription arg0, MonitoredDataItem arg1,	DataValue arg2) {			
 			
 		}
 
 		@Override
-		public void onEvent(Subscription arg0, MonitoredEventItem arg1,
-				Variant[] arg2) {
-			// TODO Auto-generated method stub
+		public void onEvent(Subscription arg0, MonitoredEventItem arg1,	Variant[] arg2) {
 			
 		}
 
 		@Override
-		public long onMissingData(UnsignedInteger arg0, long arg1, long arg2,
-				StatusCode arg3) {
-			// TODO Auto-generated method stub
+		public long onMissingData(UnsignedInteger arg0, long arg1, long arg2, StatusCode arg3) {
+			
 			return 0;
 		}
 

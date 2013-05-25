@@ -69,7 +69,7 @@ public class ServerlistFragment extends ListFragment {
 	
 	private void updateList() {
 		
-		List<Server> servers =  mPager.opcreader.getServers();
+		List<Server> servers =  MainPager.opcreader.getServers();
 		HashMap<String,String> item;
 		
 		// clear the list so the list doesn't grow on every time it is created
@@ -117,10 +117,10 @@ public class ServerlistFragment extends ListFragment {
 	        
 	    	//Code To Handle connect
 	    	try {
-				mPager.opcreader.updateConnection(mPager.opcreader.getServer((int)info.id));
+				MainPager.opcreader.updateConnection(MainPager.opcreader.getServer((int)info.id));
 			} catch (URISyntaxException e) {
 				
-				mPager.opcreader.addLog(LogmessageType.WARNING, e.toString() );
+				MainPager.opcreader.addLog(LogmessageType.WARNING, e.toString() );
 			}
 	    		    	
 	    	NodebrowserFragment f = (NodebrowserFragment) mPager.mPagerAdapter.getItem(1);
@@ -128,9 +128,9 @@ public class ServerlistFragment extends ListFragment {
 	    	if( f != null)	{
 	    			    		
 	    		try {	    			
-	    			f.updateRootList(mPager.opcreader.connection.getNode(Identifiers.RootFolder, true));	    			
+	    			f.updateRootList(MainPager.opcreader.connection.getNode(Identifiers.RootFolder, true));	    			
 	    		} catch (Exception e) {	    			
-	    			mPager.opcreader.addLog(LogmessageType.WARNING, e.toString());	    			
+	    			MainPager.opcreader.addLog(LogmessageType.WARNING, e.toString());	    			
 	    		}	    		
 	    	}
 	    	
@@ -140,7 +140,7 @@ public class ServerlistFragment extends ListFragment {
 	    	Intent intent = new Intent(getActivity(), ServerSettingsActivity.class);
 			Bundle b = new Bundle();
 			
-			Server server = mPager.opcreader.getServer((int)info.id);
+			Server server = MainPager.opcreader.getServer((int)info.id);
 	    	b.putString("name", server.getName());
 	    	b.putString("address", server.getAddress());
 	    	b.putString("identity",server.getIdentity());
@@ -152,7 +152,7 @@ public class ServerlistFragment extends ListFragment {
 	    } else if (item.getTitle() == "Delete") {
 	        
 	    	//Code To Handle deletion
-	    	mPager.opcreader.removeServer((int)info.id);
+	    	MainPager.opcreader.removeServer((int)info.id);
 	    	adapter.notifyDataSetChanged();
 	    } 
 	    else {

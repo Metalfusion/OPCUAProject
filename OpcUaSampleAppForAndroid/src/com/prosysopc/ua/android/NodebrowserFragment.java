@@ -51,7 +51,7 @@ public class NodebrowserFragment extends Fragment {
         
 		for (int i = 0; i < number; i++) {
 		
-			Nodelist_level_fragment childfrag = new Nodelist_level_fragment(mPager.opcreader);
+			Nodelist_level_fragment childfrag = new Nodelist_level_fragment(MainPager.opcreader);
 			childfrag.setup(this, null, startPos + i, false);			
 			ft.add(R.id.nodelevellayout ,childfrag, "nodelevel" + startPos + i);
 			listFragments.add(childfrag);
@@ -67,9 +67,9 @@ public class NodebrowserFragment extends Fragment {
 		
 		// TODO: Add option to OPCReader to only read child nodes or attributes
 		if (attributeView && !rootNode.attributesSet) {
-			rootNode = mPager.opcreader.getNode(rootNode.nodeID);
+			rootNode = MainPager.opcreader.getNode(rootNode.nodeID);
 		} else if (!attributeView && !rootNode.referencesSet) {
-			rootNode = mPager.opcreader.getNode(rootNode.nodeID);
+			rootNode = MainPager.opcreader.getNode(rootNode.nodeID);
 		}
 		
 		// Transaction for removing the old fragments
@@ -95,7 +95,7 @@ public class NodebrowserFragment extends Fragment {
 		FragmentTransaction ft2 = getChildFragmentManager().beginTransaction();
 		ft2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		
-		Nodelist_level_fragment childfrag = new Nodelist_level_fragment(mPager.opcreader);
+		Nodelist_level_fragment childfrag = new Nodelist_level_fragment(MainPager.opcreader);
 		
 		childfrag.setup(this, rootNode, position, attributeView);		
 		//childfrag.setup(this, null, position, attributeView); // FIXME: test code, correct code above

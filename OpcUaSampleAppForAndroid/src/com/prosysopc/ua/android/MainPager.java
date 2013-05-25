@@ -5,14 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.opcfoundation.ua.builtintypes.DataValue;
-import org.opcfoundation.ua.builtintypes.NodeId;
-
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
-import com.prosysopc.ua.client.MonitoredDataItem;
-import com.prosysopc.ua.client.MonitoredDataItemListener;
-import com.prosysopc.ua.client.MonitoredItem;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,11 +42,12 @@ public class MainPager extends FragmentActivity {
 
 	public static OPCReader opcreader;
 	public static final int LIST_LINE_LENGTH = 100; 		
-	
+	public static MainPager pager;
 	
 	
 	public MainPager () {
 		opcreader = new OPCReader();
+		
 		try {
 			opcreader.addModifyServer("Simulator", "opc.tcp://10.0.2.2:4841", "", "", 20);
 			opcreader.addModifyServer("Public test server", "opc.tcp://opcua.info:62949/Advosol/uaSimUC", "ua", "test", 20);
@@ -67,6 +60,8 @@ public class MainPager extends FragmentActivity {
 		opcreader.addLog( Logmessage.LogmessageType.WARNING, "Warning message example");
 		opcreader.addLog( Logmessage.LogmessageType.ERROR, "Error message example");
 		ServerSettingsActivity.opcreader = opcreader;
+		
+		pager = this;
 	}
 	
 	
@@ -114,7 +109,7 @@ public class MainPager extends FragmentActivity {
 	                try {
 						opcreader.updateConnection(null);
 					} catch (URISyntaxException e) {						 
-						opcreader.addLog(LogmessageType.WARNING, e.toString() );
+						opcreader.addLog(LogmessageType.ERROR, e.toString() );
 					}
 	                
 	                Toast.makeText(getBaseContext(), "Disconnected", Toast.LENGTH_SHORT).show();
@@ -122,6 +117,12 @@ public class MainPager extends FragmentActivity {
 	                break;
 	 
 	            case R.id.exit:
+	            	
+	            	try {
+						opcreader.updateConnection(null);
+					} catch (URISyntaxException e) {						 
+						opcreader.addLog(LogmessageType.WARNING, e.toString() );
+					}
 	            	
 	                Toast.makeText(getBaseContext(), "Exiting", Toast.LENGTH_SHORT).show();	                
 	                finish();
@@ -243,10 +244,6 @@ public class MainPager extends FragmentActivity {
 	
 	public void onActivityResult( int requestCode, int resultCode, Intent data)
 	{
-		// only activity that uses this listener is ValueWrite, so only it's 
-		// stuff is needed
-		int WRITE_ATTRIBUTE_CALL = 1;
-		
 		if( resultCode == Activity.RESULT_OK)
 		{
 			Bundle b = data.getExtras();

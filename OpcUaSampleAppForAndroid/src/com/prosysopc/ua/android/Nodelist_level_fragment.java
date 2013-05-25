@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
 
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
 
@@ -45,7 +46,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	public Nodelist_level_fragment(OPCReader opcreader) {
 		// TODO Auto-generated constructor stub
 		rootNode = null;
-		this.opcreader = opcreader;
+		Nodelist_level_fragment.opcreader = opcreader;
 	}
 		
 	public void setup(NodebrowserFragment nodebrowser, UINode rootNode, int level, boolean showAttributes) {
@@ -93,25 +94,21 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	@Override
 	public void onListItemClick(android.widget.ListView l, View v, int position, long id) {
 		
-		// Get the real (absolute) position instead the relative to the view one that is given as a parameter
-		for (int i = 0; i < l.getChildCount(); i++) {
-			if ( l.getChildAt(i) == v ) {
-				position = i;
-				break;
-			}
-		}		
-		
+				
 		// Test if we are displaying nodes or attributes
 		if (! showAttributes) {
 			
 			try {
 				
 				// Clear highlights from others					
-				for (int i = 0 ; i < l.getChildCount(); i++) {
-					if (i == position) {							
-						l.getChildAt(i).setBackgroundColor(Color.rgb(51, 181, 229));						
+				for (int i = 0 ; i < getListAdapter().getCount(); i++) {
+					
+					View child = getListAdapter().getView(i, null, null);
+					
+					if (i == position) {
+						child.setBackgroundColor(Color.rgb(51, 181, 229));						
 					} else	{						
-						l.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+						child.setBackgroundColor(Color.TRANSPARENT);
 					}
 				}
 				
@@ -124,10 +121,14 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			UINode node;
 			try {
 				
-				node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);								
+				node = (UINode)(getListAdapter().getItem(position));
+				
+				//node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);								
 				nodebrowser.createList(this.listLevel+1, node, node.type == UINodeType.leafNode);
 				
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				MainPager.opcreader.addLog(LogmessageType.ERROR, e.toString() + "\n" + e.getMessage());
+			}
 			
 			// Scroll the selected to the top				
 			//l.setSelectionFromTop(position, 0);

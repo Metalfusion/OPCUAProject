@@ -5,12 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
-import org.opcfoundation.ua.common.ServiceResultException;
-
-import com.prosysopc.ua.ServiceException;
-import com.prosysopc.ua.StatusException;
+import android.widget.Toast;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
-import com.prosysopc.ua.client.AddressSpaceException;
 
 public class OPCReader
 {
@@ -133,8 +129,17 @@ public class OPCReader
 	// adds new message to log
 	public void addLog( LogmessageType type, String message )
 	{
-		// timestamp is added on Logmessage constructor
+		// Timestamp is added on Logmessage constructor
 		messagelog.add( new Logmessage( type, message) );
+		
+		try {
+			if (type == LogmessageType.ERROR) {
+				Toast.makeText(MainPager.pager.getBaseContext(), "Log: ERROR", Toast.LENGTH_SHORT).show();
+			} else if (type == LogmessageType.WARNING) {
+				Toast.makeText(MainPager.pager.getBaseContext(), "Log: WARNING", Toast.LENGTH_SHORT).show();
+			}
+		} catch (Exception e) {}
+		
 	}
 	
 	public List<Logmessage> getMessagelog()
@@ -151,18 +156,8 @@ public class OPCReader
 		UINode node = null;
 		try {
 			node = connection.getNode(nodeid, true);
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
-		} catch (AddressSpaceException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
-		} catch (StatusException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
-		} catch (ServiceResultException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (Exception e) {
+			addLog(LogmessageType.ERROR, e.toString() );
 		}
 		
 		return node;
@@ -171,20 +166,14 @@ public class OPCReader
 	public void writeAttributes(String value)
 	{
 		try {
-			if( nodeidtobewritten != null )
-			{
+			
+			if( nodeidtobewritten != null )	{
 				connection.writeAttribute(nodeidtobewritten, value);
 			}
 			
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
-		} catch (StatusException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
-		} catch (AddressSpaceException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (Exception e) {
+			
+			addLog(LogmessageType.ERROR, e.toString() );		
 		}
 	}
 	
@@ -202,12 +191,9 @@ public class OPCReader
 	{
 		try {
 			connection.subscribe(nodeid);
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
-		} catch (StatusException e) {
-			// TODO Auto-generated catch block
-			addLog(LogmessageType.WARNING, e.toString() );
+		} catch (Exception e) {
+			
+			addLog(LogmessageType.ERROR, e.toString() );
 		}
 	}
 	
