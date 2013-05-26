@@ -25,6 +25,8 @@ import org.opcfoundation.ua.core.ReferenceDescription;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 import org.opcfoundation.ua.utils.AttributesUtil;
 
+import android.widget.Toast;
+
 import com.prosysopc.ua.DataTypeConverter;
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
@@ -247,19 +249,20 @@ public class Connection
 		// create new subscription if needed
 		if (subscription == null) {
 			subscription = new Subscription();
-			subscription.addNotificationListener(subscriptionListener);
+			//subscription.addNotificationListener(subscriptionListener);
 		}
 		
 		// check if item is already monitored
-		if(!subscription.hasItem(nodeId, Attributes.Value)) {
+		//if(!subscription.hasItem(nodeId, Attributes.Value)) {
 			// if not, create item to be monitored
 			MonitoredDataItem item = new MonitoredDataItem(nodeId,Attributes.Value,MonitoringMode.Reporting);
 			item.addChangeListener(dataChangeListener);
+			item.setSamplingInterval(0);
 			subscription.addItem(item);
-		}
+		//}
 		
 		//Add subscription to the client, if it wasn't there already
-		if (!client.hasSubscription(subscription.getSubscriptionId())) {
+		//if (!client.hasSubscription(subscription.getSubscriptionId())) {
 			
 			// activate subscription
 			subscription.setPublishingEnabled(true);
@@ -272,7 +275,7 @@ public class Connection
 			// add subscriptiondata for the ui
 			opcreader.addSubscriptionData(subdata);
 			
-		}		
+		//}		
 		
 	}
 	

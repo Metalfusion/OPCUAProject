@@ -241,6 +241,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	public void onActivityResult( int requestCode, int resultCode, Intent data)
 	{
 		Toast toast = Toast.makeText(getActivity(), "OnActivityResult called", Toast.LENGTH_SHORT);
+		toast.show();
 		if( requestCode == WRITE_ATTRIBUTE_CALL)
 		{
 			if( resultCode == Activity.RESULT_OK)
