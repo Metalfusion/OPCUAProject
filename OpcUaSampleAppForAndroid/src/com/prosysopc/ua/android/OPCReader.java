@@ -3,10 +3,10 @@ package com.prosysopc.ua.android;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.opcfoundation.ua.builtintypes.NodeId;
 import android.widget.Toast;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
+import com.prosysopc.ua.client.MonitoredDataItem;
 
 public class OPCReader {
 	List<Server> servers;
@@ -66,8 +66,11 @@ public class OPCReader {
 		if (newserver == null) {
 
 			if (connection != null) {
+				
 				connection.disconnect();
+				removeSubscriptions();				
 				connection = null;
+				
 				addLog(LogmessageType.INFO, "Disconnected from server " + activeServer.getName());
 				activeServer = null;
 			}
@@ -76,25 +79,28 @@ public class OPCReader {
 
 			connection = new Connection(newserver, this);
 			activeServer = newserver;
-			addLog(LogmessageType.INFO, "Connected to server " + newserver.getName());
+			addLog(LogmessageType.INFO, "Connected to server " + newserver.getName() + "\n" + newserver.getAddress());
 			try {
 				connection.connect();
 			} catch (Exception e) {
-				addLog(LogmessageType.WARNING, e.toString());
+				addLog(LogmessageType.ERROR, e.toString());
 			}
 
 		} else {
 
 			connection.disconnect();
+			removeSubscriptions();
+						
 			addLog(LogmessageType.INFO, "Disconnected from " + activeServer.getName());
+			
 			connection = new Connection(newserver, this);
-			addLog(LogmessageType.INFO, "Connected to " + newserver.getName());
+			addLog(LogmessageType.INFO, "Connected to server " + newserver.getName() + "\n" + newserver.getAddress());
 			activeServer = newserver;
 
 			try {
 				connection.connect();
 			} catch (Exception e) {
-				addLog(LogmessageType.WARNING, e.toString());
+				addLog(LogmessageType.ERROR, e.toString());
 			}
 
 		}
@@ -122,21 +128,43 @@ public class OPCReader {
 		return true;
 	}
 
-	// adds new message to log
+	// Adds a new message to the log
 	public void addLog(LogmessageType type, String message) {
+		
+		// This method might be called from anywhere, but the code needs to be run in the UI Thread to avoid problems.
+		
+		// Create a special runner class to do the message addition
+		class logMessageRunner implements Runnable {
+	        
+			LogmessageType mType;
+			String msg;
+	        
+			public logMessageRunner(LogmessageType type1, String message1) {
+				
+				mType = type1;
+				msg = message1;
+			
+			}	
+			
+	        public void run() {
+	        	
+	        	// Timestamp is added on Logmessage constructor
+				messagelog.add(new Logmessage(mType, msg));
 
-		// Timestamp is added on Logmessage constructor
-		messagelog.add(new Logmessage(type, message));
-
-		try {
-			if (type == LogmessageType.ERROR) {
-				Toast.makeText(MainPager.pager.getBaseContext(), "Log: ERROR", Toast.LENGTH_SHORT).show();
-			} else if (type == LogmessageType.WARNING) {
-				Toast.makeText(MainPager.pager.getBaseContext(), "Log: WARNING", Toast.LENGTH_SHORT).show();
-			}
-		} catch (Exception e) {
-		}
-
+				try {
+					if (mType == LogmessageType.ERROR) {
+						Toast.makeText(MainPager.pager.getBaseContext(), "Log: ERROR", Toast.LENGTH_SHORT).show();
+					} else if (mType == LogmessageType.WARNING) {
+						Toast.makeText(MainPager.pager.getBaseContext(), "Log: WARNING", Toast.LENGTH_SHORT).show();
+					}
+				} catch (Exception e) {}
+				
+	        }
+	    }
+		
+		// Run on UI thread
+		MainPager.pager.runOnUiThread(new logMessageRunner(type, message));		
+		
 	}
 
 	public List<Logmessage> getMessagelog() {
@@ -193,9 +221,47 @@ public class OPCReader {
 		} catch (Exception e) {
 			addLog(LogmessageType.ERROR, e.toString());
 		}
+		
+		MainPager.pager.updateSubscriptionView();
 
 	}
-
+	
+	// Removes all subscriptions
+	private void removeSubscriptions() {
+		
+		try {
+			connection.client.removeSubscription(connection.subscription);
+		} catch (Exception e) {}
+		
+		subscriptions.clear();
+		MainPager.pager.updateSubscriptionView();
+	}
+	
+	// Removes a subscription from OPCReader and server
+	public void removeSubscription(MonitoredDataItem item) {
+		
+		connection.removeSubscription(item);
+		
+		NodeId removedId = null;
+		
+		for (int i = 0; i < subscriptions.size(); i++) {
+			
+			SubscriptionData subData = subscriptions.get(i);
+			
+			if (subData.getDataItem() == item) {
+				
+				subscriptions.remove(i);
+				removedId = subData.getNodeId();
+				break;
+			}
+		}
+		
+		if (removedId != null) {
+			addLog(LogmessageType.INFO, "Subscription to " + removedId.toString() + " was removed");
+		}
+		
+	}
+	
 	public void updateSubscriptionValue(NodeId nodeid, String value) {
 
 		// get the subscription to be updated from the list

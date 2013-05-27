@@ -43,9 +43,10 @@ public class MainPager extends FragmentActivity {
 	public static MainPager pager;
 
 	public MainPager() {
-
+		
+		pager = this;
 		opcreader = new OPCReader();
-
+		
 		try {
 
 			opcreader.addModifyServer("Simulator", "opc.tcp://10.0.2.2:4841", "", "", 20);
@@ -57,13 +58,14 @@ public class MainPager extends FragmentActivity {
 			opcreader.addLog(LogmessageType.WARNING, e.toString());
 
 		}
-
+		
 		opcreader.addLog(Logmessage.LogmessageType.INFO, "Program start");
 		opcreader.addLog(Logmessage.LogmessageType.WARNING, "Warning message example");
 		opcreader.addLog(Logmessage.LogmessageType.ERROR, "Error message example");
+	
 		ServerSettingsActivity.opcreader = opcreader;
 
-		pager = this;
+		
 	}
 
 	@Override
@@ -261,5 +263,25 @@ public class MainPager extends FragmentActivity {
 
 		}
 	}
+	
+	public void updateSubscriptionView() {
+		
+		runOnUiThread(new Runnable() {
 
+			@Override
+			public void run() {
+				
+				try {
+					
+					IUpdateable frag = (IUpdateable) (mPagerAdapter.getItem(2));		
+					frag.update();
+				
+				} catch (Exception e) {}
+								
+			}
+			
+		});		
+		
+	}
+	
 }

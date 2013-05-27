@@ -36,6 +36,7 @@ public class MySubscriptionNotificationListener implements SubscriptionNotificat
 	public void onDataChange(Subscription subscription, MonitoredDataItem item, DataValue newValue) {
 
 		// Called for each data change notification
+		MainPager.pager.updateSubscriptionView();
 	}
 
 	@Override

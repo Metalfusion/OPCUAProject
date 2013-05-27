@@ -7,19 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.DataValue;
-import org.opcfoundation.ua.builtintypes.DiagnosticInfo;
-import org.opcfoundation.ua.builtintypes.ExtensionObject;
 import org.opcfoundation.ua.builtintypes.NodeId;
-import org.opcfoundation.ua.builtintypes.StatusCode;
 import org.opcfoundation.ua.builtintypes.UnsignedInteger;
-import org.opcfoundation.ua.builtintypes.Variant;
 import org.opcfoundation.ua.common.NamespaceTable;
 import org.opcfoundation.ua.common.ServiceResultException;
 import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.core.Identifiers;
 import org.opcfoundation.ua.core.MonitoringMode;
 import org.opcfoundation.ua.core.NodeClass;
-import org.opcfoundation.ua.core.NotificationData;
 import org.opcfoundation.ua.core.ReferenceDescription;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 import org.opcfoundation.ua.utils.AttributesUtil;
@@ -39,7 +34,6 @@ import com.prosysopc.ua.client.ConnectException;
 import com.prosysopc.ua.client.InvalidServerEndpointException;
 import com.prosysopc.ua.client.MonitoredDataItem;
 import com.prosysopc.ua.client.MonitoredDataItemListener;
-import com.prosysopc.ua.client.MonitoredEventItem;
 import com.prosysopc.ua.client.MonitoredItem;
 import com.prosysopc.ua.client.Subscription;
 import com.prosysopc.ua.client.SubscriptionNotificationListener;
@@ -118,10 +112,12 @@ public class Connection {
 		String name;
 
 		UaNode uanode = addressspace.getNode(nodeID);
-		addressspace.getCache().addNode(uanode);
+		addressspace.getCache().addNode(uanode);		
+				
 		name = uanode.getDisplayName().getText();
 
 		if (uanode.getNodeClass() == NodeClass.Object) {
+			
 			// node is folder
 			type = UINodeType.folderNode;
 
@@ -235,7 +231,9 @@ public class Connection {
 		// write the node
 		client.writeValue(nodeid, convertedValue);
 	}
-
+	
+	
+	// Adds a data value subscription to the given node
 	public void subscribe(NodeId nodeid) {
 
 		// create new subscription if needed
@@ -250,10 +248,10 @@ public class Connection {
 		}
 
 		// check if item is already monitored
-		if (!subscription.hasItem(nodeId, Attributes.Value)) {
-
+		if (!subscription.hasItem(nodeid, Attributes.Value)) {
+			
 			// if not, create item to be monitored
-			MonitoredDataItem item = new MonitoredDataItem(nodeId, Attributes.Value, MonitoringMode.Reporting);
+			MonitoredDataItem item = new MonitoredDataItem(nodeid, Attributes.Value, MonitoringMode.Reporting);
 
 			try {
 
@@ -261,12 +259,12 @@ public class Connection {
 				subscription.addItem(item);
 
 			} catch (Exception e) {
+				
 				opcreader.addLog(LogmessageType.ERROR, "Creating subscription failed" + "\n" + e.toString());
 
 				try {
 					subscription.removeItem(item);
-				} catch (Exception e1) {
-				}
+				} catch (Exception e1) {}
 
 				return;
 			}
@@ -274,16 +272,30 @@ public class Connection {
 			item.addChangeListener(dataChangeListener);
 
 			// create new dataholder for subscription
-			SubscriptionData subdata = new SubscriptionData(server, nodeid);
+			SubscriptionData subdata = new SubscriptionData(server, nodeid, item);
+			
+			try {
+				
+				UaNode node = addressspace.getNode(nodeid);
+				
+				// Read the value of the node
+				DataValue val = node.readAttribute(Attributes.Value);
+				String value = val.getValue().toString();				
+				subdata.updateValue(value);
+				
+				
+			} catch (Exception e) {}
 
 			// add subscriptiondata for the ui
 			opcreader.addSubscriptionData(subdata);
 
 		} else {
 			opcreader.addLog(LogmessageType.WARNING, "Error: Node is already subscribed to");
+			return;
 		}
 
 		opcreader.addLog(LogmessageType.INFO, "Node value subscription added" + "\n" + "Node ID: " + nodeid.toString());
+		Toast.makeText(MainPager.pager, "Subscription added", Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -301,14 +313,6 @@ public class Connection {
 		// LifetimeCount should be at least 3 times KeepAliveCount
 		subs.setLifetimeCount(1000);
 		subs.setMaxKeepAliveCount(50);
-
-		// If you are expecting big data changes, it may be better to break the
-		// notifications to smaller parts
-		// subs.setMaxNotificationsPerPublish(1000);
-
-		// Listen to the alive and timeout events of the
-		// subscription
-		// subs.addAliveListener(subscriptionAliveListener);
 
 		// Listen to notifications - the data changes and events are
 		// handled using the item listeners (see below), but in many
@@ -331,12 +335,21 @@ public class Connection {
 
 		@Override
 		public void onDataChange(MonitoredDataItem sender, DataValue prevValue, DataValue value) {
-
-			MonitoredItem i = sender;
+			
+			MonitoredItem i = sender;			
 			NodeId nodeid = i.getNodeId();
 			opcreader.updateSubscriptionValue(nodeid, value.getValue().toString());
 		}
 
 	};
+
+	public void removeSubscription(MonitoredDataItem item) {
+		
+		try {
+			subscription.removeItem(item);
+		} catch (Exception e) {
+			opcreader.addLog(LogmessageType.ERROR, "Removing subscription failed" + "\n" + e.toString());
+		}
+	}
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class SublistFragment extends ListFragment implements IUpdateable {
 	static MainPager mPager;
@@ -78,32 +80,57 @@ public class SublistFragment extends ListFragment implements IUpdateable {
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-
+	
 		super.onCreateContextMenu(menu, v, menuInfo);
-		/*
-		 * if (v.getId() == this.getListView().getId()) { AdapterView.AdapterContextMenuInfo info =
-		 * (AdapterView.AdapterContextMenuInfo) menuInfo; //HashMap item = (HashMap)
-		 * getListView().getItemAtPosition(info.position); // t‰m‰ casti heitt‰‰ poikkeuksen
-		 * menu.setHeaderTitle("Select action"); menu.add(0, 0, 0, "Open");
-		 * 
-		 * }
-		 */
+		
+		if (v.getId() == this.getListView().getId()) { 
+			  			   			  
+			menu.setHeaderTitle("Select action"); 
+			menu.add(0, 0, 0, "More info");
+			menu.add(0, 0, 0, "Remove");
+			  		  
+		}
+		 
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
-
-		if (item.getTitle() == "Open") {
-			// Code To Handle open
-			// List<Subscription> subscriptions = mPager.opcreader.getSubscriptions();
-
-			// Subscription subscription = subscriptions.get((int)info.id);
-
-		} else {
-
+		
+		SubscriptionData subData;
+		
+		try {		
+			
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			List<SubscriptionData> subscriptions = MainPager.opcreader.getSubscriptionData();
+			subData = subscriptions.get((int)info.id);
+			
+		} catch (Exception e) {
 			return false;
 		}
-		// update view
-		onStart();
+		
+		if (item.getTitle() == "More info") {
+						
+			// Use the valueReadActivity to show the subscription data			
+			Intent intent = new Intent(getActivity(), ValueReadActivity.class);
+
+			Bundle b = new Bundle();
+			b.putString("title", "NodeID: " + subData.getNodeId().toString());
+			b.putString("text", "Latest update received: " + subData.getReceiveTime().toString()  + "\n" + "Value: " + subData.getValue());
+
+			intent.putExtras(b);
+			startActivity(intent);
+			
+		} else if (item.getTitle() == "Remove") {
+			
+			MainPager.opcreader.removeSubscription(subData.getDataItem());
+			
+			// update view
+			updateList();
+			
+		} else {
+			
+			return false;
+		}
+				
 		return true;
 	}
 
