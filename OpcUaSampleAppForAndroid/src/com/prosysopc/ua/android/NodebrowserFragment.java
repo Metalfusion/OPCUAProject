@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
 public class NodebrowserFragment extends Fragment implements IUpdateable {
-	
+
 	static MainPager mPager;
 
 	private List<Nodelist_level_fragment> listFragments = new ArrayList<Nodelist_level_fragment>();
