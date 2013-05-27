@@ -18,5 +18,6 @@
     <string name="write">Write</string>       
     <string name="exit">Exit</string>    
     <string name="disconnect">Disconnect</string>
+    <string name="updateView">Update this view</string>
 
 </resources>

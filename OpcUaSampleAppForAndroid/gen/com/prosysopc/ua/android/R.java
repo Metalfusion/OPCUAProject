@@ -42,13 +42,13 @@ public final class R {
         public static final int buttonOKValueWriteView=0x7f060024;
         public static final int buttonSaveServerSettingsEdit=0x7f060020;
         public static final int buttonServerSettingsEdit=0x7f060013;
-        public static final int disconnect=0x7f060026;
+        public static final int disconnect=0x7f060027;
         public static final int editTextAddress=0x7f060018;
         public static final int editTextIdentity=0x7f06001a;
         public static final int editTextPassword=0x7f06001c;
         public static final int editTextServerName=0x7f060016;
         public static final int editTextTimeout=0x7f06001e;
-        public static final int exit=0x7f060027;
+        public static final int exit=0x7f060028;
         public static final int fragmentlist_scrollview=0x7f06000e;
         public static final int imgIcon=0x7f060004;
         public static final int messagetypeview=0x7f060007;
@@ -69,6 +69,7 @@ public final class R {
         public static final int timestampview=0x7f060008;
         public static final int title=0x7f060021;
         public static final int txtTitle=0x7f060012;
+        public static final int updateView=0x7f060026;
     }
     public static final class layout {
         public static final int activity_main_pager=0x7f030000;
@@ -107,6 +108,7 @@ public final class R {
         public static final int title_section1=0x7f050003;
         public static final int title_section2=0x7f050004;
         public static final int title_section3=0x7f050005;
+        public static final int updateView=0x7f050011;
         public static final int write=0x7f05000e;
     }
 }

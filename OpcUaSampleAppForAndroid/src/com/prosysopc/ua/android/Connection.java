@@ -1,6 +1,5 @@
 package com.prosysopc.ua.android;
 
-
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,10 +48,8 @@ import com.prosysopc.ua.nodes.UaDataType;
 import com.prosysopc.ua.nodes.UaNode;
 import com.prosysopc.ua.nodes.UaVariable;
 
+public class Connection {
 
-public class Connection
-{
-	
 	static OPCReader opcreader;
 	Server server;
 	UaClient client;
@@ -60,296 +57,286 @@ public class Connection
 	AddressSpace addressspace;
 	NamespaceTable namespacetable;
 	MainPager mpager;
-	
+
 	Subscription subscription;
-	
-	public Connection( Server server, OPCReader opcReader ) throws URISyntaxException
-	{
+	protected SubscriptionNotificationListener subscriptionListener;
+	protected MySubscriptionAliveListener subscriptionAliveListener;
+
+	public Connection(Server server, OPCReader opcReader) throws URISyntaxException {
+
 		this.server = server;
 		opcreader = opcReader;
-		client = new UaClient( server.address );
-	}
-	
-	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException, StatusException
-	{
+		subscriptionListener = new MySubscriptionNotificationListener(opcreader);
+		subscriptionAliveListener = new MySubscriptionAliveListener(opcreader);
+		client = new UaClient(server.address);
 
-		client.setTimeout(server.getTimeout()*1000);
+	}
+
+	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException, StatusException {
+
+		client.setTimeout(server.getTimeout() * 1000);
 		client.setSecurityMode(SecurityMode.NONE);
-		
+
 		UserIdentity ident;
-		
+
 		if (server.getIdentity().isEmpty() && server.getPassword().isEmpty()) {
 			ident = new UserIdentity();
 		} else {
 			ident = new UserIdentity(server.getIdentity(), server.getPassword());
 		}
-		
+
 		client.setUserIdentity(ident);
 		client.connect();
 		addressspace = client.getAddressSpace();
 		namespacetable = client.getNamespaceTable();
 		addressspace.getCache().setMaxQueueLength(20);
-		addressspace.getCache().setNodeMaxAgeInMillis(server.getTimeout()*1000*10);
-		
+		addressspace.getCache().setNodeMaxAgeInMillis(server.getTimeout() * 1000 * 10);
+
 		return true;
 	}
-	
-	public boolean disconnect()
-	{
+
+	public boolean disconnect() {
+
 		client.disconnect();
-		
+
 		return true;
 	}
-	
-	public DataValue readNode(NodeId nodeId ) throws ServiceException, StatusException
-	{
+
+	public DataValue readNode(NodeId nodeId) throws ServiceException, StatusException {
+
 		DataValue value = client.readValue(nodeId);
 		return value;
 	}
-	
+
 	// return UINode made from node of the nodeID
-	public UINode getNode(NodeId nodeID, Boolean getChildren) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
-	{
-		
+	public UINode getNode(NodeId nodeID, Boolean getChildren) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException {
+
 		Date nodeGetStart = new Date();
-		
+
 		UINode node = null;
 		UINodeType type;
 		String name;
-		
-		UaNode uanode = addressspace.getNode(nodeID);	
+
+		UaNode uanode = addressspace.getNode(nodeID);
 		addressspace.getCache().addNode(uanode);
 		name = uanode.getDisplayName().getText();
-		
-		if( uanode.getNodeClass() == NodeClass.Object )
-		{
+
+		if (uanode.getNodeClass() == NodeClass.Object) {
 			// node is folder
 			type = UINodeType.folderNode;
-						
+
 			List<UINode> children = null;
-			
-			if (getChildren) {				
-				children = getNodeChildren(uanode);				
+
+			if (getChildren) {
+				children = getNodeChildren(uanode);
 			}
-			
+
 			node = new UINode(type, name, nodeID, children);
-			
+
 			if (children != null) {
 				node.referencesSet = true;
 			}
-			
-		}
-		else
-		{
+
+		} else {
 			// node is leaf
 			type = UINodeType.leafNode;
 			node = new UINode(type, name, nodeID);
 			node.referencesSet = true;
 		}
-		
-		
+
 		// add attributes to node
-		getNodeAttributes(uanode,node);
+		getNodeAttributes(uanode, node);
 		node.attributesSet = true;
-				
+
 		if (getChildren == true) {
-			opcreader.addLog(LogmessageType.INFO,"Getting the whole '" + node.name +  "' node took " + (new Date().getTime()-nodeGetStart.getTime()) + " milliseconds");
+			opcreader.addLog(LogmessageType.INFO, "Getting the whole '" + node.name + "' node took " + (new Date().getTime() - nodeGetStart.getTime()) + " milliseconds");
 		}
-		
+
 		return node;
-		
+
 	}
-	
+
 	// Get minimal info about the node's children without polling the server too much
-	public List<UINode> getNodeChildren(UaNode node) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException
-	{
+	public List<UINode> getNodeChildren(UaNode node) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException {
+
 		// List for the child UINodes
 		ArrayList<UINode> list = new ArrayList<UINode>();
 		List<ReferenceDescription> references = addressspace.browse(node.getNodeId());
 
 		// Loop through the references
-		for( ReferenceDescription reference : references)
-		{
-			
+		for (ReferenceDescription reference : references) {
+
 			// Node class defines whether it is a folder or leaf
 			UINodeType type = reference.getNodeClass() == NodeClass.Object ? UINodeType.folderNode : UINodeType.leafNode;
-			
+
 			// Get NodeId and display name
-			NodeId id = namespacetable.toNodeId(reference.getNodeId());			
+			NodeId id = namespacetable.toNodeId(reference.getNodeId());
 			String name = reference.getDisplayName().getText();
-			
+
 			// Construct the UINode
-			UINode newNode = new UINode( type ,name, id);			
+			UINode newNode = new UINode(type, name, id);
 			list.add(newNode);
-			
+
 		}
-		
+
 		// Sort the children nodes
 		Collections.sort(list);
-		
+
 		return list;
 	}
-	
+
 	// Reads all attributes of the given UaNode and saves them to the UINode
-	public void getNodeAttributes( UaNode node, UINode uinode ) 
-	{
-		
+	public void getNodeAttributes(UaNode node, UINode uinode) {
 
 		// Get all attribute types supported by this node
 		UnsignedInteger attr[] = node.getSupportedAttributes();
-		
+
 		// Loop through the attributes
 		for (int i = 0; i < attr.length; i++) {
-			
+
 			String attrName = "Unknown attribute";
-			
+
 			// Find the name of the node attribute
 			for (long i2 = Attributes.NodeId.getValue(); i2 < Attributes.UserExecutable.getValue(); i2++) {
-				
+
 				if (attr[i].getValue() == i2) {
 					attrName = AttributesUtil.toString(UnsignedInteger.valueOf(i2));
 					break;
 				}
 			}
-			
+
 			// Read the value of the attribute
-			DataValue val = node.readAttribute(attr[i]);			
+			DataValue val = node.readAttribute(attr[i]);
 			String value = val.getValue().toString();
-			
-			uinode.addAttribute(attrName,value);
-			
+
+			uinode.addAttribute(attrName, value);
+
 		}
-		
+
 	}
-	       
+
 	// writes the value of the node
-	public void writeAttribute( NodeId nodeid, String value ) throws ServiceException, StatusException, AddressSpaceException
-	{
+	public void writeAttribute(NodeId nodeid, String value) throws ServiceException, StatusException, AddressSpaceException {
+
 		// change the datatype to fit the node
 		UaDataType dataType = null;
 		UaVariable v = (UaVariable) addressspace.getNode(nodeid);
 		// Initialize DataType node, if it is not initialized yet
 		if (v.getDataType() == null)
-			v.setDataType(client.getAddressSpace().getType(
-					v.getDataTypeId()));
+			v.setDataType(client.getAddressSpace().getType(v.getDataTypeId()));
 		dataType = (UaDataType) v.getDataType();
-			
+
 		Object convertedValue;
 		if (dataType != null)
 			convertedValue = ((DataTypeConverter) addressspace.getDataTypeConverter()).parseVariant(value, dataType);
 		else
 			convertedValue = value;
-		
+
 		// write the node
-		client.writeValue(nodeid, convertedValue );
+		client.writeValue(nodeid, convertedValue);
 	}
-	
-	public void subscribe( NodeId nodeid ) throws ServiceException, StatusException
-	{
+
+	public void subscribe(NodeId nodeid) {
+
 		// create new subscription if needed
 		if (subscription == null) {
-			subscription = new Subscription();
-			//subscription.addNotificationListener(subscriptionListener);
+
+			try {
+				subscription = createSubscription();
+			} catch (Exception e) {
+				opcreader.addLog(LogmessageType.ERROR, "Creating subscription failed" + "\n" + e.toString());
+				return;
+			}
 		}
-		
+
 		// check if item is already monitored
-		//if(!subscription.hasItem(nodeId, Attributes.Value)) {
+		if (!subscription.hasItem(nodeId, Attributes.Value)) {
+
 			// if not, create item to be monitored
-			MonitoredDataItem item = new MonitoredDataItem(nodeId,Attributes.Value,MonitoringMode.Reporting);
+			MonitoredDataItem item = new MonitoredDataItem(nodeId, Attributes.Value, MonitoringMode.Reporting);
+
+			try {
+
+				item.setSamplingInterval(-1);
+				subscription.addItem(item);
+
+			} catch (Exception e) {
+				opcreader.addLog(LogmessageType.ERROR, "Creating subscription failed" + "\n" + e.toString());
+
+				try {
+					subscription.removeItem(item);
+				} catch (Exception e1) {
+				}
+
+				return;
+			}
+
 			item.addChangeListener(dataChangeListener);
-			item.setSamplingInterval(0);
-			subscription.addItem(item);
-		//}
-		
-		//Add subscription to the client, if it wasn't there already
-		//if (!client.hasSubscription(subscription.getSubscriptionId())) {
-			
-			// activate subscription
-			subscription.setPublishingEnabled(true);
-			
-			client.addSubscription(subscription);
-			
+
 			// create new dataholder for subscription
 			SubscriptionData subdata = new SubscriptionData(server, nodeid);
-			
+
 			// add subscriptiondata for the ui
 			opcreader.addSubscriptionData(subdata);
-			
-		//}		
-		
+
+		} else {
+			opcreader.addLog(LogmessageType.WARNING, "Error: Node is already subscribed to");
+		}
+
+		opcreader.addLog(LogmessageType.INFO, "Node value subscription added" + "\n" + "Node ID: " + nodeid.toString());
+
 	}
-	
 
-	
-	
-	protected static SubscriptionNotificationListener subscriptionListener = new SubscriptionNotificationListener() {
+	private Subscription createSubscription() throws ServiceException, StatusException {
 
-		public void onDataChange(Subscription subscription, MonitoredItem item,	DataValue newValue) {
-			// Called for each data change notification			
-			// on change update the value of the subscriptiondata-list
-			NodeId nodeid = item.getNodeId();
-			opcreader.updateSubscriptionValue(nodeid, newValue.getValue().toString());
+		Subscription subs;
+
+		// Create the subscription if it does not yet exist
+		subs = new Subscription();
+
+		// Default PublishingInterval is 1000 ms
+		subs.setPublishingInterval(5000);
+		subs.setPublishingEnabled(true);
+
+		// LifetimeCount should be at least 3 times KeepAliveCount
+		subs.setLifetimeCount(1000);
+		subs.setMaxKeepAliveCount(50);
+
+		// If you are expecting big data changes, it may be better to break the
+		// notifications to smaller parts
+		// subs.setMaxNotificationsPerPublish(1000);
+
+		// Listen to the alive and timeout events of the
+		// subscription
+		// subs.addAliveListener(subscriptionAliveListener);
+
+		// Listen to notifications - the data changes and events are
+		// handled using the item listeners (see below), but in many
+		// occasions, it may be best to use the subscription
+		// listener also to handle those notifications
+		subs.addNotificationListener(subscriptionListener);
+		subs.addAliveListener(subscriptionAliveListener);
+
+		// Add it to the client, if it wasn't there already
+		if (!client.hasSubscription(subs.getSubscriptionId())) {
+
+			client.addSubscription(subs);
 		}
 
-		@Override
-		public void onError(Subscription subscription, Object notification,
-				Exception exception) {
-			// Called if the parsing of the notification data fails,
-			// notification is either a MonitoredItemNotification or
-			// an EventList
-			opcreader.addLog(LogmessageType.WARNING, exception.toString());
-		}
+		return subs;
 
-		public void onEvent(MonitoredItem item, Variant[] eventFields) {
-			// Called for each event notification
-		}
+	}
 
-		@Override
-		public void onNotificationData(Subscription subscription,
-				NotificationData notification) {
-			// Called after a complete notification data package is
-			// handled
-		}
-
-		@Override
-		public void onStatusChange(Subscription subscription,
-				StatusCode oldStatus, StatusCode newStatus,
-				DiagnosticInfo diagnosticInfo) {
-			// Called when the subscription status has changed in
-			// the server
-		}
-
-		@Override
-		public void onBufferOverflow(Subscription arg0, UnsignedInteger arg1, ExtensionObject[] arg2) {	
-			
-		}
-
-		@Override
-		public void onDataChange(Subscription arg0, MonitoredDataItem arg1,	DataValue arg2) {			
-			
-		}
-
-		@Override
-		public void onEvent(Subscription arg0, MonitoredEventItem arg1,	Variant[] arg2) {
-			
-		}
-
-		@Override
-		public long onMissingData(UnsignedInteger arg0, long arg1, long arg2, StatusCode arg3) {
-			
-			return 0;
-		}
-
-	};	
-	
 	protected static MonitoredDataItemListener dataChangeListener = new MonitoredDataItemListener() {
+
 		@Override
-		public void onDataChange(MonitoredDataItem sender, DataValue prevValue,
-				DataValue value) {
+		public void onDataChange(MonitoredDataItem sender, DataValue prevValue, DataValue value) {
+
 			MonitoredItem i = sender;
 			NodeId nodeid = i.getNodeId();
 			opcreader.updateSubscriptionValue(nodeid, value.getValue().toString());
 		}
+
 	};
-	
+
 }

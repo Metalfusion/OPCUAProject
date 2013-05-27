@@ -1,5 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
+     
+    <item
+        android:id="@+id/updateView"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/updateView"/>
+    
     <item
         android:id="@+id/disconnect"
         android:orderInCategory="100"
