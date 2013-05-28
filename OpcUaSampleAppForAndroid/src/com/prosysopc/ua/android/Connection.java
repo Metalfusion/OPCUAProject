@@ -62,7 +62,7 @@ public class Connection {
 		opcreader = opcReader;
 		subscriptionListener = new MySubscriptionNotificationListener(opcreader);
 		subscriptionAliveListener = new MySubscriptionAliveListener(opcreader);
-		client = new UaClient(server.address);
+		client = new UaClient(server.getAddress());
 
 	}
 

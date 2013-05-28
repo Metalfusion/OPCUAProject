@@ -46,17 +46,7 @@ public class MainPager extends FragmentActivity {
 		
 		pager = this;
 		opcreader = new OPCReader();
-		
-		try {
-
-			opcreader.addModifyServer("Ascolab", "opc.tcp://demo.ascolab.com:4841", "", "", 20);
-
-		} catch (URISyntaxException e) {
-
-			opcreader.addLog(LogmessageType.WARNING, e.toString());
-
-		}
-		
+				
 		opcreader.addLog(Logmessage.LogmessageType.INFO, "Program started");
 		//opcreader.addLog(Logmessage.LogmessageType.WARNING, "Warning message example");
 		//opcreader.addLog(Logmessage.LogmessageType.ERROR, "Error message example");
@@ -279,6 +269,13 @@ public class MainPager extends FragmentActivity {
 			
 		});		
 		
+	}
+		
+	@Override
+	protected void onDestroy() {
+	
+		opcreader.saveServers("Servers");		
+		super.onDestroy();
 	}
 	
 }

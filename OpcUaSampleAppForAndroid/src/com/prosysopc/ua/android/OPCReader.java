@@ -1,9 +1,19 @@
 package com.prosysopc.ua.android;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.opcfoundation.ua.builtintypes.NodeId;
+
+import android.content.Context;
+import android.os.Handler;
+import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.Toast;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.client.MonitoredDataItem;
@@ -25,7 +35,26 @@ public class OPCReader {
 		servers = new ArrayList<Server>();
 		messagelog = new ArrayList<Logmessage>();
 		activeServer = null;
+		
+		Handler handler = new Handler();
+		
+		handler.postDelayed(new Runnable() {
 
+		    public void run() {
+		    	
+		    	loadServers("Servers");
+		
+		    	if (servers.isEmpty()) {
+				
+		    		try {
+						addModifyServer("Ascolab", "opc.tcp://demo.ascolab.com:4841", "", "", 20);
+					} catch (URISyntaxException e) {
+						e.printStackTrace();
+					}
+				}		    	
+		    }
+		}, 100); // 100ms delay to allow the MainPager to settle first
+		
 	}
 
 	// Adds a new server to server list, or updates an existing one.
@@ -41,7 +70,7 @@ public class OPCReader {
 
 		for (Server s : servers) {
 
-			if (s.name.equals(newserver.name)) {
+			if (s.getName().equals(newserver.getName())) {
 
 				if (s == activeServer) {
 					updateConnection(newserver);
@@ -281,4 +310,61 @@ public class OPCReader {
 		nodeidtobewritten = nodeid;
 	}
 
+	// Serializes all servers to the given file. Returns true if successful.
+	public Boolean saveServers(String fileName) {
+		
+		try {
+
+			FileOutputStream fos = MainPager.pager.openFileOutput(fileName, Context.MODE_PRIVATE);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			
+			for (Server serv : servers) {
+				os.writeObject(serv);
+			}
+			
+			os.close();
+			
+		} catch (IOException e) {
+			
+			addLog(LogmessageType.ERROR, "Saving servers failed." + "\n" + e.toString());
+			return false;
+		}
+		
+		addLog(LogmessageType.INFO, "Servers were saved to:" + "\n" + fileName);
+		return true;
+		
+	}
+	
+	// Tries to load servers from the given file. Returns true if successful.
+	public boolean loadServers(String fileName) {
+		
+		try {
+		
+			FileInputStream fis = MainPager.pager.getBaseContext().openFileInput(fileName);
+			ObjectInputStream is = new ObjectInputStream(fis);
+			
+			Server newServer = (Server)is.readObject();
+						
+			servers.clear();
+			
+			while (newServer != null) {
+				
+				addModifyServer(newServer);
+				//servers.add(newServer);
+				newServer = (Server)is.readObject();								
+			}			
+			
+			is.close();
+		
+		} catch (Exception e) {
+			
+			//addLog(LogmessageType.ERROR, "Loading servers failed." + "\n" + e.toString());					
+			return false;
+		}
+		
+		addLog(LogmessageType.INFO, servers.size() + " servers were loaded from:" + "\n" + fileName);
+		return true;
+		
+	}
+	
 }
