@@ -49,8 +49,6 @@ public class MainPager extends FragmentActivity {
 		
 		try {
 
-			opcreader.addModifyServer("Simulator", "opc.tcp://10.0.2.2:4841", "", "", 20);
-			opcreader.addModifyServer("Public test server", "opc.tcp://opcua.info:62949/Advosol/uaSimUC", "ua", "test", 20);
 			opcreader.addModifyServer("Ascolab", "opc.tcp://demo.ascolab.com:4841", "", "", 20);
 
 		} catch (URISyntaxException e) {
@@ -59,12 +57,11 @@ public class MainPager extends FragmentActivity {
 
 		}
 		
-		opcreader.addLog(Logmessage.LogmessageType.INFO, "Program start");
-		opcreader.addLog(Logmessage.LogmessageType.WARNING, "Warning message example");
-		opcreader.addLog(Logmessage.LogmessageType.ERROR, "Error message example");
+		opcreader.addLog(Logmessage.LogmessageType.INFO, "Program started");
+		//opcreader.addLog(Logmessage.LogmessageType.WARNING, "Warning message example");
+		//opcreader.addLog(Logmessage.LogmessageType.ERROR, "Error message example");
 	
 		ServerSettingsActivity.opcreader = opcreader;
-
 		
 	}
 

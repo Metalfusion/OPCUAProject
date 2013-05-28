@@ -7,36 +7,36 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"        
+        android:layout_height="wrap_content"
         android:ems="10"
-        android:textSize="25sp"
-        android:textIsSelectable="true">
-      
+        android:textIsSelectable="true"
+        android:textSize="25sp" >
     </TextView>
-   
+
     <EditText
         android:id="@+id/textvalue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1.0"
         android:ems="10"
-        android:inputType="textMultiLine" >
+        android:inputType="textMultiLine"
+        android:gravity="top" >
 
         <requestFocus />
     </EditText>
-    
-    <Button
-       android:id="@+id/buttonOKValueWriteView"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:onClick="buttonOKWriteViewOnClick"
-       android:text="@string/write" />
-    
-   <Button
-       android:id="@+id/buttonCloseValueWriteView"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:onClick="buttonCloseValueWriteOnClick"
-       android:text="@string/cancel" />
 
+    <Button
+        android:id="@+id/buttonOKValueWriteView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonOKWriteViewOnClick"
+        android:text="@string/write" />
+
+    <Button
+        android:id="@+id/buttonCloseValueWriteView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonCloseValueWriteOnClick"
+        android:text="@string/cancel" />
 
 </LinearLayout>

@@ -86,7 +86,10 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		TextView headerText = (TextView) nodelistview.findViewById(R.id.HeaderText);
 		headerText.setText(headerStr);
 		headerText.setOnClickListener(this);
-
+		
+		// Scroll the new list onto view
+		nodebrowser.scrollViewToRight();
+		
 		return nodelistview;
 
 	}
@@ -250,9 +253,13 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 
 	// Event handler for the header click, opens attributes list
 	public void onClick(View v) {
-
-		v.setBackgroundColor(Color.rgb(51, 181, 229));
-		nodebrowser.createList(this.listLevel + 1, this.rootNode, true);
+		
+		if (!showAttributes) {
+		
+			v.setBackgroundColor(Color.rgb(51, 181, 229));
+			nodebrowser.createList(this.listLevel + 1, this.rootNode, true);
+			
+		}
 	}
 
 	public UINode getNode() {

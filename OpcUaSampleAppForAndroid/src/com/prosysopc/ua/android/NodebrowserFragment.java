@@ -105,9 +105,6 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 		ft2.commit();
 		listFragments.add(childfrag);
 
-		HorizontalScrollView scroller = (HorizontalScrollView) (getView().findViewById(R.id.fragmentlist_scrollview));
-		scroller.scrollBy(150, 0);
-
 	}
 
 	// Resets the whole nodebrowser
@@ -119,8 +116,21 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 			createList(0, rootNode, false);
 		}
 	}
+	
+	// Scrolls the horizontal view with the list fragments
+	public void scrollViewToRight() {
+				
+		getView().postDelayed(new Runnable() {
 
-	@Override
+		    public void run() {
+		    	HorizontalScrollView scroller = (HorizontalScrollView) (getView().findViewById(R.id.fragmentlist_scrollview));
+				scroller.fullScroll(View.FOCUS_RIGHT);
+		    }
+
+		}, 500); // 500ms delay to allow the view to settle first
+		
+	}
+		
 	public void update() {
 
 		try {
