@@ -9,11 +9,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.opcfoundation.ua.builtintypes.NodeId;
-
 import android.content.Context;
 import android.os.Handler;
-import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.Toast;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.client.MonitoredDataItem;

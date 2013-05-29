@@ -40,7 +40,7 @@ public class ValueWriteActivity extends Activity {
 
 		String newValue = ((EditText) findViewById(R.id.textvalue)).getText().toString();
 
-		// TODO: Write the new value to the server and update the nodebrowser
+		// Send the result to the MainPager to be processed
 		Intent resultData = new Intent();
 		resultData.putExtra("newValue", newValue);
 		setResult(Activity.RESULT_OK, resultData);

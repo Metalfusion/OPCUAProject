@@ -53,8 +53,8 @@ public class Connection {
 	MainPager mpager;
 
 	Subscription subscription;
-	protected SubscriptionNotificationListener subscriptionListener;
-	protected MySubscriptionAliveListener subscriptionAliveListener;
+	SubscriptionNotificationListener subscriptionListener;
+	MySubscriptionAliveListener subscriptionAliveListener;
 
 	public Connection(Server server, OPCReader opcReader) throws URISyntaxException {
 
@@ -331,7 +331,7 @@ public class Connection {
 
 	}
 
-	protected static MonitoredDataItemListener dataChangeListener = new MonitoredDataItemListener() {
+	private static MonitoredDataItemListener dataChangeListener = new MonitoredDataItemListener() {
 
 		@Override
 		public void onDataChange(MonitoredDataItem sender, DataValue prevValue, DataValue value) {
