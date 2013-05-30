@@ -2,8 +2,6 @@ package com.prosysopc.ua.android;
 
 import java.util.List;
 
-import com.prosysopc.ua.android.UINode.AttributeValuePair;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.prosysopc.ua.android.UINode.AttributeValuePair;
 
 public class UINodeAttributeAdapter extends ArrayAdapter<AttributeValuePair> {
 

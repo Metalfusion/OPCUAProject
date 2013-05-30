@@ -8,10 +8,13 @@ import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.opcfoundation.ua.builtintypes.NodeId;
+
 import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
+
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.client.MonitoredDataItem;
 
@@ -44,7 +47,7 @@ public class OPCReader {
 		    	if (servers.isEmpty()) {
 				
 		    		try {
-						addModifyServer("Ascolab", "opc.tcp://demo.ascolab.com:4841", "", "", 20);
+						addModifyServer("Ascolab public demoserver", "opc.tcp://demo.ascolab.com:4841", "", "", 20);
 					} catch (URISyntaxException e) {
 						e.printStackTrace();
 					}

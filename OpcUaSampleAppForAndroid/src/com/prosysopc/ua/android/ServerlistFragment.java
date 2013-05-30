@@ -4,8 +4,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.opcfoundation.ua.core.Identifiers;
-import com.prosysopc.ua.android.Logmessage.LogmessageType;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.SimpleAdapter;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 @SuppressLint("ValidFragment")
 public class ServerlistFragment extends ListFragment implements IUpdateable {

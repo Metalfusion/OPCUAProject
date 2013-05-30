@@ -3,8 +3,6 @@ package com.prosysopc.ua.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.prosysopc.ua.android.Logmessage.LogmessageType;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 public class NodebrowserFragment extends Fragment implements IUpdateable {
 

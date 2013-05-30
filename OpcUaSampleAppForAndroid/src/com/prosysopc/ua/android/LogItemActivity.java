@@ -2,10 +2,7 @@ package com.prosysopc.ua.android;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import android.view.Menu;
 import android.view.View;
-
 import android.widget.TextView;
 
 public class LogItemActivity extends Activity {
@@ -29,14 +26,7 @@ public class LogItemActivity extends Activity {
 		messageview.setText(b.getString("message"));
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_pager, menu);
-		return true;
-	}
-
+	
 	// On click event for Cancel button
 	public void buttonCloseLogItemOnClick(View v) {
 

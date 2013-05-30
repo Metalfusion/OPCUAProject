@@ -1,7 +1,9 @@
 package com.prosysopc.ua.android;
 
 import java.util.Date;
+
 import org.opcfoundation.ua.builtintypes.NodeId;
+
 import com.prosysopc.ua.client.MonitoredDataItem;
 
 public class SubscriptionData {

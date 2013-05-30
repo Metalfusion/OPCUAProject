@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.prosysopc.ua.android.Logmessage.LogmessageType;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -15,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 public class LogviewFragment extends ListFragment implements IUpdateable {
 	static MainPager mPager;

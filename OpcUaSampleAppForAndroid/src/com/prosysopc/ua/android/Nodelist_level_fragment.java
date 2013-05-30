@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
 
-import com.prosysopc.ua.android.Logmessage.LogmessageType;
-import com.prosysopc.ua.android.UINode.AttributeValuePair;
-import com.prosysopc.ua.android.UINode.UINodeType;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +18,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
+import com.prosysopc.ua.android.UINode.AttributeValuePair;
+import com.prosysopc.ua.android.UINode.UINodeType;
 
 @SuppressLint("ValidFragment")
 public class Nodelist_level_fragment extends ListFragment implements OnClickListener {

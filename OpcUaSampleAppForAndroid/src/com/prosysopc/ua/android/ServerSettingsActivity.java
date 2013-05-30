@@ -2,13 +2,12 @@ package com.prosysopc.ua.android;
 
 import java.net.URISyntaxException;
 
-import com.prosysopc.ua.android.Logmessage.LogmessageType;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 public class ServerSettingsActivity extends Activity {
 
@@ -35,14 +34,7 @@ public class ServerSettingsActivity extends Activity {
 		etTimeout.setText("" + b.getInt("timeout"));
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_pager, menu);
-		return true;
-	}
-
+	
 	// On click event for Cancel button
 	public void buttonCancelServerSettingsEditOnClick(View v) {
 

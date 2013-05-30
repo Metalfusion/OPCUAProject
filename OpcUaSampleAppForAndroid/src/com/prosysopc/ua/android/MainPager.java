@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +21,8 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
 public class MainPager extends FragmentActivity {
 
@@ -162,13 +163,7 @@ public class MainPager extends FragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
-			// Fragment fragment = new DummySectionFragment();
-			// Bundle args = new Bundle();
-			// args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			// fragment.setArguments(args);
+			// getItem is called to instantiate the fragment for the given page.			
 			// return fragment;
 			return this.fragments.get(position);
 

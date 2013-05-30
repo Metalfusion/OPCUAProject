@@ -3,10 +3,7 @@ package com.prosysopc.ua.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.view.Menu;
 import android.view.View;
-
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,14 +22,6 @@ public class ValueWriteActivity extends Activity {
 
 		titleview.setText(b.getString("title"));
 		valueview.setText(b.getString("value"));
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_pager, menu);
-		return true;
 	}
 
 	// On click event for OK button
