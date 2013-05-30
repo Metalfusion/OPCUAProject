@@ -237,19 +237,6 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		return true;
 	}
 
-	// reads the return value from ValueWriteActivity
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		if (requestCode == WRITE_ATTRIBUTE_CALL) {
-			if (resultCode == Activity.RESULT_OK) {
-				Bundle b = data.getExtras();
-				// and writes the value to server
-				opcreader.writeAttributes(b.getString("newValue"));
-
-			}
-		}
-
-	}
 
 	// Event handler for the header click, opens attributes list
 	public void onClick(View v) {
