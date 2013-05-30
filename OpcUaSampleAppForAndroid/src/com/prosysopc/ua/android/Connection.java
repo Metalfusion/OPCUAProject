@@ -217,17 +217,21 @@ public class Connection {
 		// change the datatype to fit the node
 		UaDataType dataType = null;
 		UaVariable v = (UaVariable) addressspace.getNode(nodeid);
+		
 		// Initialize DataType node, if it is not initialized yet
-		if (v.getDataType() == null)
+		if (v.getDataType() == null) {
 			v.setDataType(client.getAddressSpace().getType(v.getDataTypeId()));
+		}
+			
 		dataType = (UaDataType) v.getDataType();
-
 		Object convertedValue;
-		if (dataType != null)
+		
+		if (dataType != null) {
 			convertedValue = ((DataTypeConverter) addressspace.getDataTypeConverter()).parseVariant(value, dataType);
-		else
+		} else {
 			convertedValue = value;
-
+		}
+			
 		// write the node
 		client.writeValue(nodeid, convertedValue);
 	}

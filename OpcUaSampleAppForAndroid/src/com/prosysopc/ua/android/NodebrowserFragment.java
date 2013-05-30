@@ -99,8 +99,7 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 		Nodelist_level_fragment childfrag = new Nodelist_level_fragment(MainPager.opcreader);
 
 		childfrag.setup(this, rootNode, position, attributeView);
-		// childfrag.setup(this, null, position, attributeView); // FIXME: test code, correct code above
-
+		
 		ft2.add(R.id.nodelevellayout, childfrag, "nodelevel" + position);
 		ft2.commit();
 		listFragments.add(childfrag);
