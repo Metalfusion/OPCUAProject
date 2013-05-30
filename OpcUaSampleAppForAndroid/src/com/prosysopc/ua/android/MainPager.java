@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+// The main activity of the application. Contains all the main views as fragments in a horizontal tabber.
 public class MainPager extends FragmentActivity {
 
 	/**
@@ -45,6 +46,7 @@ public class MainPager extends FragmentActivity {
 
 	public MainPager() {
 		
+		// Initialize the global variable and the OPCReader
 		pager = this;
 		opcreader = new OPCReader();
 				
@@ -55,11 +57,12 @@ public class MainPager extends FragmentActivity {
 		ServerSettingsActivity.opcreader = opcreader;
 		
 	}
-
+	
+	// Creates the UI
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
-		// purkkaratkaisu android.os.NetworkOnMainThreadExceptioniin
+		// A bad solution to suppress the android.os.NetworkOnMainThreadException
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
 
 		super.onCreate(savedInstanceState);
@@ -77,7 +80,8 @@ public class MainPager extends FragmentActivity {
 		mViewPager.setAdapter(mPagerAdapter);
 
 	}
-
+	
+	// Creates the options menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -85,7 +89,8 @@ public class MainPager extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.main_pager, menu);
 		return true;
 	}
-
+	
+	// Handles user input from options menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -93,53 +98,51 @@ public class MainPager extends FragmentActivity {
 
 		switch (item.getItemId()) {
 
-		case R.id.updateView:
-
-			Toast.makeText(getBaseContext(), "Updating", Toast.LENGTH_SHORT).show();
-			IUpdateable frag = (IUpdateable) (mPagerAdapter.getItem(mViewPager.getCurrentItem()));
-			frag.update();
-
-			break;
-
-		case R.id.disconnect:
-
-			try {
-				opcreader.updateConnection(null);
-			} catch (URISyntaxException e) {
-				opcreader.addLog(LogmessageType.ERROR, e.toString());
-			}
-
-			Toast.makeText(getBaseContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-
-			break;
-
-		case R.id.exit:
-
-			try {
-				opcreader.updateConnection(null);
-			} catch (URISyntaxException e) {
-				opcreader.addLog(LogmessageType.WARNING, e.toString());
-			}
-
-			Toast.makeText(getBaseContext(), "Exiting", Toast.LENGTH_SHORT).show();
-			finish();
-
-			break;
+			case R.id.updateView:
+	
+				Toast.makeText(getBaseContext(), "Updating", Toast.LENGTH_SHORT).show();
+				IUpdateable frag = (IUpdateable) (mPagerAdapter.getItem(mViewPager.getCurrentItem()));
+				frag.update();
+	
+				break;
+	
+			case R.id.disconnect:
+	
+				try {
+					opcreader.updateConnection(null);
+				} catch (URISyntaxException e) {
+					opcreader.addLog(LogmessageType.ERROR, e.toString());
+				}
+	
+				Toast.makeText(getBaseContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+	
+				break;
+	
+			case R.id.exit:
+	
+				try {
+					opcreader.updateConnection(null);
+				} catch (URISyntaxException e) {
+					opcreader.addLog(LogmessageType.WARNING, e.toString());
+				}
+	
+				Toast.makeText(getBaseContext(), "Exiting", Toast.LENGTH_SHORT).show();
+				finish();
+	
+				break;
 		}
 		return true;
 
 	}
 
+	// Creates the fragments
 	private List<Fragment> getFragments() {
 
 		List<Fragment> fList = new ArrayList<Fragment>();
 
 		fList.add(ServerlistFragment.newInstance(this));
-
 		fList.add(NodebrowserFragment.newInstance(this));
-
 		fList.add(SublistFragment.newInstance(this));
-
 		fList.add(LogviewFragment.newInstance(this));
 
 		return fList;
@@ -159,7 +162,8 @@ public class MainPager extends FragmentActivity {
 			this.fragments = fragments;
 
 		}
-
+		
+		// Returns the fragment from the given position
 		@Override
 		public Fragment getItem(int position) {
 
@@ -168,16 +172,15 @@ public class MainPager extends FragmentActivity {
 			return this.fragments.get(position);
 
 		}
-
+		
+		// Returns the fragment count
 		@Override
 		public int getCount() {
 
-			// Show 3 total pages.
-			// return 3;
 			return this.fragments.size();
-
 		}
-
+		
+		// Titles for the tabs
 		@Override
 		public CharSequence getPageTitle(int position) {
 
@@ -196,7 +199,7 @@ public class MainPager extends FragmentActivity {
 		}
 	}
 
-	// On click event for button1
+	// On click event for server edit button in the ServerListFragment
 	public void buttonServerEditOnClick(View v) {
 
 		Intent intent = new Intent(this, ServerSettingsActivity.class);
@@ -235,7 +238,8 @@ public class MainPager extends FragmentActivity {
 		}
 		return maxWidth;
 	}
-
+	
+	// Handles the result-Intent coming from the valueWriteActivity
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (resultCode == Activity.RESULT_OK) {
@@ -246,8 +250,10 @@ public class MainPager extends FragmentActivity {
 		}
 	}
 	
+	// The subscription view needs constant updating, this does just that.
 	public void updateSubscriptionView() {
 		
+		// This method might get called from networking threads but we need to run this code in the main thread
 		runOnUiThread(new Runnable() {
 
 			@Override
@@ -255,7 +261,8 @@ public class MainPager extends FragmentActivity {
 				
 				try {
 					
-					IUpdateable frag = (IUpdateable) (mPagerAdapter.getItem(2));		
+					// Run the basic update through IUpdateable
+					IUpdateable frag = (IUpdateable) (mPagerAdapter.getItem(2));
 					frag.update();
 				
 				} catch (Exception e) {}
@@ -265,7 +272,8 @@ public class MainPager extends FragmentActivity {
 		});		
 		
 	}
-		
+	
+	// Saves the servers when the application is shut down
 	@Override
 	protected void onDestroy() {
 	

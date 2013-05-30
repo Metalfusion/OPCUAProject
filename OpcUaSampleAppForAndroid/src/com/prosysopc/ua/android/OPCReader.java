@@ -18,16 +18,18 @@ import android.widget.Toast;
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.client.MonitoredDataItem;
 
+// Class having the main logic of the application and handling the data resources
 public class OPCReader {
-	List<Server> servers;
-	List<Logmessage> messagelog;
-	Server activeServer;
+		 
+	List<SubscriptionData> subscriptions = new ArrayList<SubscriptionData>();	// Node subscriptions
+	List<Server> servers;			// Server settings
+	List<Logmessage> messagelog;	// Log messages
+	Server activeServer;			// Server onto which we are connected
 
-	// Connection settings
+	// Connection settings holder and handler
 	Connection connection;
 
-	List<SubscriptionData> subscriptions = new ArrayList<SubscriptionData>();
-
+	// Temporary variable for storing the nodeID during value write operations 
 	private NodeId nodeidtobewritten;
 
 	public OPCReader() {
@@ -38,6 +40,7 @@ public class OPCReader {
 		
 		Handler handler = new Handler();
 		
+		// The MainPager's functions can't be used when it is still being constructed so we must delay the loading of servers 
 		handler.postDelayed(new Runnable() {
 
 		    public void run() {
@@ -91,7 +94,8 @@ public class OPCReader {
 
 	// Updates the connection within the prosys framework
 	public void updateConnection(Server newserver) throws URISyntaxException {
-
+		
+		// Disconnecting
 		if (newserver == null) {
 
 			if (connection != null) {
@@ -104,7 +108,7 @@ public class OPCReader {
 				activeServer = null;
 			}
 
-		} else if (connection == null) {
+		} else if (connection == null) {	// Connecting
 
 			connection = new Connection(newserver, this);
 			activeServer = newserver;
@@ -115,7 +119,7 @@ public class OPCReader {
 				addLog(LogmessageType.ERROR, e.toString());
 			}
 
-		} else {
+		} else {	// Disconnecting and connecting
 
 			connection.disconnect();
 			removeSubscriptions();
@@ -135,18 +139,20 @@ public class OPCReader {
 		}
 
 	}
-
+	
+	// Returns the list of servers
 	public List<Server> getServers() {
 
 		return servers;
 	}
 
-	// returns i:th server from serverlist
+	// Returns i:th server from serverlist
 	public Server getServer(int i) {
 
 		return servers.get(i);
 	}
-
+	
+	// Removes a server from the internal list
 	public boolean removeServer(int i) {
 
 		if (i > servers.size()) {
@@ -160,7 +166,7 @@ public class OPCReader {
 	// Adds a new message to the log
 	public void addLog(LogmessageType type, String message) {
 		
-		// This method might be called from anywhere, but the code needs to be run in the UI Thread to avoid problems.
+		// This method might be called from anywhere, but the code needs to be run in the UI Thread to avoid some problems.
 		
 		// Create a special runner class to do the message addition
 		class logMessageRunner implements Runnable {
@@ -196,20 +202,25 @@ public class OPCReader {
 		
 	}
 
+	// Returns all log messages
 	public List<Logmessage> getMessagelog() {
 
 		return messagelog;
 	}
 
+	// Clears all log messages
 	public void clearLog() {
 
 		messagelog.clear();
 	}
 
+	// Gets a node from the server and converts it to UINode
+	// Returns null if the operation fails
 	public UINode getNode(NodeId nodeid) {
 
 		UINode node = null;
-
+		
+		// Get the node from Connection
 		try {
 			node = connection.getNode(nodeid, true);
 		} catch (Exception e) {
@@ -218,9 +229,16 @@ public class OPCReader {
 
 		return node;
 	}
+	
+	// Presets the nodeId of the node the will have its value written with writeAttributes
+	public void setNodeIdtoBeWritten(NodeId nodeid) {
 
+		nodeidtobewritten = nodeid;
+	}
+	
+	// Writes the value attribute of the predefined Node to the server
 	public void writeAttributes(String value) {
-
+		
 		try {
 
 			if (nodeidtobewritten != null) {
@@ -232,17 +250,20 @@ public class OPCReader {
 			addLog(LogmessageType.ERROR, e.toString());
 		}
 	}
-
+	
+	// Adds the subscription data
 	public void addSubscriptionData(SubscriptionData sd) {
 
 		subscriptions.add(sd);
 	}
-
+	
+	// Gets all subscriptions
 	public List<SubscriptionData> getSubscriptionData() {
 
 		return subscriptions;
 	}
 
+	// Adds subscription to the given nodeId's value attribute
 	public void subscribe(NodeId nodeid) {
 
 		try {
@@ -273,6 +294,7 @@ public class OPCReader {
 		
 		NodeId removedId = null;
 		
+		// Find the correct SubscriptionData
 		for (int i = 0; i < subscriptions.size(); i++) {
 			
 			SubscriptionData subData = subscriptions.get(i);
@@ -285,12 +307,14 @@ public class OPCReader {
 			}
 		}
 		
+		// The subscription was found and removed without error
 		if (removedId != null) {
 			addLog(LogmessageType.INFO, "Subscription to " + removedId.toString() + " was removed");
 		}
 		
 	}
 	
+	// Sets the subscribed nodes value to the data structure
 	public void updateSubscriptionValue(NodeId nodeid, String value) {
 
 		// get the subscription to be updated from the list
@@ -304,11 +328,7 @@ public class OPCReader {
 
 		}
 	}
-
-	public void setNodeIdtoBeWritten(NodeId nodeid) {
-
-		nodeidtobewritten = nodeid;
-	}
+	
 
 	// Serializes all servers to the given file. Returns true if successful.
 	public Boolean saveServers(String fileName) {

@@ -11,8 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+// Adapter for displaying Logmessage-objects in a ListView
 public class LogMessageAdapter extends ArrayAdapter<Logmessage> {
-
+	
+	// Different icons for the different log message types
 	static int[] resArr = { R.drawable.error, R.drawable.exclamation, R.drawable.information };
 
 	Context context;
@@ -33,7 +35,9 @@ public class LogMessageAdapter extends ArrayAdapter<Logmessage> {
 		View row = convertView;
 		LogmessageHolder holder = null;
 
+		// Check if we need to create the Holder for this item
 		if (row == null) {
+			
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 
@@ -43,18 +47,20 @@ public class LogMessageAdapter extends ArrayAdapter<Logmessage> {
 			holder.txt2 = (TextView) row.findViewById(R.id.text2);
 
 			row.setTag(holder);
+			
 		} else {
 			holder = (LogmessageHolder) row.getTag();
 		}
 
 		Logmessage logmsg = data.get(position);
-
 		String msg = logmsg.getMessage();
-
+		
+		// Truncate the message if it is too long
 		if (msg.length() > MainPager.LIST_LINE_LENGTH) {
 			msg = msg.substring(0, MainPager.LIST_LINE_LENGTH - 3) + "...";
 		}
-
+		
+		// Fill the UI elements with data
 		holder.txt1.setText(logmsg.getTimestampString());
 		holder.txt2.setText(msg);
 		holder.imgIcon.setImageResource(resArr[logmsg.getType().ordinal()]);
@@ -62,6 +68,7 @@ public class LogMessageAdapter extends ArrayAdapter<Logmessage> {
 		return row;
 	}
 
+	// Inner class for holding the UI elements for a single item
 	static class LogmessageHolder {
 		ImageView imgIcon;
 		TextView txt1;

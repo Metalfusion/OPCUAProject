@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.opcfoundation.ua.builtintypes.NodeId;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ import com.prosysopc.ua.android.Logmessage.LogmessageType;
 import com.prosysopc.ua.android.UINode.AttributeValuePair;
 import com.prosysopc.ua.android.UINode.UINodeType;
 
+// A fragment for displaying a single level of the OPC UA Addressspace tree or Attributes of a node.
 @SuppressLint("ValidFragment")
 public class Nodelist_level_fragment extends ListFragment implements OnClickListener {
 
@@ -35,7 +35,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 
 	public static OPCReader opcreader;
 
-	// id for write attribute call
+	// IDs for write attribute Activity call
 	static final int WRITE_ATTRIBUTE_CALL = 1;
 	static final int RESULT = 2;
 
@@ -48,7 +48,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		rootNode = null;
 		Nodelist_level_fragment.opcreader = opcreader;
 	}
-
+	
+	// Adds vital information to the object, should be called right after the object's creation
 	public void setup(NodebrowserFragment nodebrowser, UINode rootNode, int level, boolean showAttributes) {
 
 		this.listLevel = level;
@@ -57,6 +58,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		this.showAttributes = showAttributes;
 	}
 
+	// Creates the UI elements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -68,7 +70,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 
 		ListAdapter adapter;
 		String headerStr = "";
-
+		
+		// Check for attribute display mode, affects the title and listadapter
 		if (showAttributes) {
 			headerStr = "Attrib. of " + rootNode.name;
 			adapter = new UINodeAttributeAdapter(getActivity(), rootNode.attributes);
@@ -78,7 +81,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		}
 
 		setListAdapter(adapter);
-
+		
+		// Truncate the title if necessary
 		if (headerStr.length() > MainPager.LIST_LINE_LENGTH) {
 			headerStr = headerStr.substring(0, MainPager.LIST_LINE_LENGTH - 3) + "...";
 		}
@@ -125,8 +129,6 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			try {
 
 				node = (UINode) (getListAdapter().getItem(position));
-
-				// node = (UINode)this.getListView().getChildAt(position).getTag(UINodeAdapter.NODE_KEY_ID);
 				nodebrowser.createList(this.listLevel + 1, node, node.type == UINodeType.leafNode);
 
 			} catch (Exception e) {
@@ -137,9 +139,10 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			// l.setSelectionFromTop(position, 0);
 
 		} else {
-
+						
 			selectedItem = (AttributeValuePair) l.getAdapter().getItem(position);
 
+			// Show the context menu for the selected attribute
 			registerForContextMenu(l);
 			l.showContextMenu();
 			unregisterForContextMenu(l);
@@ -153,9 +156,9 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
 		super.onCreateContextMenu(menu, v, menuInfo);
-
 		Boolean hasValue = false;
-
+		
+		// Find out if this node has attribute named "Value"
 		for (AttributeValuePair attr : rootNode.attributes) {
 
 			if (attr.attrName == "Value") {
@@ -169,6 +172,7 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 		menu.setHeaderTitle("Select action");
 		menu.add(0, 0, 0, "Open attribute");
 
+		// If the node has value, it can be edited and subscribed to
 		if (hasValue) {
 			menu.add(0, 0, 0, "Edit node value");
 			menu.add(0, 0, 0, "Subscribe to node");
@@ -178,13 +182,13 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 
 	// Event handler for context menu click
 	public boolean onContextItemSelected(MenuItem item) {
-
-		// AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-
+		
+		// Selecteditem should have been set earlier when creating the context menu
 		if (selectedItem == null) {
 			return false;
 		}
 
+		// The action depends on the selected menu item's title
 		if (item.getTitle() == "Open attribute") {
 
 			Intent intent = new Intent(getActivity(), ValueReadActivity.class);
@@ -202,7 +206,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			Intent intent = new Intent(getActivity(), ValueWriteActivity.class);
 
 			AttributeValuePair valueAttr = null;
-
+			
+			// Find the correct AttributeValuePair
 			for (AttributeValuePair attr : rootNode.attributes) {
 
 				if (attr.attrName == "Value") {
@@ -210,14 +215,15 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 					break;
 				}
 			}
-
+			
+			// Put the value into the Intent's bundle
 			Bundle b = new Bundle();
 			b.putString("title", valueAttr.attrName);
 			b.putString("value", valueAttr.attrValue);
 
 			intent.putExtras(b);
 
-			// set nodeid in opcreader for the write
+			// Set nodeid in opcreader for the write
 			opcreader.setNodeIdtoBeWritten(rootNode.getNodeId());
 
 			// 1 is the id for the result
@@ -225,7 +231,8 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			selectedItem = null;
 
 		} else if (item.getTitle() == "Subscribe to node") {
-
+			
+			// Subscription is to the rootNode of this list
 			opcreader.subscribe(rootNode.getNodeId());
 			selectedItem = null;
 
@@ -248,13 +255,14 @@ public class Nodelist_level_fragment extends ListFragment implements OnClickList
 			
 		}
 	}
-
+	
+	// Returns the root node of this list
 	public UINode getNode() {
 
 		return rootNode;
 	}
 
-	// Dummy data generation for testing
+	// Dummy data generation for testing purposes
 	private void createTestData() {
 
 		String name;

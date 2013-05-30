@@ -42,6 +42,7 @@ import com.prosysopc.ua.nodes.UaDataType;
 import com.prosysopc.ua.nodes.UaNode;
 import com.prosysopc.ua.nodes.UaVariable;
 
+// Provides an interface to the Prosys OPC UA SDK and maintains a single server connection
 public class Connection {
 
 	static OPCReader opcreader;
@@ -65,7 +66,8 @@ public class Connection {
 		client = new UaClient(server.getAddress());
 
 	}
-
+	
+	// Connects to the server defined in the constructor
 	public boolean connect() throws InvalidServerEndpointException, ConnectException, SessionActivationException, ServiceException, StatusException {
 
 		client.setTimeout(server.getTimeout() * 1000);
@@ -88,21 +90,23 @@ public class Connection {
 
 		return true;
 	}
-
+	
+	// Disconnects from the server
 	public boolean disconnect() {
 
 		client.disconnect();
-
 		return true;
 	}
-
+	
+	// Reads the value attribute of a node
 	public DataValue readNode(NodeId nodeId) throws ServiceException, StatusException {
 
 		DataValue value = client.readValue(nodeId);
 		return value;
 	}
 
-	// return UINode made from node of the nodeID
+	// Fetches a node from the server and converts it to a UINode
+	// getChildren defines if the (immediate) child nodes are also resolved
 	public UINode getNode(NodeId nodeID, Boolean getChildren) throws ServiceException, AddressSpaceException, StatusException, ServiceResultException {
 
 		Date nodeGetStart = new Date();
@@ -110,12 +114,14 @@ public class Connection {
 		UINode node = null;
 		UINodeType type;
 		String name;
-
+		
+		// Get the node (uses cache automatically)
 		UaNode uanode = addressspace.getNode(nodeID);
 		addressspace.getCache().addNode(uanode);		
 				
 		name = uanode.getDisplayName().getText();
-
+		
+		// Node class defines the UINode type
 		if (uanode.getNodeClass() == NodeClass.Object) {
 			
 			// node is folder
@@ -211,7 +217,7 @@ public class Connection {
 
 	}
 
-	// writes the value of the node
+	// Writes the value attribute of the node to the server
 	public void writeAttribute(NodeId nodeid, String value) throws ServiceException, StatusException, AddressSpaceException {
 
 		// change the datatype to fit the node
@@ -237,7 +243,7 @@ public class Connection {
 	}
 	
 	
-	// Adds a data value subscription to the given node
+	// Adds a data subscription to the given node's value attribute
 	public void subscribe(NodeId nodeid) {
 
 		// create new subscription if needed
@@ -302,7 +308,8 @@ public class Connection {
 		Toast.makeText(MainPager.pager, "Subscription added", Toast.LENGTH_SHORT).show();
 
 	}
-
+	
+	// Initializes the subscription that is used for all node subscriptions
 	private Subscription createSubscription() throws ServiceException, StatusException {
 
 		Subscription subs;
@@ -334,19 +341,22 @@ public class Connection {
 		return subs;
 
 	}
-
+	
+	// Listener for handling the subscription data updates
 	private static MonitoredDataItemListener dataChangeListener = new MonitoredDataItemListener() {
 
 		@Override
 		public void onDataChange(MonitoredDataItem sender, DataValue prevValue, DataValue value) {
 			
+			// Read the value and update the appropriate SubscriptionData-object handled by the OPCReader
 			MonitoredItem i = sender;			
 			NodeId nodeid = i.getNodeId();
 			opcreader.updateSubscriptionValue(nodeid, value.getValue().toString());
 		}
 
 	};
-
+	
+	// Removes a single node subscription from the server
 	public void removeSubscription(MonitoredDataItem item) {
 		
 		try {

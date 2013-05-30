@@ -17,11 +17,13 @@ import android.widget.SimpleAdapter;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+// A fragment for display subscriptions, shows names and values in a list
 public class SublistFragment extends ListFragment implements IUpdateable {
+	
 	static MainPager mPager;
-	private SimpleAdapter adapter;
+	private SimpleAdapter adapter;	// Adapter for the listView
 
-	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();	// For storing the data
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */
@@ -38,7 +40,8 @@ public class SublistFragment extends ListFragment implements IUpdateable {
 		return f;
 
 	}
-
+	
+	// Creates the UI
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -59,7 +62,8 @@ public class SublistFragment extends ListFragment implements IUpdateable {
 		super.onStart();
 		updateList();
 	}
-
+	
+	// Resets the list and updates it with the latest data
 	private void updateList() {
 
 		List<SubscriptionData> subscriptions = MainPager.opcreader.getSubscriptionData();
@@ -67,17 +71,21 @@ public class SublistFragment extends ListFragment implements IUpdateable {
 
 		// clear the list so the list doesn't grow on every time it is created
 		list.clear();
-
+		
+		// Pick the wanted data from the list
 		for (int i = 0; i < subscriptions.size(); i++) {
 			item = new HashMap<String, String>();
 			item.put("line1", subscriptions.get(i).getNodeId().toString());
 			item.put("line2", subscriptions.get(i).getValue());
 			list.add(item);
 		}
+		
+		// Replace the adapter with a new one 
 		adapter = new SimpleAdapter(this.getActivity(), list, android.R.layout.two_line_list_item, new String[] { "line1", "line2" }, new int[] { android.R.id.text1, android.R.id.text2 });
 		setListAdapter(adapter);
 	}
-
+	
+	// Creates the context menu
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 	
@@ -92,11 +100,13 @@ public class SublistFragment extends ListFragment implements IUpdateable {
 		}
 		 
 	}
-
+	
+	// Handles the context menu item selection events
 	public boolean onContextItemSelected(MenuItem item) {
 		
 		SubscriptionData subData;
 		
+		// Try to fetch the correct SubscriptionData-object
 		try {		
 			
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -107,6 +117,7 @@ public class SublistFragment extends ListFragment implements IUpdateable {
 			return false;
 		}
 		
+		// The item title defines the action
 		if (item.getTitle() == "More info") {
 						
 			// Use the valueReadActivity to show the subscription data			
@@ -134,6 +145,7 @@ public class SublistFragment extends ListFragment implements IUpdateable {
 		return true;
 	}
 
+	// IUpdateable implementation resets the list
 	@Override
 	public void update() {
 

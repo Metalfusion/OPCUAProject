@@ -16,6 +16,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+// A fragment for displaying a list of log objects
 public class LogviewFragment extends ListFragment implements IUpdateable {
 	static MainPager mPager;
 
@@ -38,7 +39,8 @@ public class LogviewFragment extends ListFragment implements IUpdateable {
 		return f;
 
 	}
-
+	
+	// Creates the UI
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -55,7 +57,8 @@ public class LogviewFragment extends ListFragment implements IUpdateable {
 		super.onStart();
 		updateAdapter();
 	}
-
+	
+	// Re-creates the adapter, effectively resetting the whole fragment
 	private void updateAdapter() {
 
 		List<Logmessage> messagelog = MainPager.opcreader.getMessagelog();
@@ -63,9 +66,11 @@ public class LogviewFragment extends ListFragment implements IUpdateable {
 		setListAdapter(adapter);
 	}
 
+	// Handles the context menu creation
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-
+		
+		// Verify that the sender view is our listview
 		if (v.getId() == this.getListView().getId()) {
 
 			menu.setHeaderTitle("Select action");
@@ -77,18 +82,21 @@ public class LogviewFragment extends ListFragment implements IUpdateable {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 	}
-
+	
+	// Handle the context menu item selection event
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-
+		
+		// User wants to open the item
 		if (item.getTitle().equals("Open this item")) {
-			// Code To Handle open
+			
+			// Get the most up to date Logmessage object
 			List<Logmessage> messagelog = MainPager.opcreader.getMessagelog();
-
 			Logmessage message = messagelog.get((int) info.id);
-
+			
+			// Create an Intent to call the LogItemActivity
 			Intent intent = new Intent(this.getActivity(), LogItemActivity.class);
 			Bundle b = new Bundle();
 			b.putString("type", message.getType().toString());
@@ -98,7 +106,8 @@ public class LogviewFragment extends ListFragment implements IUpdateable {
 			startActivity(intent);
 
 		} else if (item.getTitle().equals("Clear log")) {
-
+			
+			// Remove all log messages
 			MainPager.opcreader.clearLog();
 
 			// update view
@@ -110,7 +119,8 @@ public class LogviewFragment extends ListFragment implements IUpdateable {
 
 		return true;
 	}
-
+	
+	// Update implementation resets the fragment
 	@Override
 	public void update() {
 

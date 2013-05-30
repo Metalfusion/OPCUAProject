@@ -2,11 +2,13 @@ package com.prosysopc.ua.android;
 
 import java.util.Date;
 
+// A container class for log messages
 public class Logmessage {
 	private Long timestamp;
 	private LogmessageType type;
 	private String message;
 
+	// Create a new log message. The message is timestamped automatically
 	public Logmessage(LogmessageType typevalue, String messagevalue) {
 
 		type = typevalue;
@@ -28,10 +30,12 @@ public class Logmessage {
 
 		return message;
 	}
-
+	
+	// Enum for the log message types which note the severity
 	public enum LogmessageType {
 		WARNING, ERROR, INFO;
-
+		
+		// String representations for the items
 		public String toString() {
 
 			String s;
@@ -48,12 +52,13 @@ public class Logmessage {
 			default:
 				s = new String("");
 				break;
-
 			}
+			
 			return s;
 		}
 	}
-
+	
+	// Get the timestamp as a string
 	public String getTimestampString() {
 
 		Date date = new Date(timestamp);

@@ -6,12 +6,13 @@ import org.opcfoundation.ua.builtintypes.NodeId;
 
 import com.prosysopc.ua.client.MonitoredDataItem;
 
+// A data container class for node subscriptions and their values
 public class SubscriptionData {
 	
 	private Server server;
 	private String value;
 	private NodeId nodeid;
-	private Date receiveTime;
+	private Date receiveTime;	// Time of last data update
 	private MonitoredDataItem dataItem;
 
 	public SubscriptionData(Server server, NodeId nodeid, MonitoredDataItem item) {

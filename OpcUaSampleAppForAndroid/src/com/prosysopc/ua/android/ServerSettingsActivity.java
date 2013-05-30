@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+// An activity for displaying and editing server settings
 public class ServerSettingsActivity extends Activity {
 
 	public static OPCReader opcreader;
@@ -18,7 +19,8 @@ public class ServerSettingsActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.serversettings);
-
+		
+		// Find the UI elements
 		EditText etServer = (EditText) findViewById(R.id.editTextServerName);
 		EditText etAddress = (EditText) findViewById(R.id.editTextAddress);
 		EditText etIdentity = (EditText) findViewById(R.id.editTextIdentity);
@@ -26,7 +28,8 @@ public class ServerSettingsActivity extends Activity {
 		EditText etTimeout = (EditText) findViewById(R.id.editTextTimeout);
 
 		Bundle b = getIntent().getExtras();
-		// set view from bundle
+		
+		// Setup the UI elements with the data from the bundle
 		etServer.setText(b.getString("name"));
 		etAddress.setText(b.getString("address"));
 		etIdentity.setText(b.getString("identity"));
@@ -38,7 +41,7 @@ public class ServerSettingsActivity extends Activity {
 	// On click event for Cancel button
 	public void buttonCancelServerSettingsEditOnClick(View v) {
 
-		// return to viewpager when cancel is pressed
+		// return to MainPager when cancel is pressed
 		finish();
 	}
 
@@ -57,10 +60,8 @@ public class ServerSettingsActivity extends Activity {
 			opcreader.addModifyServer(etServer.getText().toString(), etAddress.getText().toString(), etIdentity.getText().toString(), etPassword.getText().toString(),
 					Integer.parseInt(etTimeout.getText().toString()));
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			opcreader.addLog(LogmessageType.WARNING, e.toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
+		} catch (URISyntaxException e) {			
 			opcreader.addLog(LogmessageType.WARNING, e.toString());
 		}
 

@@ -7,7 +7,7 @@ import com.prosysopc.ua.client.Subscription;
 import com.prosysopc.ua.client.SubscriptionAliveListener;
 
 /**
- * A sampler listener for subscription alive events.
+ * A simple listener for subscription alive events. Sends info to the log.
  */
 public class MySubscriptionAliveListener implements SubscriptionAliveListener {
 
@@ -21,10 +21,8 @@ public class MySubscriptionAliveListener implements SubscriptionAliveListener {
 	@Override
 	public void onAlive(Subscription s) {
 
-		// the client acknowledged that the
-		// connection is alive,
+		// the client acknowledged that the connection is alive,
 		// although there were no changes to send
-
 		opcreader.addLog(LogmessageType.INFO, String.format("%tc Subscription alive: ID=%d lastAlive=%tc", Calendar.getInstance(), s.getSubscriptionId().getValue(), s.getLastAlive()));
 
 	}
@@ -33,9 +31,7 @@ public class MySubscriptionAliveListener implements SubscriptionAliveListener {
 	public void onTimeout(Subscription s) {
 
 		// the client did not acknowledged that the
-		// connection is alive,
-		// and the maxKeepAliveCount has been
-		// exceeded
+		// connection is alive, and the maxKeepAliveCount has been exceeded
 		opcreader.addLog(LogmessageType.INFO, String.format("%tc Subscription timeout: ID=%d lastAlive=%tc", Calendar.getInstance(), s.getSubscriptionId().getValue(), s.getLastAlive()));
 
 	}

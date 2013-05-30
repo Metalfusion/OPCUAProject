@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.opcfoundation.ua.builtintypes.NodeId;
 
+// A data container of the OPC UA nodes with only the interesting data for the UI
 public class UINode implements Comparable<UINode> {
 
 	public UINodeType type;
@@ -13,8 +14,8 @@ public class UINode implements Comparable<UINode> {
 	public String name;
 	public NodeId nodeID;
 
-	public Boolean attributesSet = false;
-	public Boolean referencesSet = false;
+	public Boolean attributesSet = false;	// Have the attributes of this node been read and set
+	public Boolean referencesSet = false;	// Have the child nodes of this node been read and set
 
 	public UINode() {
 
@@ -82,13 +83,14 @@ public class UINode implements Comparable<UINode> {
 		return nodeID;
 	}
 
+	// Enumeration for the node type, folder has children, leaf doesn't
 	public enum UINodeType {
+		
+		// The id's are also the resource integers for the icons
 		folderNode(R.drawable.folder), leafNode(R.drawable.text_list_bullets);
-
+		
 		public int value;
-
 		private UINodeType(int value) {
-
 			this.value = value;
 		}
 

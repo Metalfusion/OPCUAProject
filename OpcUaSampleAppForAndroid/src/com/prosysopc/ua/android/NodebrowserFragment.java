@@ -13,10 +13,12 @@ import android.widget.HorizontalScrollView;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+// A fragment for browsing the OPC UA addressspace tree with multiple list views
 public class NodebrowserFragment extends Fragment implements IUpdateable {
 
 	static MainPager mPager;
-
+	
+	// List for the fragments that represent levels at the addressspace tree
 	private List<Nodelist_level_fragment> listFragments = new ArrayList<Nodelist_level_fragment>();
 
 	/**
@@ -44,7 +46,7 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 
 	}
 
-	// Creates lists with dummy data
+	// Creates lists with dummy data for testing purposes
 	private void createTestFragments(int number) {
 
 		FragmentTransaction ft = getChildFragmentManager().beginTransaction();
@@ -66,7 +68,8 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 
 	// Adds a new list to the nodebrowser and removes unnecessary old ones.
 	public void createList(int position, UINode rootNode, boolean attributeView) {
-
+		
+		// Check if the provided UINode needs updating before the list can be created
 		// TODO: Add option to OPCReader to only read child nodes or attributes
 		if (attributeView && !rootNode.attributesSet) {
 			rootNode = MainPager.opcreader.getNode(rootNode.nodeID);
@@ -96,8 +99,8 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 		FragmentTransaction ft2 = getChildFragmentManager().beginTransaction();
 		ft2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
+		// Create the new list fragment
 		Nodelist_level_fragment childfrag = new Nodelist_level_fragment(MainPager.opcreader);
-
 		childfrag.setup(this, rootNode, position, attributeView);
 		
 		ft2.add(R.id.nodelevellayout, childfrag, "nodelevel" + position);
@@ -118,7 +121,8 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 	
 	// Scrolls the horizontal view with the list fragments
 	public void scrollViewToRight() {
-				
+		
+		// Setup an asyncronous delayed execution, running this immediately doesn't have any effect
 		getView().postDelayed(new Runnable() {
 
 		    public void run() {
@@ -129,7 +133,8 @@ public class NodebrowserFragment extends Fragment implements IUpdateable {
 		}, 500); // 500ms delay to allow the view to settle first
 		
 	}
-		
+	
+	// IUpdateable implementation, resets the whole fragment
 	public void update() {
 
 		try {

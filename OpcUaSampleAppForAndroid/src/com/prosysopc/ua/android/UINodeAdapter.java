@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+// Adapter for UINode children display on listview
 public class UINodeAdapter extends ArrayAdapter<UINode> {
 
+	// The tags are used for retrieving the objects from the UI items
 	public static final int HOLDER_KEY_ID = R.id.TAG_UINODE_HOLDER_KEY_ID;
 	public static final int NODE_KEY_ID = R.id.TAG_UINODE_NODE_KEY_ID;
 
@@ -31,16 +33,20 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
 
 		View row = convertView;
 		UINodeHolder holder = null;
-
+		
+		// Check if we need to create the holder
 		if (row == null) {
-
+			
+			// Create the UI from XML
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 
+			// Find the UI elements
 			holder = new UINodeHolder();
 			holder.imgIcon = (ImageView) row.findViewById(R.id.imgIcon);
 			holder.txtTitle = (TextView) row.findViewById(R.id.txtTitle);
-
+			
+			// Save the objects as tags
 			row.setTag(HOLDER_KEY_ID, holder);
 			row.setTag(NODE_KEY_ID, rootNode.childNodes.get(position));
 
@@ -48,18 +54,20 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
 			holder = (UINodeHolder) row.getTag(HOLDER_KEY_ID);
 		}
 
+		// Set the data to the holder parameters
 		UINode UINode = rootNode.childNodes.get(position);
 		holder.txtTitle.setText(truncateString(UINode.name));
 		holder.imgIcon.setImageResource(UINode.type.value);
 
 		return row;
 	}
-
+	
+	// Inner holder class for the UI elements
 	static class UINodeHolder {
 		ImageView imgIcon;
 		TextView txtTitle;
 	}
-
+		
 	@Override
 	public UINode getItem(int position) {
 
@@ -70,7 +78,8 @@ public class UINodeAdapter extends ArrayAdapter<UINode> {
 		}
 
 	}
-
+	
+	// Limits the string length to a predefined constant value
 	private String truncateString(String str) {
 
 		if (str.length() > MainPager.LIST_LINE_LENGTH) {

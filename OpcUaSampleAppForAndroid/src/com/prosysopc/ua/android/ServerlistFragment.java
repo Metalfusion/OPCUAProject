@@ -22,12 +22,13 @@ import android.widget.SimpleAdapter;
 
 import com.prosysopc.ua.android.Logmessage.LogmessageType;
 
+// Fragment for displaying a list of servers
 @SuppressLint("ValidFragment")
 public class ServerlistFragment extends ListFragment implements IUpdateable {
 
 	static MainPager mPager;
-	private SimpleAdapter adapter;
-	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+	private SimpleAdapter adapter; // Adapter for the listView
+	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(); // For holding the raw data to display
 
 	/**
 	 * The fragment argument representing the section number for this fragment.
@@ -51,6 +52,7 @@ public class ServerlistFragment extends ListFragment implements IUpdateable {
 
 	}
 
+	// Creates the View (UI elements)
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -68,6 +70,7 @@ public class ServerlistFragment extends ListFragment implements IUpdateable {
 		updateList();
 	}
 
+	// Updates the UI from the underlying data
 	private void updateList() {
 
 		List<Server> servers = MainPager.opcreader.getServers();
@@ -84,33 +87,37 @@ public class ServerlistFragment extends ListFragment implements IUpdateable {
 			list.add(item);
 
 		}
-
+		
+		// Replace the adapter with a new one
 		adapter = new SimpleAdapter(this.getActivity(), list, android.R.layout.two_line_list_item, new String[] { "line1", "line2" }, new int[] { android.R.id.text1, android.R.id.text2 });
 		setListAdapter(adapter);
 	}
-
+	
+	// Creates the context menu
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
 		super.onCreateContextMenu(menu, v, menuInfo);
 
+		// Make sure the view is the listView
 		if (v.getId() == this.getListView().getId()) {
-
+			
+			// Populate the context menu
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			// HashMap item = (HashMap) getListView().getItemAtPosition(info.position);
 			menu.setHeaderTitle("Select action");
 			menu.add(0, info.position, 0, "Connect");
 			menu.add(0, 0, 0, "Edit");
-			menu.add(0, 0, 0, "Delete");
-			// toiseksi parametriksi pitäis tulla ilmeisesti itemin id, tyyliin HashMap.getId()
+			menu.add(0, 0, 0, "Delete");			
 
 		}
 	}
-
+	
+	// Handles the context menu item selection event
 	public boolean onContextItemSelected(MenuItem item) {
 
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-
+		
+		// The title tells what action was clicked
 		if (item.getTitle() == "Connect") {
 
 			// Code To Handle connect
@@ -120,9 +127,11 @@ public class ServerlistFragment extends ListFragment implements IUpdateable {
 
 				MainPager.opcreader.addLog(LogmessageType.WARNING, e.toString());
 			}
-
+			
+			// Get the NodeBrowser
 			NodebrowserFragment f = (NodebrowserFragment) mPager.mPagerAdapter.getItem(1);
-
+			
+			// Make the NodeBrowser to load the rootNode from the server and display it
 			if (f != null) {
 
 				try {
@@ -133,7 +142,8 @@ public class ServerlistFragment extends ListFragment implements IUpdateable {
 			}
 
 		} else if (item.getTitle() == "Edit") {
-
+			
+			// Call the ServerSettingActivity with and intent
 			Intent intent = new Intent(getActivity(), ServerSettingsActivity.class);
 			Bundle b = new Bundle();
 
@@ -151,6 +161,7 @@ public class ServerlistFragment extends ListFragment implements IUpdateable {
 			// Code To Handle deletion
 			MainPager.opcreader.removeServer((int) info.id);
 			adapter.notifyDataSetChanged();
+			
 		} else {
 
 			return false;
@@ -160,6 +171,7 @@ public class ServerlistFragment extends ListFragment implements IUpdateable {
 		return true;
 	}
 
+	// IUpdateable implementation resets the list
 	@Override
 	public void update() {
 

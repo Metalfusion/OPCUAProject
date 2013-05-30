@@ -15,7 +15,7 @@ import com.prosysopc.ua.client.Subscription;
 import com.prosysopc.ua.client.SubscriptionNotificationListener;
 
 /**
- * A listener for subscription notifications.
+ * A listener for subscription notifications. Sends into the log.
  */
 public class MySubscriptionNotificationListener implements SubscriptionNotificationListener {
 
@@ -43,8 +43,7 @@ public class MySubscriptionNotificationListener implements SubscriptionNotificat
 	public void onError(Subscription subscription, Object notification, Exception exception) {
 
 		// Called if the parsing of the notification data fails,
-		// notification is either a MonitoredItemNotification or
-		// an EventList
+		// notification is either a MonitoredItemNotification or an EventList
 		opcreader.addLog(LogmessageType.ERROR, "Subscription error: " + "\n" + exception.toString());
 	}
 
@@ -65,12 +64,7 @@ public class MySubscriptionNotificationListener implements SubscriptionNotificat
 	@Override
 	public void onNotificationData(Subscription subscription, NotificationData notification) {
 
-		// Called after a complete notification data package is handled
-		// if (notification instanceof DataChangeNotification) {
-		// DataChangeNotification d = (DataChangeNotification) notification;
-		// println("onNotificationData: " + d.getMonitoredItems().length);
-		// }
-
+		// Called after a complete notification data package is handled		
 	}
 
 	@Override
